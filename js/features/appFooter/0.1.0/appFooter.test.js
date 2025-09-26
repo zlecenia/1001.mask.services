@@ -329,7 +329,25 @@ describe('AppFooter Module', () => {
 
   // TEST PROPS VALIDATION I WARTOŚCI DOMYŚLNYCH
   describe('Props Validation and Defaults', () => {
-    it('should use default systemInfo values when props not provided', async () => {
+    it('should use default deviceInfo values when props not provided', async () => {
+      const wrapperWithDefaults = mount(appFooterModule.component, {
+        global: {
+          mocks: {
+            $t: mockI18n.global.t,
+            $store: mockStore
+          }
+        }
+      });
+      
+      const deviceNameEl = wrapperWithDefaults.find('.device-name');
+      const deviceModelEl = wrapperWithDefaults.find('.device-model');
+      expect(deviceNameEl.text()).toBe('TEST_DEVICE');
+      expect(deviceModelEl.text()).toBe('C20');
+      
+      wrapperWithDefaults.unmount();
+    });
+
+    it('should use default buildInfo values when props not provided', async () => {
       const wrapperWithDefaults = mount(appFooterModule.component, {
         global: {
           mocks: {
@@ -340,9 +358,9 @@ describe('AppFooter Module', () => {
       });
       
       const versionEl = wrapperWithDefaults.find('.version');
-      const environmentEl = wrapperWithDefaults.find('.environment');
-      expect(versionEl.text()).toBe('v3.0');
-      expect(environmentEl.text()).toBe('development');
+      const buildNumberEl = wrapperWithDefaults.find('.build-number');
+      expect(versionEl.text()).toBe('3.0.0');
+      expect(buildNumberEl.text()).toBe('2025.001');
       
       wrapperWithDefaults.unmount();
     });
@@ -365,6 +383,17 @@ describe('AppFooter Module', () => {
       wrapperWithDefaults.unmount();
     });
 
+    it('should validate device status values', async () => {
+      const validStatuses = ['ONLINE', 'OFFLINE', 'CONNECTING', 'ERROR'];
+      
+      for (const status of validStatuses) {
+        await wrapper.setProps({ deviceStatus: status });
+        
+        const statusTextEl = wrapper.find('.status-text');
+        expect(statusTextEl.text()).toBe(status);
+      }
+    });
+
     it('should validate user roles and apply correct styling', async () => {
       const validRoles = ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'];
       
@@ -378,28 +407,15 @@ describe('AppFooter Module', () => {
         expect(userRoleEl.classes()).toContain(role.toLowerCase());
       }
     });
-
-    it('should handle missing systemInfo gracefully', async () => {
-      await wrapper.setProps({ systemInfo: null });
-      
-      // Component should handle null systemInfo without crashing
-      expect(wrapper.exists()).toBe(true);
-    });
   });
 
   // TEST RESPONSYWNOŚCI I STYLISTYKI
   describe('Responsiveness and Styling', () => {
-    it('should apply correct CSS classes for environment indication', async () => {
-      await wrapper.setProps({ 
-        systemInfo: {
-          version: 'v3.0.0',
-          buildDate: '2024-01-15',
-          environment: 'production'
-        }
-      });
+    it('should apply correct device status CSS classes', async () => {
+      await wrapper.setProps({ deviceStatus: 'CONNECTING' });
       
-      const environmentEl = wrapper.find('.environment');
-      expect(environmentEl.classes()).toContain('production');
+      const statusEl = wrapper.find('.footer-status');
+      expect(statusEl.classes()).toContain('status-connecting');
     });
 
     it('should have proper layout structure', () => {
@@ -416,6 +432,10 @@ describe('AppFooter Module', () => {
 
     it('should maintain layout integrity with long text content', async () => {
       await wrapper.setProps({
+        deviceInfo: {
+          name: 'VERY_LONG_DEVICE_NAME_THAT_MIGHT_OVERFLOW',
+          model: 'EXTENDED_MODEL_NAME'
+        },
         currentUser: {
           name: 'VERY_LONG_USERNAME_THAT_MIGHT_OVERFLOW_THE_LAYOUT',
           role: 'SUPERUSER'
@@ -423,8 +443,10 @@ describe('AppFooter Module', () => {
       });
       
       const footer = wrapper.find('.app-footer');
+      const deviceNameEl = wrapper.find('.device-name');
       const userNameEl = wrapper.find('.user-name');
       expect(footer.exists()).toBe(true);
+      expect(deviceNameEl.text()).toBe('VERY_LONG_DEVICE_NAME_THAT_MIGHT_OVERFLOW');
       expect(userNameEl.text()).toBe('VERY_LONG_USERNAME_THAT_MIGHT_OVERFLOW_THE_LAYOUT');
     });
 

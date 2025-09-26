@@ -9,8 +9,7 @@ const template = `
       <span class="device-name">{{ deviceInfo.name || 'TEST_DEVICE' }}</span>
       <span class="device-model">{{ deviceInfo.model || 'C20' }}</span>
     </div>
-    <span class="system-info">
-      <span class="version">{{ systemInfo.version }}</span>
+    <span class="system-info" v-if="systemInfo">
       <span class="build-date">{{ formatBuildDate(systemInfo.buildDate) }}</span>
       <span class="environment" :class="systemInfo.environment">{{ systemInfo.environment }}</span>
     </span>
@@ -18,6 +17,7 @@ const template = `
   
   <div class="footer-center">
     <div class="footer-build-info">
+      <span class="version">{{ buildInfo.version || '3.0.0' }}</span>
       <span class="build-number">{{ buildInfo.buildNumber || '2024.001' }}</span>
     </div>
     <span class="current-time footer-text">{{ currentTime }}</span>
