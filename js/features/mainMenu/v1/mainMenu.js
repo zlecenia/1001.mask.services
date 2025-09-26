@@ -470,6 +470,9 @@ export default {
     };
   },
   computed: {
+    userRole() {
+      return this.$store?.state?.user?.role || 'OPERATOR';
+    },
     filteredMenuItems() {
       return this.menuConfig[this.userRole] || [];
     }
