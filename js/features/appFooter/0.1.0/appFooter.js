@@ -117,7 +117,25 @@ const styles = `
 .footer-center {
   flex: 1;
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 4px;
+}
+
+.footer-build-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.build-number {
+  background: #16a085;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
 }
 
 .current-time {
@@ -129,15 +147,53 @@ const styles = `
   border-radius: 4px;
 }
 
+.footer-text {
+  font-size: 12px;
+}
+
 .footer-right {
   display: flex;
   align-items: center;
+  gap: 12px;
+}
+
+.footer-status {
+  display: flex;
+  align-items: center;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
+}
+
+.footer-status.status-online {
+  background: #27ae60;
+  color: white;
+}
+
+.footer-status.status-offline {
+  background: #e74c3c;
+  color: white;
+}
+
+.footer-status.status-connecting {
+  background: #f39c12;
+  color: white;
+}
+
+.footer-status.status-error {
+  background: #c0392b;
+  color: white;
 }
 
 .user-info {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.footer-info {
+  font-size: 11px;
 }
 
 .user-name {
