@@ -18,7 +18,7 @@ describe('AppFooter Module', () => {
         },
         system: {
           version: 'v3.0.0',
-          buildDate: '2024-01-15',
+          buildDate: '2025-01-15',
           environment: 'development'
         },
         language: 'pl'
@@ -34,7 +34,19 @@ describe('AppFooter Module', () => {
             'global.build_date': 'Build Date',
             'global.environment': 'Environment',
             'global.user': 'User',
-            'global.role': 'Role'
+            'global.role': 'Role',
+            'footer.copyright': '© 2025 MASKTRONIC',
+            'footer.version': '',
+            'footer.build': 'Build',
+            'footer.environment': '',
+            'footer.status.online': 'ONLINE',
+            'footer.status.offline': 'OFFLINE',
+            'footer.status.connecting': 'CONNECTING',
+            'footer.status.error': 'ERROR',
+            'footer.role.operator': 'OPERATOR',
+            'footer.role.admin': 'ADMIN',
+            'footer.role.superuser': 'SUPERUSER',
+            'footer.role.serwisant': 'SERWISANT'
           };
           return translations[key] || key;
         }
@@ -50,7 +62,7 @@ describe('AppFooter Module', () => {
         },
         buildInfo: {
           version: '3.0.0',
-          buildNumber: '2024.001'
+          buildNumber: '2025.001'
         },
         deviceStatus: 'ONLINE',
         currentUser: {
@@ -126,7 +138,7 @@ describe('AppFooter Module', () => {
       const versionEl = wrapper.find('.version');
       const buildNumberEl = wrapper.find('.build-number');
       expect(versionEl.text()).toBe('3.0.0');
-      expect(buildNumberEl.text()).toBe('2024.001');
+      expect(buildNumberEl.text()).toBe('2025.001');
     });
 
     it('should display user information', () => {
@@ -193,14 +205,14 @@ describe('AppFooter Module', () => {
       await wrapper.setProps({
         buildInfo: {
           version: '4.0.0',
-          buildNumber: '2024.002'
+          buildNumber: '2025.002'
         }
       });
       
       const versionEl = wrapper.find('.version');
       const buildNumberEl = wrapper.find('.build-number');
       expect(versionEl.text()).toBe('4.0.0');
-      expect(buildNumberEl.text()).toBe('2024.002');
+      expect(buildNumberEl.text()).toBe('2025.002');
     });
 
     it('should react to deviceStatus prop changes', async () => {

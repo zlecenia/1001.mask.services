@@ -254,7 +254,7 @@ const app = createApp({
     },
     
     getDefaultMenu() {
-      return [
+      const baseMenu = [
         {
           id: 'dashboard',
           title: 'Panel główny',
@@ -272,6 +272,21 @@ const app = createApp({
           ]
         }
       ];
+      
+      // Add security menu for authorized roles
+      if (this.currentUser && ['admin', 'superuser', 'serwisant'].includes(this.currentUser.role.toLowerCase())) {
+        baseMenu.push({
+          id: 'security',
+          title: 'Bezpieczeństwo',
+          items: [
+            { id: 'audit-logs', title: 'Dziennik Audytu', route: '/audit', icon: 'fas fa-shield-alt' },
+            { id: 'security-dashboard', title: 'Panel Bezpieczeństwa', route: '/dashboard/security', icon: 'fas fa-eye' },
+            { id: 'security-logs', title: 'Logi Bezpieczeństwa', route: '/security-logs', icon: 'fas fa-file-alt' }
+          ]
+        });
+      }
+      
+      return baseMenu;
     },
     
     navigateTo(route) {
@@ -286,6 +301,13 @@ const app = createApp({
       try {
         // Show optimized loading placeholder
         contentArea.innerHTML = '<div class="loading-content lazy-loading">Ładowanie...</div>';
+        
+        // Handle audit/security routes specifically
+        const auditRoutes = ['/audit', '/security-logs', '/logs', '/dashboard/security'];
+        if (auditRoutes.includes(route)) {
+          await this.loadAuditViewer(contentArea);
+          return;
+        }
         
         // Use performance-optimized module finding and rendering
         const routeModule = await this.registry.findModuleForRoute(route);
@@ -347,6 +369,59 @@ const app = createApp({
       this.initializeApplication();
     },
     
+    async loadAuditViewer(container) {
+      try {
+        // Check authorization
+        if (!this.currentUser || !['admin', 'superuser', 'serwisant'].includes(this.currentUser.role.toLowerCase())) {
+          container.innerHTML = `
+            <div class="access-denied">
+              <div class="access-denied-icon">
+                <i class="fas fa-lock"></i>
+              </div>
+              <h3>Brak dostępu</h3>
+              <p>Nie masz uprawnień do przeglądania dziennika audytu.</p>
+              <p>Wymagana rola: Administrator, Superuser lub Serwisant</p>
+            </div>
+          `;
+          return;
+        }
+        
+        // Load the auditLogViewer module
+        const auditModule = await this.registry.load('auditLogViewer', 'latest');
+        if (auditModule && auditModule.component) {
+          // Create Vue component instance for audit viewer
+          const { createApp } = Vue;
+          const auditApp = createApp({
+            components: {
+              AuditLogViewer: auditModule.component
+            },
+            template: '<AuditLogViewer />'
+          });
+          
+          // Use the same i18n and store instances
+          auditApp.use(this.$store);
+          auditApp.use(this.$i18n);
+          
+          // Mount audit viewer
+          container.innerHTML = '<div id="audit-viewer-mount"></div>';
+          auditApp.mount('#audit-viewer-mount');
+          
+          console.log('✓ Audit Log Viewer loaded successfully');
+        } else {
+          throw new Error('AuditLogViewer module not found or invalid');
+        }
+      } catch (error) {
+        console.error('Failed to load Audit Log Viewer:', error);
+        container.innerHTML = `
+          <div class="error-content">
+            <h3>Błąd ładowania Dziennika Audytu</h3>
+            <p>${error.message}</p>
+            <button onclick="location.reload()" class="retry-btn">Odśwież stronę</button>
+          </div>
+        `;
+      }
+    },
+    
     delay(ms) {
       return new Promise(resolve => setTimeout(resolve, ms));
     }
@@ -383,7 +458,11 @@ const router = createRouter({
     { path: '/', component: { template: '<div>Strona główna</div>' } },
     { path: '/status', component: { template: '<div>Status systemu</div>' } },
     { path: '/users', component: { template: '<div>Użytkownicy</div>' } },
-    { path: '/settings', component: { template: '<div>Ustawienia</div>' } }
+    { path: '/settings', component: { template: '<div>Ustawienia</div>' } },
+    { path: '/audit', component: { template: '<div id="audit-viewer-container"></div>' } },
+    { path: '/security-logs', component: { template: '<div id="audit-viewer-container"></div>' } },
+    { path: '/logs', component: { template: '<div id="audit-viewer-container"></div>' } },
+    { path: '/dashboard/security', component: { template: '<div id="audit-viewer-container"></div>' } }
   ]
 });
 

@@ -1,0 +1,77 @@
+{
+  "component": {
+    "name": "auditLogViewer",
+    "version": "0.1.0",
+    "description": "Comprehensive security audit log viewer and dashboard for monitoring authentication events, user actions, and system security",
+    "author": "1001.mask.services",
+    "created": "2025",
+    "type": "security-dashboard"
+  },
+  "ui": {
+    "display": {
+      "width": "100%",
+      "height": "100%", 
+      "responsive": true,
+      "touchOptimized": true,
+      "landscapeMode": true
+    },
+    "layout": {
+      "header": true,
+      "filters": true,
+      "stats": true,
+      "table": true,
+      "pagination": true,
+      "modal": true
+    },
+    "theme": {
+      "colorScheme": "light",
+      "primaryColor": "#007bff",
+      "dangerColor": "#dc3545",
+      "warningColor": "#ffc107",
+      "successColor": "#28a745"
+    }
+  },
+  "data": {
+    "refreshInterval": 30000,
+    "pageSize": 50,
+    "maxDisplayLogs": 10000,
+    "timeRanges": ["1h", "24h", "7d", "30d", "all"],
+    "exportFormats": ["csv"],
+    "autoRefresh": true
+  },
+  "responsive": {
+    "breakpoints": {
+      "small": "400px",
+      "medium": "800px", 
+      "large": "1280px"
+    },
+    "display79": {
+      "width": "1280px",
+      "height": "400px",
+      "orientation": "landscape",
+      "scaling": "optimized"
+    }
+  },
+  "accessibility": {
+    "keyboardNavigation": true,
+    "screenReader": true,
+    "highContrast": false,
+    "focusManagement": true,
+    "ariaLabels": true
+  },
+  "performance": {
+    "virtualScrolling": false,
+    "lazyLoading": false,
+    "caching": true,
+    "debounceSearch": 300,
+    "maxMemoryUsage": "50MB"
+  },
+  "security": {
+    "roleBasedAccess": true,
+    "auditLogging": true,
+    "dataValidation": true,
+    "exportPermissions": true,
+    "allowedRoles": ["ADMIN", "SUPERUSER", "SERWISANT"],
+    "sensitiveDataMasking": false
+  }
+}

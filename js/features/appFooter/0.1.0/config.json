@@ -18,7 +18,7 @@
       "left": {
         "copyright": {
           "enabled": true,
-          "text": "© 2024 MASKTRONIC",
+          "text": "© 2025 MASKTRONIC",
           "fontSize": "10px"
         },
         "deviceInfo": {
@@ -40,7 +40,7 @@
           "enabled": true,
           "showBuildNumber": true,
           "defaultVersion": "3.0.0",
-          "defaultBuildNumber": "2024.001"
+          "defaultBuildNumber": "2025.001"
         },
         "currentTime": {
           "enabled": true,
@@ -72,7 +72,7 @@
   "data": {
     "systemInfo": {
       "version": "v3.0",
-      "buildDate": "2024-01-26",
+      "buildDate": "2025-01-26",
       "environment": "development"
     },
     "deviceInfo": {
@@ -81,7 +81,7 @@
     },
     "buildInfo": {
       "version": "3.0.0",
-      "buildNumber": "2024.001"
+      "buildNumber": "2025.001"
     },
     "currentUser": {
       "name": "Guest",

@@ -1,5 +1,8 @@
 // Auth Module for Vuex Store
 // Handles authentication, user management, and role-based access control
+// Enhanced with SecurityService integration
+
+import { getSecurityService } from '../../services/securityService.js';
 
 const authModule = {
   namespaced: true,
@@ -7,15 +10,18 @@ const authModule = {
   state: {
     isAuthenticated: false,
     currentUser: null,
+    sessionToken: null,
     role: null,
     permissions: [],
     sessionTimeout: 1800000, // 30 minutes
     loginAttempts: 0,
-    maxLoginAttempts: 3,
-    lockoutDuration: 300000, // 5 minutes
+    maxLoginAttempts: 5, // Increased to match SecurityService
+    lockoutDuration: 900000, // 15 minutes to match SecurityService
     lockoutUntil: null,
     lastActivity: null,
-    sessionStartTime: null
+    sessionStartTime: null,
+    csrfToken: null,
+    securityService: null
   },
   
   getters: {
@@ -88,35 +94,54 @@ const authModule = {
     CLEAR_SESSION(state) {
       state.isAuthenticated = false;
       state.currentUser = null;
+      state.sessionToken = null;
+      state.csrfToken = null;
       state.role = null;
       state.permissions = [];
       state.sessionStartTime = null;
       state.lastActivity = null;
+    },
+    
+    INIT_SECURITY_SERVICE(state) {
+      state.securityService = getSecurityService();
+    },
+    
+    SET_SESSION_TOKEN(state, token) {
+      state.sessionToken = token;
+    },
+    
+    SET_CSRF_TOKEN(state, token) {
+      state.csrfToken = token;
     }
   },
   
   actions: {
     async login({ commit, state, getters }, { username, password, role }) {
-      // Check if account is locked
-      if (!getters.canLogin) {
-        throw new Error('Account locked due to too many failed attempts');
-      }
-      
       try {
-        // Mock authentication - replace with real API call
-        const isValidLogin = await mockAuthenticate(username, password, role);
+        // Initialize SecurityService if not already done
+        if (!state.securityService) {
+          commit('INIT_SECURITY_SERVICE');
+        }
         
-        if (isValidLogin) {
+        // Use SecurityService for comprehensive authentication
+        const authResult = await state.securityService.authenticateUser(username, password, role);
+        
+        if (authResult.success) {
           const user = {
             id: 1,
-            username,
-            name: getDisplayName(role),
-            role,
-            permissions: getRolePermissions(role)
+            username: authResult.user.username,
+            name: getDisplayName(authResult.user.role),
+            role: authResult.user.role,
+            permissions: authResult.user.permissions
           };
+          
+          // Generate CSRF token for secure form submissions
+          const csrfToken = state.securityService.generateCSRFToken(authResult.sessionToken);
           
           commit('SET_AUTHENTICATED', true);
           commit('SET_USER', user);
+          commit('SET_SESSION_TOKEN', authResult.sessionToken);
+          commit('SET_CSRF_TOKEN', csrfToken);
           commit('SET_SESSION_START');
           commit('RESET_LOGIN_ATTEMPTS');
           

@@ -1,7 +1,10 @@
 /**
  * Page Template Component 0.1.0
  * Bazowy template strony dla systemu MASKSERVICE z układem dla wyświetlacza 7.9 cala (400x1280px landscape)
+ * Enhanced with comprehensive security features based on components.md
  */
+
+import { getSecurityService } from '../../../services/securityService.js';
 
 // Template for the page layout optimized for 7.9" landscape display
 const template = `
@@ -388,6 +391,10 @@ export default {
       contentDescription: 'Bazowy template strony dla systemu MASKSERVICE',
       isFullscreen: false,
       currentDateTime: '',
+      securityService: null,
+      lastActivityTime: Date.now(),
+      pageViewStartTime: Date.now(),
+      securityValidationErrors: 0,
       pressureSensors: [
         {
           type: 'low',
@@ -493,17 +500,97 @@ export default {
   },
   methods: {
     selectMenuItem(item) {
-      this.activeItem = item.key;
-      this.$emit('menu-selected', item);
+      // Update activity tracking
+      this.lastActivityTime = Date.now();
+      
+      // Sanitize and validate menu item input
+      const sanitizedKey = this.securityService?.sanitizeInput(item.key) || item.key;
+      
+      // Validate menu item access
+      if (this.securityService) {
+        const validation = this.securityService.validateInput(sanitizedKey, 'menu_item');
+        if (!validation.isValid) {
+          this.securityValidationErrors++;
+          this.securityService.logAuditEvent('PAGE_TEMPLATE_VALIDATION_ERROR', {
+            item: sanitizedKey,
+            error: validation.error,
+            validationErrors: this.securityValidationErrors,
+            timestamp: new Date().toISOString()
+          });
+          return;
+        }
+      }
+      
+      this.activeItem = sanitizedKey;
+      
+      // Log menu selection for audit trail
+      this.securityService?.logAuditEvent('PAGE_TEMPLATE_MENU_SELECTED', {
+        item: sanitizedKey,
+        currentUser: this.currentUser,
+        timestamp: new Date().toISOString(),
+        sessionDuration: Date.now() - this.pageViewStartTime
+      });
+      
+      this.$emit('menu-selected', { ...item, key: sanitizedKey });
     },
+    
     changeLanguage() {
-      this.$emit('language-changed', this.currentLanguage);
+      // Update activity tracking
+      this.lastActivityTime = Date.now();
+      
+      // Sanitize and validate language selection
+      const sanitizedLanguage = this.securityService?.sanitizeInput(this.currentLanguage) || this.currentLanguage;
+      
+      // Validate language selection
+      const allowedLanguages = ['pl', 'en', 'de'];
+      if (!allowedLanguages.includes(sanitizedLanguage)) {
+        this.securityValidationErrors++;
+        this.securityService?.logAuditEvent('PAGE_TEMPLATE_INVALID_LANGUAGE', {
+          attempted: sanitizedLanguage,
+          allowed: allowedLanguages,
+          validationErrors: this.securityValidationErrors,
+          timestamp: new Date().toISOString()
+        });
+        return;
+      }
+      
+      // Log language change for audit trail
+      this.securityService?.logAuditEvent('PAGE_TEMPLATE_LANGUAGE_CHANGED', {
+        newLanguage: sanitizedLanguage,
+        currentUser: this.currentUser,
+        timestamp: new Date().toISOString()
+      });
+      
+      this.$emit('language-changed', sanitizedLanguage);
     },
+    
     logout() {
+      // Update activity tracking
+      this.lastActivityTime = Date.now();
+      
+      // Log logout action for audit trail
+      this.securityService?.logAuditEvent('PAGE_TEMPLATE_LOGOUT', {
+        currentUser: this.currentUser,
+        sessionDuration: Date.now() - this.pageViewStartTime,
+        timestamp: new Date().toISOString(),
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'
+      });
+      
       this.$emit('logout');
     },
+    
     toggleFullscreen() {
+      // Update activity tracking
+      this.lastActivityTime = Date.now();
+      
       this.isFullscreen = !this.isFullscreen;
+      
+      // Log fullscreen toggle for audit trail
+      this.securityService?.logAuditEvent('PAGE_TEMPLATE_FULLSCREEN_TOGGLE', {
+        isFullscreen: this.isFullscreen,
+        currentUser: this.currentUser,
+        timestamp: new Date().toISOString()
+      });
     },
     updateDateTime() {
       this.currentDateTime = new Date().toLocaleString(this.currentLanguage);
@@ -521,22 +608,78 @@ export default {
       }
       
       this.$emit('resize', { width, height });
+    },
+    checkUserActivity() {
+      const inactivityTimeout = 15 * 60 * 1000; // 15 minutes
+      const now = Date.now();
+      
+      if (now - this.lastActivityTime > inactivityTimeout) {
+        this.securityService?.logAuditEvent('PAGE_TEMPLATE_INACTIVITY', {
+          currentUser: this.currentUser,
+          lastActivityTime: new Date(this.lastActivityTime).toISOString(),
+          inactivityDuration: now - this.lastActivityTime,
+          timestamp: new Date().toISOString()
+        });
+        
+        // Emit inactivity warning
+        this.$emit('user-inactive');
+      }
     }
   },
-  mounted() {
+  async mounted() {
     this.updateDateTime();
     this.dateTimeInterval = setInterval(this.updateDateTime, 1000);
     
     // Add window resize event listener
     window.addEventListener('resize', this.handleResize);
+
+    // Initialize SecurityService for comprehensive security features
+    try {
+      this.securityService = getSecurityService();
+      
+      // Log page template component initialization for audit trail
+      this.securityService.logAuditEvent('PAGE_TEMPLATE_INIT', {
+        title: this.title,
+        currentUser: this.currentUser,
+        deviceId: this.deviceId,
+        showSidebar: this.showSidebar,
+        showPressurePanel: this.showPressurePanel,
+        timestamp: new Date().toISOString(),
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'
+      });
+
+      // Set up activity monitoring
+      this.activityMonitorInterval = setInterval(() => {
+        this.checkUserActivity();
+      }, 2 * 60 * 1000); // Check every 2 minutes
+
+    } catch (error) {
+      console.error('Failed to initialize SecurityService in PageTemplate:', error);
+      // Fallback mode without enhanced security features
+      this.securityService = null;
+    }
   },
+  
   beforeUnmount() {
     if (this.dateTimeInterval) {
       clearInterval(this.dateTimeInterval);
     }
     
+    // Clean up activity monitoring
+    if (this.activityMonitorInterval) {
+      clearInterval(this.activityMonitorInterval);
+    }
+    
     // Remove window resize event listener
     window.removeEventListener('resize', this.handleResize);
+
+    // Log page template component cleanup for audit trail
+    this.securityService?.logAuditEvent('PAGE_TEMPLATE_CLEANUP', {
+      sessionDuration: Date.now() - this.pageViewStartTime,
+      currentUser: this.currentUser,
+      validationErrors: this.securityValidationErrors,
+      timestamp: new Date().toISOString()
+    });
   },
-  emits: ['menu-selected', 'language-changed', 'logout']
+  emits: ['menu-selected', 'language-changed', 'logout', 'resize', 'user-inactive']
 };

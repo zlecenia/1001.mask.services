@@ -1,7 +1,10 @@
 /**
  * Login Form Component 0.1.0
  * Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9"
+ * Enhanced with comprehensive security features based on components.md
  */
+
+import { getSecurityService } from '../../../services/securityService.js';
 
 // Template for login form with virtual keyboard aligned to Vitest expectations
 const template = `
@@ -447,8 +450,12 @@ export default {
       },
       validationRules: {
         usernameMin: 3,
-        passwordMin: 3
+        passwordMin: 8 // Enhanced security requirement
       },
+      securityService: null,
+      csrfToken: null,
+      loginAttempts: 0,
+      maxLoginAttempts: 5,
       keyboardLayout: [
         ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
         ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
@@ -489,39 +496,99 @@ export default {
     handleBlur(field) {
       this.validateField(field);
     },
-    handleLogin() {
+    async handleLogin() {
       if (!this.validateForm()) {
+        return;
+      }
+
+      // Check for login attempt limits
+      if (this.loginAttempts >= this.maxLoginAttempts) {
+        this.loginError = this.$t('auth.account_locked') || 'Account locked due to too many failed attempts';
         return;
       }
 
       this.loading = true;
       this.loginError = '';
 
-      const payload = {
-        username: this.form.username,
-        password: this.form.password,
-        role: this.form.role
-      };
+      try {
+        // Sanitize inputs using SecurityService
+        const sanitizedUsername = this.securityService.sanitizeInput(this.form.username);
+        const sanitizedPassword = this.securityService.sanitizeInput(this.form.password);
+        const sanitizedRole = this.securityService.sanitizeInput(this.form.role);
 
-      this.$emit('login-attempt', { ...payload, timestamp: new Date().toISOString() });
+        // Validate inputs for security threats
+        const usernameValidation = this.securityService.validateInput(sanitizedUsername, 'username');
+        const passwordValidation = this.securityService.validateInput(sanitizedPassword, 'password');
 
-      const dispatch = this.$store?.dispatch || (() => Promise.resolve({ success: true }));
+        if (!usernameValidation.isValid) {
+          this.loginError = usernameValidation.error;
+          this.loginAttempts++;
+          return;
+        }
 
-      dispatch('auth/login', payload)
-        .then((result = {}) => {
-          if (result.success) {
-            this.$router?.push?.('/dashboard');
-            this.clearForm();
-          } else {
-            this.loginError = result.error || 'Invalid credentials';
-          }
-        })
-        .catch(() => {
-          this.loginError = 'Authentication service unavailable';
-        })
-        .finally(() => {
-          this.loading = false;
+        if (!passwordValidation.isValid) {
+          this.loginError = passwordValidation.error;
+          this.loginAttempts++;
+          return;
+        }
+
+        const payload = {
+          username: sanitizedUsername,
+          password: sanitizedPassword,
+          role: sanitizedRole,
+          csrfToken: this.csrfToken
+        };
+
+        // Emit secure login attempt with audit logging
+        this.$emit('login-attempt', { 
+          username: sanitizedUsername, 
+          role: sanitizedRole, 
+          timestamp: new Date().toISOString(),
+          attempt: this.loginAttempts + 1
         });
+
+        const dispatch = this.$store?.dispatch || (() => Promise.resolve({ success: true }));
+
+        const result = await dispatch('auth/login', payload);
+        
+        if (result && result.success !== false) {
+          // Login successful - reset attempts and redirect
+          this.loginAttempts = 0;
+          this.$router?.push?.('/dashboard');
+          this.clearForm();
+          
+          // Log successful authentication
+          this.securityService.logAuditEvent('LOGIN_SUCCESS', {
+            username: sanitizedUsername,
+            role: sanitizedRole,
+            timestamp: new Date().toISOString()
+          });
+        } else {
+          // Login failed - increment attempts and show error
+          this.loginAttempts++;
+          this.loginError = result?.error || this.$t('auth.invalid_credentials') || 'Invalid credentials';
+          
+          // Log failed authentication attempt
+          this.securityService.logAuditEvent('LOGIN_FAILED', {
+            username: sanitizedUsername,
+            role: sanitizedRole,
+            attempt: this.loginAttempts,
+            timestamp: new Date().toISOString()
+          });
+        }
+      } catch (error) {
+        this.loginAttempts++;
+        this.loginError = this.$t('auth.service_unavailable') || 'Authentication service unavailable';
+        console.error('Login error:', error);
+        
+        // Log authentication error
+        this.securityService?.logAuditEvent('LOGIN_ERROR', {
+          error: error.message,
+          timestamp: new Date().toISOString()
+        });
+      } finally {
+        this.loading = false;
+      }
     },
     validateField(field) {
       const newErrors = { ...this.errors };
@@ -530,7 +597,15 @@ export default {
 
       if (field === 'username') {
         if (!this.form.username || this.form.username.length < minUser) {
-          newErrors.username = `Username must be at least ${minUser} characters (minimum 3 characters)`;
+          newErrors.username = this.$t('validation.username_min_length') || `Username must be at least ${minUser} characters`;
+        } else if (this.securityService) {
+          // Enhanced security validation using SecurityService
+          const validation = this.securityService.validateInput(this.form.username, 'username');
+          if (!validation.isValid) {
+            newErrors.username = validation.error;
+          } else {
+            delete newErrors.username;
+          }
         } else {
           delete newErrors.username;
         }
@@ -538,7 +613,15 @@ export default {
 
       if (field === 'password') {
         if (!this.form.password || this.form.password.length < minPass) {
-          newErrors.password = `Password must be at least ${minPass} characters (minimum 3 characters)`;
+          newErrors.password = this.$t('validation.password_min_length') || `Password must be at least ${minPass} characters`;
+        } else if (this.securityService) {
+          // Enhanced security validation using SecurityService
+          const validation = this.securityService.validateInput(this.form.password, 'password');
+          if (!validation.isValid) {
+            newErrors.password = validation.error;
+          } else {
+            delete newErrors.password;
+          }
         } else {
           delete newErrors.password;
         }
@@ -546,7 +629,15 @@ export default {
 
       if (field === 'role') {
         if (!this.form.role) {
-          newErrors.role = 'Role selection is required';
+          newErrors.role = this.$t('validation.role_required') || 'Role selection is required';
+        } else if (this.securityService) {
+          // Validate role against available roles using SecurityService
+          const validation = this.securityService.validateInput(this.form.role, 'role');
+          if (!validation.isValid) {
+            newErrors.role = validation.error;
+          } else {
+            delete newErrors.role;
+          }
         } else {
           delete newErrors.role;
         }
@@ -653,11 +744,29 @@ export default {
       };
     }
   },
-  mounted() {
+  async mounted() {
     if (typeof window !== 'undefined') {
       this._resizeHandler = () => this.handleResize();
       window.addEventListener('resize', this._resizeHandler);
       this.handleResize();
+    }
+
+    // Initialize SecurityService for comprehensive security features
+    try {
+      this.securityService = getSecurityService();
+      
+      // Generate CSRF token for secure form submissions
+      this.csrfToken = this.securityService.generateCSRFToken('login-form');
+      
+      // Log component initialization for audit trail
+      this.securityService.logAuditEvent('LOGIN_FORM_INIT', {
+        timestamp: new Date().toISOString(),
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'
+      });
+    } catch (error) {
+      console.error('Failed to initialize SecurityService:', error);
+      // Fallback mode without enhanced security features
+      this.securityService = null;
     }
   },
   beforeUnmount() {

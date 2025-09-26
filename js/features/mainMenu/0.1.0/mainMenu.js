@@ -2,7 +2,10 @@
  * Main Menu Component 0.1.0
  * Główne menu aplikacji z kontrolą dostępu opartą na rolach
  * Roles: OPERATOR (2 opcje), ADMIN (4 opcje), SUPERUSER (4 zaawansowane), SERWISANT (5 technicznych)
+ * Enhanced with comprehensive security features based on components.md
  */
+
+import { getSecurityService } from '../../../services/securityService.js';
 
 // Template for role-based menu system
 const template = `
@@ -278,6 +281,9 @@ export default {
       activeItem: null,
       activeSubItem: null,
       expandedItem: null,
+      securityService: null,
+      lastAccessTime: Date.now(),
+      menuAccessAttempts: 0,
       
       // Complete menu configuration for all roles - matches module config
       menuConfig: {
@@ -324,25 +330,59 @@ export default {
   methods: {
     selectMenuItem(item) {
       console.log('MainMenu selectMenuItem called:', item, 'router:', this.$router);
-      if (item.disabled) return;
+      
+      if (item.disabled) {
+        // Log attempt to access disabled menu item
+        this.securityService?.logAuditEvent('MENU_ACCESS_DENIED', {
+          item: item.key,
+          reason: 'disabled',
+          userRole: this.userRole,
+          timestamp: new Date().toISOString()
+        });
+        return;
+      }
+      
+      // Security validation - check if user has permission for this menu item
+      if (!this.validateMenuAccess(item)) {
+        this.menuAccessAttempts++;
+        this.securityService?.logAuditEvent('MENU_ACCESS_UNAUTHORIZED', {
+          item: item.key,
+          userRole: this.userRole,
+          attempts: this.menuAccessAttempts,
+          timestamp: new Date().toISOString()
+        });
+        return;
+      }
+      
+      // Sanitize the menu item key to prevent XSS
+      const sanitizedKey = this.securityService?.sanitizeInput(item.key) || item.key;
       
       // Set active item and clear expansion
-      this.activeItem = item.key;
+      this.activeItem = sanitizedKey;
       this.expandedItem = null;
+      this.lastAccessTime = Date.now();
+      
+      // Log successful menu access for audit trail
+      this.securityService?.logAuditEvent('MENU_ACCESS_SUCCESS', {
+        item: sanitizedKey,
+        userRole: this.userRole,
+        timestamp: new Date().toISOString(),
+        sessionInfo: this.getSessionInfo()
+      });
       
       // Router navigation - now always happens since no submenu
-      console.log('MainMenu router navigation attempt:', this.$router, item.key);
+      console.log('MainMenu router navigation attempt:', this.$router, sanitizedKey);
       if (this.$router && this.$router.push) {
-        console.log('MainMenu calling router.push:', `/${item.key}`);
-        this.$router.push(`/${item.key}`);
+        console.log('MainMenu calling router.push:', `/${sanitizedKey}`);
+        this.$router.push(`/${sanitizedKey}`);
       } else {
         console.log('MainMenu no router available or push method missing');
       }
       
       this.$emit('menu-selected', {
-        item: item.key,
+        item: sanitizedKey,
         role: this.userRole,
-        timestamp: new Date()
+        timestamp: new Date().toISOString()
       });
     },
     
@@ -376,13 +416,102 @@ export default {
       };
       
       return roleHierarchy[this.userRole] >= roleHierarchy[requiredRole];
+    },
+
+    validateMenuAccess(item) {
+      // Check if user role has access to this menu item
+      if (!this.userRole) {
+        return false;
+      }
+
+      // Check if item exists in user's allowed menu config
+      const allowedItems = this.menuConfig[this.userRole] || [];
+      const hasAccess = allowedItems.some(allowedItem => allowedItem.key === item.key);
+
+      if (!hasAccess) {
+        return false;
+      }
+
+      // Additional security validation using SecurityService
+      if (this.securityService) {
+        const validation = this.securityService.validateInput(item.key, 'menu_item');
+        return validation.isValid;
+      }
+
+      return true;
+    },
+
+    getSessionInfo() {
+      return {
+        userRole: this.userRole,
+        lastAccessTime: this.lastAccessTime,
+        menuAccessAttempts: this.menuAccessAttempts,
+        activeItem: this.activeItem
+      };
+    },
+
+    checkSessionTimeout() {
+      const timeout = 30 * 60 * 1000; // 30 minutes
+      const now = Date.now();
+      
+      if (now - this.lastAccessTime > timeout) {
+        this.securityService?.logAuditEvent('MENU_SESSION_TIMEOUT', {
+          userRole: this.userRole,
+          lastAccessTime: new Date(this.lastAccessTime).toISOString(),
+          timeoutDuration: timeout,
+          timestamp: new Date().toISOString()
+        });
+        
+        // Emit session timeout event
+        this.$emit('session-timeout');
+        return true;
+      }
+      
+      return false;
     }
   },
   
-  mounted() {
+  async mounted() {
     console.log(`MainMenu initialized for role: ${this.userRole}`);
     console.log(`Available menu items: ${this.getMenuItemCount()}`);
+
+    // Initialize SecurityService for comprehensive security features
+    try {
+      this.securityService = getSecurityService();
+      
+      // Log menu component initialization for audit trail
+      this.securityService.logAuditEvent('MENU_COMPONENT_INIT', {
+        userRole: this.userRole,
+        availableMenuItems: this.getMenuItemCount(),
+        timestamp: new Date().toISOString(),
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'
+      });
+
+      // Set up session timeout monitoring
+      this.sessionTimeoutInterval = setInterval(() => {
+        this.checkSessionTimeout();
+      }, 5 * 60 * 1000); // Check every 5 minutes
+
+    } catch (error) {
+      console.error('Failed to initialize SecurityService in MainMenu:', error);
+      // Fallback mode without enhanced security features
+      this.securityService = null;
+    }
+  },
+
+  beforeUnmount() {
+    // Clean up session timeout monitoring
+    if (this.sessionTimeoutInterval) {
+      clearInterval(this.sessionTimeoutInterval);
+    }
+
+    // Log menu component cleanup for audit trail
+    this.securityService?.logAuditEvent('MENU_COMPONENT_CLEANUP', {
+      userRole: this.userRole,
+      sessionDuration: Date.now() - this.lastAccessTime,
+      timestamp: new Date().toISOString()
+    });
   },
   
-  emits: ['menu-selected']
+  emits: ['menu-selected', 'session-timeout']
 };

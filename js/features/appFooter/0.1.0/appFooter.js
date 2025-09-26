@@ -17,8 +17,8 @@ const template = `
   
   <div class="footer-center">
     <div class="footer-build-info">
-      <span class="version">{{ $t('footer.version') }}: {{ buildInfo.version || '3.0.0' }}</span>
-      <span class="build-number">{{ $t('footer.build') }}: {{ buildInfo.buildNumber || '2024.001' }}</span>
+      <span class="version">{{ buildInfo.version || '3.0.0' }}</span>
+      <span class="build-number">{{ buildInfo.buildNumber || '2025.001' }}</span>
     </div>
     <span class="current-time footer-text">{{ currentTime }}</span>
   </div>

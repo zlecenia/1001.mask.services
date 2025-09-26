@@ -29,14 +29,18 @@ describe('AppHeader Module', () => {
       global: {
         t: (key) => {
           const translations = {
+            'global.company': 'MASKTRONIC',
             'global.logo': 'MASKTRONIC',
             'global.hardware': 'C20',
             'global.product': '1001',
+            'global.version': 'v3.0',
             'global.software': 'v3.0',
             'global.device_name': 'TEST_DEVICE',
             'global.device_type': 'C20',
             'global.online': 'Online',
-            'global.offline': 'Offline'
+            'global.offline': 'Offline',
+            'header.device_info': 'TEST_DEVICE',
+            'header.language_selector': 'Switch to'
           };
           return translations[key] || key;
         }
@@ -231,8 +235,8 @@ describe('AppHeader Module', () => {
       const deviceInfoSpans = wrapper.find('.device-info').findAll('span');
       // First span: $t('global.device_name') returns 'TEST_DEVICE' from mock
       expect(deviceInfoSpans[0].text()).toBe('TEST_DEVICE');
-      // Second span: $t('global.device_type') returns 'C20' from mock
-      expect(deviceInfoSpans[1].text()).toBe('C20');
+      // Second span: deviceInfo.type prop value is displayed directly
+      expect(deviceInfoSpans[1].text()).toBe('300');
     });
 
     it('should handle offline device status correctly', async () => {

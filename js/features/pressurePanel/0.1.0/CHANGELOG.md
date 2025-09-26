@@ -1,6 +1,6 @@
 # PressurePanel Module - CHANGELOG
 
-## [0.1.0] - 2024-01-26
+## [0.1.0] - 2025-01-26
 
 ### Added
 - Initial release of PressurePanel module

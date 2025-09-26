@@ -53,7 +53,7 @@ The AppFooter module provides a Vue 3 component for displaying application foote
 const component = await registry.load('appFooter', '0.1.0');
 await component.render({
   deviceInfo: { name: 'DEVICE_001', model: 'C20' },
-  buildInfo: { version: '3.0.0', buildNumber: '2024.001' },
+  buildInfo: { version: '3.0.0', buildNumber: '2025.001' },
   deviceStatus: 'ONLINE',
   currentUser: { name: 'Operator', role: 'OPERATOR' }
 });

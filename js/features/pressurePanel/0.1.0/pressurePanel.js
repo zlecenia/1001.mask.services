@@ -1,5 +1,7 @@
 // PressurePanel component for real-time sensor monitoring with 7.9" display optimization
-import WebSocketService from '../../services/websocketService.js';
+// Enhanced with comprehensive security features based on components.md
+import WebSocketService from '../../../services/websocketService.js';
+import { getSecurityService } from '../../../services/securityService.js';
 const template = `
 <div class="pressure-panel" :class="deviceClass">
   <h3 class="panel-title">{{ $t('sensors.pressure_monitoring') || 'Monitoring Ciśnienia' }}</h3>
@@ -334,7 +336,13 @@ export default {
       },
       connectionStatus: 'disconnected',
       alertHistory: [],
-      webSocketSubscriptions: []
+      webSocketSubscriptions: [],
+      securityService: null,
+      sensorAccessAttempts: 0,
+      lastSecurityValidation: Date.now(),
+      monitoringStartTime: Date.now(),
+      dataValidationErrors: 0,
+      suspiciousActivityCount: 0
     };
   },
   
@@ -406,24 +414,59 @@ export default {
     
     async refreshSensors() {
       this.isRefreshing = true;
+      this.sensorAccessAttempts++;
+      
+      // Security validation for sensor access
+      if (!this.validateSensorAccess()) {
+        this.isRefreshing = false;
+        return;
+      }
       
       try {
+        // Log sensor refresh request for audit trail
+        this.securityService?.logAuditEvent('PRESSURE_PANEL_REFRESH_REQUESTED', {
+          connectionStatus: this.connectionStatus,
+          accessAttempts: this.sensorAccessAttempts,
+          timestamp: new Date().toISOString(),
+          monitoringDuration: Date.now() - this.monitoringStartTime
+        });
+        
         if (this.connectionStatus === 'connected') {
-          // Request fresh sensor data via WebSocket
-          WebSocketService.requestSensorData(['pressure-01', 'pressure-02', 'pressure-03'], ['pressure']);
+          // Validate sensor IDs before WebSocket request
+          const sensorIds = ['pressure-01', 'pressure-02', 'pressure-03'];
+          const sanitizedIds = sensorIds.map(id => this.securityService?.sanitizeInput(id) || id);
+          
+          // Request fresh sensor data via WebSocket with validated IDs
+          WebSocketService.requestSensorData(sanitizedIds, ['pressure']);
         } else {
           // Fallback: simulate sensor refresh
           await new Promise(resolve => setTimeout(resolve, 1000));
         }
         
         this.updateTime();
+        this.lastSecurityValidation = Date.now();
+        
+        // Log successful sensor refresh
+        this.securityService?.logAuditEvent('PRESSURE_PANEL_REFRESH_SUCCESS', {
+          timestamp: new Date().toISOString(),
+          sensorCount: Object.keys(this.effectivePressureData).length
+        });
+        
         this.$emit('sensors-refreshed', { timestamp: new Date().toISOString() });
         
-        // Check for alerts
+        // Check for alerts with security validation
         this.checkForAlerts();
         
       } catch (error) {
         console.error('Failed to refresh sensors:', error);
+        this.dataValidationErrors++;
+        
+        // Log sensor refresh error for security monitoring
+        this.securityService?.logAuditEvent('PRESSURE_PANEL_REFRESH_ERROR', {
+          error: error.message,
+          validationErrors: this.dataValidationErrors,
+          timestamp: new Date().toISOString()
+        });
       } finally {
         this.isRefreshing = false;
       }
@@ -475,18 +518,34 @@ export default {
     handlePressureData(data) {
       console.log('📡 Real-time pressure data received:', data);
       
-      // Update real-time pressure data
+      // Security validation for incoming sensor data
+      if (!this.validateIncomingSensorData(data)) {
+        return;
+      }
+      
+      // Update real-time pressure data with security validation
       if (data.pressure) {
         Object.keys(data.pressure).forEach(key => {
           if (this.realTimePressureData[key]) {
-            this.realTimePressureData[key] = {
-              ...this.realTimePressureData[key],
-              ...data.pressure[key],
-              lastUpdate: data.timestamp || Date.now()
-            };
+            // Sanitize and validate sensor data
+            const sanitizedData = this.sanitizeSensorData(data.pressure[key]);
+            if (sanitizedData) {
+              this.realTimePressureData[key] = {
+                ...this.realTimePressureData[key],
+                ...sanitizedData,
+                lastUpdate: data.timestamp || Date.now()
+              };
+            }
           }
         });
       }
+      
+      // Log successful data update for audit trail
+      this.securityService?.logAuditEvent('PRESSURE_PANEL_DATA_RECEIVED', {
+        dataKeys: Object.keys(data.pressure || {}),
+        timestamp: new Date().toISOString(),
+        dataSource: 'websocket'
+      });
       
       this.updateTime();
       this.$emit('pressure-data-updated', data);
@@ -523,13 +582,159 @@ export default {
     handleDisconnected(disconnectionData) {
       console.log('🔌 WebSocket disconnected from pressure monitoring:', disconnectionData);
       this.connectionStatus = 'disconnected';
+      
+      // Log disconnection for security monitoring
+      this.securityService?.logAuditEvent('PRESSURE_PANEL_WEBSOCKET_DISCONNECTED', {
+        reason: disconnectionData?.reason || 'unknown',
+        timestamp: new Date().toISOString(),
+        monitoringDuration: Date.now() - this.monitoringStartTime
+      });
+      
       this.$emit('websocket-disconnected', disconnectionData);
+    },
+
+    // Security Validation Methods
+    validateSensorAccess() {
+      // Check if too many access attempts
+      if (this.sensorAccessAttempts > 50) {
+        this.suspiciousActivityCount++;
+        this.securityService?.logAuditEvent('PRESSURE_PANEL_EXCESSIVE_ACCESS', {
+          accessAttempts: this.sensorAccessAttempts,
+          suspiciousActivity: this.suspiciousActivityCount,
+          timestamp: new Date().toISOString()
+        });
+        return false;
+      }
+
+      // Check if security validation is recent
+      const validationTimeout = 5 * 60 * 1000; // 5 minutes
+      if (Date.now() - this.lastSecurityValidation > validationTimeout) {
+        this.securityService?.logAuditEvent('PRESSURE_PANEL_VALIDATION_TIMEOUT', {
+          lastValidation: new Date(this.lastSecurityValidation).toISOString(),
+          timestamp: new Date().toISOString()
+        });
+        return false;
+      }
+
+      return true;
+    },
+
+    validateIncomingSensorData(data) {
+      if (!data || typeof data !== 'object') {
+        this.dataValidationErrors++;
+        this.securityService?.logAuditEvent('PRESSURE_PANEL_INVALID_DATA_FORMAT', {
+          dataType: typeof data,
+          validationErrors: this.dataValidationErrors,
+          timestamp: new Date().toISOString()
+        });
+        return false;
+      }
+
+      // Validate data structure
+      if (data.pressure && typeof data.pressure !== 'object') {
+        this.dataValidationErrors++;
+        this.securityService?.logAuditEvent('PRESSURE_PANEL_INVALID_PRESSURE_DATA', {
+          pressureType: typeof data.pressure,
+          validationErrors: this.dataValidationErrors,
+          timestamp: new Date().toISOString()
+        });
+        return false;
+      }
+
+      return true;
+    },
+
+    sanitizeSensorData(sensorData) {
+      if (!sensorData || typeof sensorData !== 'object') {
+        return null;
+      }
+
+      const sanitized = {};
+
+      // Sanitize and validate sensor value
+      if (typeof sensorData.value === 'number' && isFinite(sensorData.value)) {
+        // Validate reasonable sensor ranges for industrial pressure monitoring
+        if (sensorData.value >= -100 && sensorData.value <= 1000) {
+          sanitized.value = sensorData.value;
+        } else {
+          this.dataValidationErrors++;
+          this.securityService?.logAuditEvent('PRESSURE_PANEL_VALUE_OUT_OF_RANGE', {
+            value: sensorData.value,
+            validationErrors: this.dataValidationErrors,
+            timestamp: new Date().toISOString()
+          });
+          return null;
+        }
+      }
+
+      // Sanitize unit
+      if (typeof sensorData.unit === 'string') {
+        const allowedUnits = ['bar', 'mbar', 'psi', 'kPa', 'Pa'];
+        const sanitizedUnit = this.securityService?.sanitizeInput(sensorData.unit) || sensorData.unit;
+        if (allowedUnits.includes(sanitizedUnit)) {
+          sanitized.unit = sanitizedUnit;
+        }
+      }
+
+      // Sanitize status
+      if (typeof sensorData.status === 'string') {
+        const allowedStatuses = ['normal', 'warning', 'critical', 'error'];
+        const sanitizedStatus = this.securityService?.sanitizeInput(sensorData.status) || sensorData.status;
+        if (allowedStatuses.includes(sanitizedStatus)) {
+          sanitized.status = sanitizedStatus;
+        }
+      }
+
+      return Object.keys(sanitized).length > 0 ? sanitized : null;
+    },
+
+    performSecurityChecks() {
+      // Check for suspicious activity patterns
+      if (this.sensorAccessAttempts > 30 || this.dataValidationErrors > 10) {
+        this.suspiciousActivityCount++;
+        this.securityService?.logAuditEvent('PRESSURE_PANEL_SUSPICIOUS_ACTIVITY', {
+          accessAttempts: this.sensorAccessAttempts,
+          validationErrors: this.dataValidationErrors,
+          suspiciousCount: this.suspiciousActivityCount,
+          timestamp: new Date().toISOString()
+        });
+      }
+      
+      // Reset counters periodically to prevent false positives
+      const resetInterval = 30 * 60 * 1000; // 30 minutes
+      if (Date.now() - this.monitoringStartTime > resetInterval) {
+        this.sensorAccessAttempts = Math.floor(this.sensorAccessAttempts / 2);
+        this.dataValidationErrors = Math.floor(this.dataValidationErrors / 2);
+      }
     }
   },
   
   async mounted() {
     console.log('PressurePanel component mounted successfully');
     this.updateTime();
+
+    // Initialize SecurityService for comprehensive security features
+    try {
+      this.securityService = getSecurityService();
+      
+      // Log pressure panel component initialization for audit trail
+      this.securityService.logAuditEvent('PRESSURE_PANEL_INIT', {
+        pressureDataKeys: Object.keys(this.realTimePressureData),
+        alertThresholds: this.alertThresholds,
+        timestamp: new Date().toISOString(),
+        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'
+      });
+
+      // Set up security monitoring
+      this.securityMonitorInterval = setInterval(() => {
+        this.performSecurityChecks();
+      }, 3 * 60 * 1000); // Check every 3 minutes
+
+    } catch (error) {
+      console.error('Failed to initialize SecurityService in PressurePanel:', error);
+      // Fallback mode without enhanced security features
+      this.securityService = null;
+    }
     
     // Initialize WebSocket connection for real-time monitoring
     await this.initializeWebSocket();
@@ -548,10 +753,24 @@ export default {
       }
     });
     
+    // Clean up security monitoring
+    if (this.securityMonitorInterval) {
+      clearInterval(this.securityMonitorInterval);
+    }
+    
     // Clear time update interval
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
     }
+
+    // Log pressure panel cleanup for audit trail
+    this.securityService?.logAuditEvent('PRESSURE_PANEL_CLEANUP', {
+      monitoringDuration: Date.now() - this.monitoringStartTime,
+      sensorAccessAttempts: this.sensorAccessAttempts,
+      dataValidationErrors: this.dataValidationErrors,
+      suspiciousActivityCount: this.suspiciousActivityCount,
+      timestamp: new Date().toISOString()
+    });
     
     console.log('✅ PressurePanel cleanup completed');
   }
