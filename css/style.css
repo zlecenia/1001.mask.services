@@ -923,7 +923,7 @@ button:active {
     bottom: 0;
     width: 2px;
     background: #111222;
-    transition: height 0.3s ease;
+    transition: height 0.3s;
 }
 
 .pressure-chart-container {
@@ -1602,14 +1602,8 @@ button:active {
 }
 
 @keyframes slideIn {
-    from {
-        transform: translateX(100%);
-        opacity: 0;
-    }
-    to {
-        transform: translateX(0);
-        opacity: 1;
-    }
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
 }
 
 /* Responsive Design Improvements */
@@ -2179,4 +2173,13 @@ button:active {
     }
 }
 
+/* Font Awesome optimization to reduce glyph warnings */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+/* Font loading optimization */
+.fas, .far, .fal, .fab, .fa {
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
