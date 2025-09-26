@@ -427,6 +427,20 @@ export default {
     },
     updateDateTime() {
       this.currentDateTime = new Date().toLocaleString(this.currentLanguage);
+    },
+    handleResize() {
+      // Handle window resize events for responsive design
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+      
+      // Adjust layout based on window size
+      if (width < 1280 || height < 400) {
+        this.isFullscreen = true;
+      } else {
+        this.isFullscreen = false;
+      }
+      
+      this.$emit('resize', { width, height });
     }
   },
   mounted() {
