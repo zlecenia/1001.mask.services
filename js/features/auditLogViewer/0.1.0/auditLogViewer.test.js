@@ -201,6 +201,9 @@ describe('AuditLogViewer Component', () => {
     });
 
     it('should clear filters when reset', async () => {
+      // Ensure audit logs are loaded
+      expect(wrapper.vm.auditLogs).toHaveLength(5);
+      
       await wrapper.setData({ 
         searchTerm: 'test',
         selectedEventType: 'LOGIN_FORM_SUCCESS',
@@ -281,7 +284,9 @@ describe('AuditLogViewer Component', () => {
     });
 
     it('should calculate security alerts count', () => {
-      expect(wrapper.vm.securityAlerts).toBe(2); // LOGIN_FORM_FAILED and SECURITY_EXCESSIVE_REQUESTS
+      // Should count events with 'error' or 'critical' severity
+      // LOGIN_FORM_FAILED (error), SECURITY_EXCESSIVE_REQUESTS (error), LOGIN_FORM_ERROR (error)
+      expect(wrapper.vm.securityAlerts).toBe(3);
     });
 
     it('should update statistics when filters change', async () => {
@@ -305,6 +310,9 @@ describe('AuditLogViewer Component', () => {
     });
 
     it('should export logs as CSV', () => {
+      // Ensure we have audit logs loaded
+      expect(wrapper.vm.auditLogs).toHaveLength(5);
+      
       // Mock URL.createObjectURL and document.createElement
       global.URL.createObjectURL = vi.fn(() => 'mock-url');
       global.URL.revokeObjectURL = vi.fn();
@@ -323,6 +331,9 @@ describe('AuditLogViewer Component', () => {
     });
 
     it('should log export event', () => {
+      // Clear previous audit event calls from component initialization
+      mockSecurityService.logAuditEvent.mockClear();
+      
       // Mock export functionality
       global.URL.createObjectURL = vi.fn(() => 'mock-url');
       global.URL.revokeObjectURL = vi.fn();
@@ -389,6 +400,12 @@ describe('AuditLogViewer Component', () => {
   });
 
   describe('Real-time Updates', () => {
+    beforeEach(async () => {
+      // Ensure data is loaded
+      wrapper.vm.auditLogs = [...sampleAuditLogs];
+      await wrapper.vm.$nextTick();
+    });
+    
     it('should refresh logs automatically', () => {
       expect(wrapper.vm.refreshInterval).toBeTruthy();
     });
@@ -402,6 +419,9 @@ describe('AuditLogViewer Component', () => {
     });
 
     it('should log refresh events', async () => {
+      // Clear previous calls from component initialization
+      mockSecurityService.logAuditEvent.mockClear();
+      
       await wrapper.vm.refreshLogs();
       
       expect(mockSecurityService.logAuditEvent).toHaveBeenCalledWith(
@@ -435,13 +455,19 @@ describe('AuditLogViewer Component', () => {
     });
 
     it('should handle missing SecurityService', async () => {
+      // Temporarily override global function to return null
+      const originalGetSecurityService = global.getSecurityService;
       global.getSecurityService = vi.fn(() => null);
       
       const newWrapper = mount(AuditLogViewer, {
         global: { mocks: { $t: key => key } }
       });
       
+      await newWrapper.vm.$nextTick();
       expect(newWrapper.vm.securityService).toBe(null);
+      
+      // Restore original function
+      global.getSecurityService = originalGetSecurityService;
       newWrapper.unmount();
     });
   });
@@ -474,7 +500,11 @@ describe('AuditLogViewer Component', () => {
       // Additional ARIA testing would go here
     });
 
-    it('should support keyboard navigation', () => {
+    it('should support keyboard navigation', async () => {
+      // Ensure we have data loaded first
+      wrapper.vm.auditLogs = [...sampleAuditLogs];
+      await wrapper.vm.$nextTick();
+      
       const table = wrapper.find('.logs-table');
       expect(table.exists()).toBe(true);
       // Additional keyboard navigation testing would go here
