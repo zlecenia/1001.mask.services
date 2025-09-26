@@ -4,8 +4,10 @@ export default {
   metadata: {
     name: 'appFooter',
     version: '0.1.0',
+    type: 'component',
     displayName: 'App Footer',
     description: 'Footer component with system info, timestamps, and 7.9" display optimization',
+    dependencies: ['vue', 'vuex', 'vue-i18n'],
     initialized: false
   },
   
@@ -13,7 +15,7 @@ export default {
   
   async init(context = {}) {
     this.metadata.initialized = true;
-    return true;
+    return { success: true };
   },
   
   handle(request = {}) {

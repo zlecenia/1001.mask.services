@@ -273,42 +273,60 @@ describe('AppFooter Module', () => {
 
   // TEST PROPS VALIDATION I WARTOŚCI DOMYŚLNYCH
   describe('Props Validation and Defaults', () => {
-    it('should display buildInfo with translation fallback behavior', async () => {
-      // Test how template handles translation vs prop values
-      await wrapper.setProps({ 
-        buildInfo: {
-          version: '5.0.0',
-          buildNumber: '2024.999',
-          timestamp: '2024-12-31T23:59:59Z'
+    it('should use default systemInfo values when props not provided', async () => {
+      const wrapperWithDefaults = mount(appFooterModule.component, {
+        global: {
+          mocks: {
+            $t: mockI18n.global.t,
+            $store: mockStore
+          }
         }
       });
       
-      const buildInfoEl = wrapper.find('.footer-build-info');
-      expect(buildInfoEl.text()).toContain('5.0.0');
-      expect(buildInfoEl.text()).toContain('2024.999');
+      const versionEl = wrapperWithDefaults.find('.version');
+      const environmentEl = wrapperWithDefaults.find('.environment');
+      expect(versionEl.text()).toBe('v3.0');
+      expect(environmentEl.text()).toBe('development');
+      
+      wrapperWithDefaults.unmount();
     });
 
-    it('should handle offline device status correctly', async () => {
-      await wrapper.setProps({ deviceStatus: 'OFFLINE' });
+    it('should use default currentUser values when props not provided', async () => {
+      const wrapperWithDefaults = mount(appFooterModule.component, {
+        global: {
+          mocks: {
+            $t: mockI18n.global.t,
+            $store: mockStore
+          }
+        }
+      });
       
-      const statusIndicator = wrapper.find('.footer-status');
-      expect(statusIndicator.classes()).toContain('offline');
+      const userNameEl = wrapperWithDefaults.find('.user-name');
+      const userRoleEl = wrapperWithDefaults.find('.user-role');
+      expect(userNameEl.text()).toBe('Guest');
+      expect(userRoleEl.text()).toBe('OPERATOR');
+      
+      wrapperWithDefaults.unmount();
     });
 
-    it('should validate deviceStatus prop values', async () => {
-      const validStatuses = ['ONLINE', 'OFFLINE', 'CONNECTING'];
+    it('should validate user roles and apply correct styling', async () => {
+      const validRoles = ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'];
       
-      for (const status of validStatuses) {
-        await wrapper.setProps({ deviceStatus: status });
-        expect(wrapper.props('deviceStatus')).toBe(status);
+      for (const role of validRoles) {
+        await wrapper.setProps({ 
+          currentUser: { name: 'TestUser', role: role }
+        });
+        
+        const userRoleEl = wrapper.find('.user-role');
+        expect(userRoleEl.text()).toBe(role);
+        expect(userRoleEl.classes()).toContain(role.toLowerCase());
       }
     });
 
-    it('should handle missing buildInfo gracefully', async () => {
-      await wrapper.setProps({ buildInfo: null });
+    it('should handle missing systemInfo gracefully', async () => {
+      await wrapper.setProps({ systemInfo: null });
       
-      const buildInfoEl = wrapper.find('.footer-build-info');
-      // Component should handle null buildInfo without crashing
+      // Component should handle null systemInfo without crashing
       expect(wrapper.exists()).toBe(true);
     });
   });
