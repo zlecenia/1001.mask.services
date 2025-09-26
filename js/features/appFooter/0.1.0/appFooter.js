@@ -25,11 +25,11 @@ const template = `
   
   <div class="footer-right">
     <div class="footer-status" :class="statusClass">
-      <span class="status-text">{{ $t(`footer.status.${deviceStatus.toLowerCase()}`) || deviceStatus || $t('footer.status.online') }}</span>
+      <span class="status-text">{{ $t('footer.status.' + deviceStatus.toLowerCase()) || deviceStatus || $t('footer.status.online') }}</span>
     </div>
     <span class="user-info footer-info">
       <span class="user-name">{{ currentUser.name }}</span>
-      <span class="user-role" :class="currentUser.role.toLowerCase()">{{ $t(`footer.role.${currentUser.role.toLowerCase()}`) || currentUser.role }}</span>
+      <span class="user-role" :class="currentUser.role.toLowerCase()">{{ $t('footer.role.' + currentUser.role.toLowerCase()) || currentUser.role }}</span>
     </span>
   </div>
 </footer>`;

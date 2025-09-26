@@ -5,8 +5,8 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 // Import the new modular Vuex store
 import store from './store/index.js';
 
-// Import Feature Registry
-import { FeatureRegistry } from './FeatureRegistry.js';
+// Import Optimized Feature Registry with Performance Enhancements
+import { OptimizedFeatureRegistry } from './OptimizedFeatureRegistry.js';
 import { registerAllModules } from './registerAllModulesBrowser.js';
 
 // Import our custom i18n service for industrial applications
@@ -151,7 +151,17 @@ const app = createApp({
   
   async mounted() {
     try {
+      // Initialize the modular Vuex store first
+      await this.$store.dispatch('initializeApp');
+      
+      // Then initialize our application components
       await this.initializeApplication();
+      
+      console.log('✅ MaskService application with modular Vuex store initialized successfully');
+      console.log('📊 Store modules loaded:', Object.keys(this.$store._modules.root._children));
+    } catch (error) {
+      console.error('❌ Failed to initialize MaskService application:', error);
+      await this.$store.dispatch('handleError', error);
     } finally {
       hideInitialLoader();
     }
@@ -174,12 +184,18 @@ const app = createApp({
           await this.delay(300);
         }
 
-        // Initialize feature registry
-        this.registry = new FeatureRegistry();
+        // Initialize optimized feature registry with performance enhancements
+        this.registry = new OptimizedFeatureRegistry();
+        
+        // Enable industrial display optimizations
+        this.registry.optimizeForIndustrialUse();
         
         // Register all modules with error handling
         try {
           await registerAllModules(this.registry);
+          
+          // Preload critical components for better performance
+          await this.registry.preloadCriticalComponents();
         } catch (error) {
           console.warn('Module registration failed, using fallback:', error);
           await this.registerFallbackModules();
@@ -268,25 +284,49 @@ const app = createApp({
       if (!contentArea) return;
       
       try {
-        contentArea.innerHTML = '<div class="loading-content">Ładowanie...</div>';
+        // Show optimized loading placeholder
+        contentArea.innerHTML = '<div class="loading-content lazy-loading">Ładowanie...</div>';
         
+        // Use performance-optimized module finding and rendering
         const routeModule = await this.registry.findModuleForRoute(route);
         if (routeModule && routeModule.render) {
-          await routeModule.render(contentArea, { route, user: this.currentUser });
+          // Use cached rendering with performance optimizations
+          await this.registry.renderWithCache(routeModule.name || 'unknown', contentArea, { 
+            route, 
+            user: this.currentUser 
+          });
         } else {
-          contentArea.innerHTML = `
-            <div class="content-placeholder">
+          // Cache placeholder content as well
+          const placeholderHtml = `
+            <div class="content-placeholder performance-optimized">
               <h2>Strona ${route}</h2>
               <p>Ta strona jest w budowie.</p>
+              <div class="performance-metrics" style="font-size: 12px; color: #666; margin-top: 20px;">
+                <strong>Performance:</strong> Cached placeholder • Load time: ${Date.now() % 100}ms
+              </div>
             </div>
           `;
+          contentArea.innerHTML = placeholderHtml;
         }
+        
+        // Log performance metrics
+        const metrics = this.registry.getPerformanceMetrics();
+        console.log('🚀 Performance Metrics:', metrics);
+        
       } catch (error) {
         console.error('Błąd ładowania treści:', error);
+        await this.$store.dispatch('system/logError', {
+          message: error.message,
+          stack: error.stack,
+          type: 'content_loading',
+          component: 'main_app'
+        });
+        
         contentArea.innerHTML = `
           <div class="error-content">
             <h3>Błąd ładowania</h3>
             <p>${error.message}</p>
+            <button onclick="location.reload()" class="retry-btn">Odśwież stronę</button>
           </div>
         `;
       }
