@@ -44,11 +44,15 @@ describe('AppFooter Module', () => {
     const Component = appFooterModule.component;
     wrapper = mount(Component, {
       props: {
-        systemInfo: {
-          version: 'v3.0.0',
-          buildDate: '2024-01-15',
-          environment: 'development'
+        deviceInfo: {
+          name: 'TEST_DEVICE',
+          model: 'C20'
         },
+        buildInfo: {
+          version: '3.0.0',
+          buildNumber: '2024.001'
+        },
+        deviceStatus: 'ONLINE',
         currentUser: {
           name: 'TestUser',
           role: 'OPERATOR'
@@ -105,13 +109,24 @@ describe('AppFooter Module', () => {
       expect(wrapper.find('.app-footer').exists()).toBe(true);
     });
 
-    it('should display system information', () => {
-      const systemInfoEl = wrapper.find('.system-info');
-      expect(systemInfoEl.exists()).toBe(true);
+    it('should display device information', () => {
+      const deviceInfoEl = wrapper.find('.footer-device-info');
+      expect(deviceInfoEl.exists()).toBe(true);
+      
+      const deviceNameEl = wrapper.find('.device-name');
+      const deviceModelEl = wrapper.find('.device-model');
+      expect(deviceNameEl.text()).toBe('TEST_DEVICE');
+      expect(deviceModelEl.text()).toBe('C20');
+    });
+
+    it('should display build information', () => {
+      const buildInfoEl = wrapper.find('.footer-build-info');
+      expect(buildInfoEl.exists()).toBe(true);
       
       const versionEl = wrapper.find('.version');
-      expect(versionEl.exists()).toBe(true);
-      expect(versionEl.text()).toBe('v3.0.0');
+      const buildNumberEl = wrapper.find('.build-number');
+      expect(versionEl.text()).toBe('3.0.0');
+      expect(buildNumberEl.text()).toBe('2024.001');
     });
 
     it('should display user information', () => {
@@ -128,6 +143,19 @@ describe('AppFooter Module', () => {
       const timeEl = wrapper.find('.current-time');
       expect(timeEl.exists()).toBe(true);
       expect(timeEl.text()).toBeDefined();
+    });
+
+    it('should display copyright information', () => {
+      const copyrightEl = wrapper.find('.footer-copyright');
+      expect(copyrightEl.exists()).toBe(true);
+      expect(copyrightEl.text()).toContain('© 2025 MASKTRONIC');
+    });
+
+    it('should display device status', () => {
+      const statusEl = wrapper.find('.footer-status');
+      const statusTextEl = wrapper.find('.status-text');
+      expect(statusEl.exists()).toBe(true);
+      expect(statusTextEl.text()).toBe('ONLINE');
     });
 
     it('should have correct CSS classes for styling', () => {
