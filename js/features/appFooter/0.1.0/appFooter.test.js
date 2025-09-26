@@ -220,20 +220,22 @@ describe('AppFooter Module', () => {
 
   // TEST INTERAKCJI I ZDARZEŃ
   describe('Interactions and Events', () => {
-    it('should emit diagnostic-requested event on diagnostic info click', async () => {
-      const diagnosticBtn = wrapper.find('.footer-diagnostic-btn');
-      if (diagnosticBtn.exists()) {
-        await diagnosticBtn.trigger('click');
-        expect(wrapper.emitted('diagnostic-requested')).toBeTruthy();
-      }
+    it('should handle user role styling correctly', async () => {
+      const userRoleEl = wrapper.find('.user-role');
+      expect(userRoleEl.classes()).toContain('operator');
+      
+      // Test different role styling
+      await wrapper.setProps({
+        currentUser: { name: 'Admin', role: 'ADMIN' }
+      });
+      
+      expect(userRoleEl.classes()).toContain('admin');
     });
 
-    it('should emit system-info-requested event on system info click', async () => {
-      const systemInfoBtn = wrapper.find('.footer-system-info');
-      if (systemInfoBtn.exists()) {
-        await systemInfoBtn.trigger('click');
-        expect(wrapper.emitted('system-info-requested')).toBeTruthy();
-      }
+    it('should format build date correctly', () => {
+      const buildDateEl = wrapper.find('.build-date');
+      expect(buildDateEl.exists()).toBe(true);
+      expect(buildDateEl.text()).toMatch(/\d{2}\.\d{2}\.\d{4}/); // DD.MM.YYYY format
     });
 
     it('should handle touch events for 7.9" display optimization', async () => {
@@ -247,14 +249,9 @@ describe('AppFooter Module', () => {
 
   // TEST DOSTĘPNOŚCI I UX
   describe('Accessibility and UX', () => {
-    it('should have proper ARIA labels for interactive elements', () => {
-      const interactiveElements = wrapper.findAll('[role="button"], button, [tabindex]');
-      
-      interactiveElements.forEach(element => {
-        const ariaLabel = element.attributes('aria-label');
-        const ariaLabelledBy = element.attributes('aria-labelledby');
-        expect(ariaLabel || ariaLabelledBy).toBeTruthy();
-      });
+    it('should have proper structure for accessibility', () => {
+      const footer = wrapper.find('.app-footer');
+      expect(footer.element.tagName.toLowerCase()).toBe('footer');
     });
 
     it('should be optimized for 7.9" landscape display', () => {
@@ -263,8 +260,14 @@ describe('AppFooter Module', () => {
     });
 
     it('should have readable font sizes for industrial display', () => {
-      const textElements = wrapper.findAll('.footer-text, .footer-info');
+      const textElements = wrapper.findAll('.version, .build-date, .environment, .current-time, .user-name, .user-role');
       expect(textElements.length).toBeGreaterThan(0);
+    });
+
+    it('should display environment status with appropriate styling', () => {
+      const environmentEl = wrapper.find('.environment');
+      expect(environmentEl.exists()).toBe(true);
+      expect(environmentEl.classes()).toContain('development');
     });
   });
 

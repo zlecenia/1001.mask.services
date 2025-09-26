@@ -202,6 +202,64 @@ class FeatureRegistry {
   }
 
   /**
+   * Find a module that can handle a specific route
+   * @param {string} route - Route path (e.g., '/', '/users', '/settings')
+   * @returns {Promise<object|null>} Module that can handle the route, or null
+   */
+  async findModuleForRoute(route) {
+    // Try to find modules that have route handling capabilities
+    for (const [name] of this.versions.entries()) {
+      try {
+        const module = await this.load(name, 'latest');
+        
+        // Check if module has route handling capability
+        if (module && typeof module.canHandleRoute === 'function') {
+          if (await module.canHandleRoute(route)) {
+            return module;
+          }
+        }
+        
+        // Fallback: check if module has specific route mapping
+        if (module && module.routes && Array.isArray(module.routes)) {
+          if (module.routes.includes(route)) {
+            return module;
+          }
+        }
+        
+        // Default route handling for basic paths
+        if (module && module.name) {
+          // Handle basic route mapping
+          const routeModuleMap = {
+            '/': 'pageTemplate',
+            '/home': 'pageTemplate', 
+            '/dashboard': 'pageTemplate',
+            '/menu': 'mainMenu',
+            '/login': 'loginForm',
+            '/users': 'pageTemplate',
+            '/settings': 'pageTemplate',
+            '/status': 'pageTemplate'
+          };
+          
+          if (routeModuleMap[route] === module.name) {
+            return module;
+          }
+        }
+      } catch (error) {
+        // Continue to next module if this one fails to load
+        console.warn(`Failed to load module ${name} for route matching:`, error);
+      }
+    }
+    
+    // If no specific module found, try to return pageTemplate as default
+    try {
+      return await this.load('pageTemplate', 'latest');
+    } catch (error) {
+      console.warn('Could not load default pageTemplate module:', error);
+      return null;
+    }
+  }
+
+  /**
    * Clear all registrations (for testing)
    */
   clear() {
