@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createApp } from 'vue';
+import { createApp, reactive } from 'vue';
 
 // Import the module
 import pageTemplateModule from './index.js';
@@ -18,9 +18,9 @@ describe('PageTemplate Module', () => {
   let mockRouter;
 
   beforeEach(() => {
-    // Mock Vuex store
+    // Mock Vuex store using Vue reactive system for proper reactivity
     mockStore = {
-      state: {
+      state: reactive({
         user: {
           role: 'OPERATOR',
           name: 'Test User'
@@ -32,7 +32,7 @@ describe('PageTemplate Module', () => {
             differential: 7.2
           }
         }
-      },
+      }),
       commit: vi.fn(),
       dispatch: vi.fn()
     };
