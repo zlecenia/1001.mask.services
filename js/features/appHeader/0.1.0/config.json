@@ -1,1 +1,111 @@
-{}
+{
+  "component": {
+    "name": "appHeader",
+    "displayName": "App Header",
+    "type": "layout",
+    "category": "ui-component"
+  },
+  "ui": {
+    "layout": {
+      "height": 40,
+      "position": "fixed",
+      "background": "#2c3e50",
+      "color": "#ffffff",
+      "fontSize": "13px",
+      "padding": "0 16px"
+    },
+    "sections": {
+      "left": {
+        "logo": {
+          "enabled": true,
+          "text": "MASKSERVICE C20",
+          "fontSize": "14px",
+          "fontWeight": "bold"
+        }
+      },
+      "center": {
+        "deviceStatus": {
+          "enabled": true,
+          "showIcon": true,
+          "showText": true,
+          "defaultStatus": "OFFLINE",
+          "statusColors": {
+            "ONLINE": "#27ae60",
+            "OFFLINE": "#e74c3c",
+            "CONNECTING": "#f39c12"
+          }
+        },
+        "deviceInfo": {
+          "enabled": true,
+          "showName": true,
+          "showType": true,
+          "showUrl": true,
+          "format": "Device: {name}.{type}.{url}"
+        }
+      },
+      "right": {
+        "languageSelector": {
+          "enabled": true,
+          "availableLanguages": ["pl", "en", "de"],
+          "defaultLanguage": "pl",
+          "showFlags": true
+        },
+        "userActions": {
+          "enabled": true,
+          "showUserName": false,
+          "showLogout": false
+        }
+      }
+    }
+  },
+  "data": {
+    "deviceStatus": "OFFLINE",
+    "deviceInfo": {
+      "name": "CONNECT",
+      "type": "500",
+      "url": "c201001.mask.services"
+    },
+    "currentLanguage": "pl",
+    "connectionInfo": {
+      "lastPing": null,
+      "latency": null,
+      "quality": "unknown"
+    }
+  },
+  "languages": {
+    "pl": {
+      "name": "Polski",
+      "flag": "🇵🇱",
+      "code": "pl"
+    },
+    "en": {
+      "name": "English", 
+      "flag": "🇬🇧",
+      "code": "en"
+    },
+    "de": {
+      "name": "Deutsch",
+      "flag": "🇩🇪", 
+      "code": "de"
+    }
+  },
+  "responsive": {
+    "display79": {
+      "enabled": true,
+      "maxWidth": "1280px",
+      "maxHeight": "400px",
+      "optimizations": ["compact-layout", "reduced-padding"]
+    }
+  },
+  "accessibility": {
+    "ariaLabels": true,
+    "keyboardNavigation": true,
+    "highContrast": false,
+    "screenReader": true
+  },
+  "performance": {
+    "statusUpdateInterval": 5000,
+    "enableCaching": true,
+    "lazyLoading": false
+  }
+}

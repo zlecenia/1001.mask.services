@@ -10,18 +10,18 @@ const template = `
   <header class="page-header">
     <div class="header-left">
       <img src="/favicon.ico" alt="MASKSERVICE" class="logo">
-      <h1 class="system-title">{{ title || 'MASKSERVICE C20 1001' }}</h1>
+      <h1 class="system-title">{{ title || $t('global.system_title') || 'MASKSERVICE C20 1001' }}</h1>
     </div>
     <div class="header-center">
       <div class="connection-status" :class="connectionStatus">
         <i class="status-icon"></i>
-        <span>{{ connectionText }}</span>
+        <span>{{ $t(`global.${connectionStatus}`) || connectionText }}</span>
       </div>
     </div>
     <div class="header-right">
       <div class="device-info">
         <span class="device-id">{{ deviceId }}</span>
-        <span class="device-status">{{ deviceStatus }}</span>
+        <span class="device-status">{{ $t(`global.${deviceStatus.toLowerCase()}`) || deviceStatus }}</span>
       </div>
     </div>
   </header>
@@ -67,8 +67,8 @@ const template = `
       <div class="content-area page-content">
         <slot name="default">
           <div class="placeholder-content">
-            <h3>{{ contentTitle }}</h3>
-            <p>{{ contentDescription }}</p>
+            <h3>{{ $t('pageTemplate.content_title') || contentTitle }}</h3>
+            <p>{{ $t('pageTemplate.content_description') || contentDescription }}</p>
           </div>
         </slot>
       </div>
@@ -82,16 +82,16 @@ const template = `
     </div>
     <div class="footer-center">
       <div class="language-selector">
-        <select v-model="currentLanguage" @change="changeLanguage">
-          <option value="pl">Polski</option>
-          <option value="en">English</option>
-          <option value="de">Deutsch</option>
+        <select v-model="currentLanguage" @change="changeLanguage" :title="$t('pageTemplate.language_selector')">
+          <option value="pl">{{ $t('global.languages.pl') || 'Polski' }}</option>
+          <option value="en">{{ $t('global.languages.en') || 'English' }}</option>
+          <option value="de">{{ $t('global.languages.de') || 'Deutsch' }}</option>
         </select>
       </div>
     </div>
     <div class="footer-right">
       <span class="datetime">{{ currentDateTime }}</span>
-      <button @click="logout" class="logout-btn">{{ $t('common.logout') }}</button>
+      <button @click="logout" class="logout-btn">{{ $t('global.logout') || $t('common.logout') }}</button>
     </div>
   </footer>
 </div>

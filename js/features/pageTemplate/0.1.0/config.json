@@ -1,1 +1,170 @@
-{}
+{
+  "component": {
+    "name": "pageTemplate",
+    "displayName": "Page Template",
+    "type": "layout",
+    "category": "ui-component"
+  },
+  "ui": {
+    "layout": {
+      "type": "grid",
+      "areas": {
+        "header": "app-header",
+        "sidebar": "main-menu", 
+        "content": "content-area",
+        "footer": "app-footer",
+        "pressurePanel": "pressure-panel"
+      },
+      "gridTemplate": {
+        "rows": "40px 1fr 30px",
+        "columns": "180px 1fr 120px",
+        "areas": [
+          "header header header",
+          "sidebar content pressurePanel",
+          "footer footer footer"
+        ]
+      }
+    },
+    "contentArea": {
+      "background": "#f8f9fa",
+      "padding": "16px",
+      "overflow": "auto",
+      "minHeight": "calc(100vh - 70px)"
+    },
+    "transitions": {
+      "enabled": true,
+      "duration": "0.3s",
+      "easing": "ease-in-out"
+    }
+  },
+  "components": {
+    "header": {
+      "component": "appHeader",
+      "enabled": true,
+      "props": {
+        "showDeviceStatus": true,
+        "showLanguageSelector": true
+      }
+    },
+    "sidebar": {
+      "component": "mainMenu", 
+      "enabled": true,
+      "props": {
+        "collapsible": false,
+        "showIcons": true
+      }
+    },
+    "content": {
+      "component": "dynamic",
+      "enabled": true,
+      "props": {
+        "routeContent": true,
+        "errorBoundary": true
+      }
+    },
+    "footer": {
+      "component": "appFooter",
+      "enabled": true,
+      "props": {
+        "showSystemInfo": true,
+        "showUserInfo": false,
+        "showDeviceStatus": true
+      }
+    },
+    "pressurePanel": {
+      "component": "pressurePanel",
+      "enabled": true,
+      "props": {
+        "realTimeUpdates": true,
+        "showAlerts": true
+      }
+    }
+  },
+  "routing": {
+    "defaultRoute": "/dashboard",
+    "errorRoute": "/error",
+    "loginRoute": "/login",
+    "routes": {
+      "/": "/dashboard",
+      "/dashboard": "dashboard-view",
+      "/monitoring": "monitoring-view",
+      "/tests": "tests-view",
+      "/reports": "reports-view",
+      "/users": "users-view",
+      "/system": "system-view",
+      "/service": "service-view",
+      "/calibration": "calibration-view",
+      "/diagnostics": "diagnostics-view",
+      "/workshop": "workshop-view"
+    }
+  },
+  "data": {
+    "currentRoute": "/dashboard",
+    "layoutState": {
+      "sidebarCollapsed": false,
+      "pressurePanelVisible": true,
+      "fullscreenMode": false
+    },
+    "contentProps": {},
+    "errorState": {
+      "hasError": false,
+      "errorMessage": null,
+      "errorCode": null
+    }
+  },
+  "responsive": {
+    "display79": {
+      "enabled": true,
+      "maxWidth": "1280px",
+      "maxHeight": "400px",
+      "optimizations": ["fixed-layout", "touch-friendly", "compact-spacing"]
+    },
+    "breakpoints": {
+      "mobile": {
+        "maxWidth": "400px",
+        "layout": "mobile-stack"
+      },
+      "tablet": {
+        "maxWidth": "768px", 
+        "layout": "tablet-responsive"
+      },
+      "desktop": {
+        "minWidth": "1024px",
+        "layout": "desktop-grid"
+      }
+    },
+    "adaptiveLayout": {
+      "enabled": true,
+      "autoCollapse": true,
+      "touchOptimization": true
+    }
+  },
+  "accessibility": {
+    "ariaLabels": true,
+    "keyboardNavigation": true,
+    "skipLinks": true,
+    "landmarks": true,
+    "highContrast": false,
+    "screenReader": true,
+    "focusManagement": true
+  },
+  "performance": {
+    "enableCaching": true,
+    "lazyLoading": true,
+    "prefetchRoutes": false,
+    "componentCaching": true,
+    "virtualScrolling": false
+  },
+  "security": {
+    "validateRoutes": true,
+    "requireAuthentication": true,
+    "roleBasedAccess": true,
+    "auditNavigation": true
+  },
+  "errorHandling": {
+    "enableErrorBoundary": true,
+    "fallbackComponent": "error-fallback",
+    "logErrors": true,
+    "retryAttempts": 3
+  }
+}

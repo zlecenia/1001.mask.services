@@ -1,1 +1,111 @@
-{}
+{
+  "component": {
+    "name": "appFooter",
+    "displayName": "App Footer",
+    "type": "layout",
+    "category": "ui-component"
+  },
+  "ui": {
+    "layout": {
+      "height": 30,
+      "position": "fixed",
+      "background": "#2c3e50",
+      "color": "#ffffff",
+      "fontSize": "10px",
+      "padding": "0 16px"
+    },
+    "sections": {
+      "left": {
+        "copyright": {
+          "enabled": true,
+          "text": "© 2024 MASKTRONIC",
+          "fontSize": "10px"
+        },
+        "deviceInfo": {
+          "enabled": true,
+          "showName": true,
+          "showModel": true,
+          "defaultName": "TEST_DEVICE",
+          "defaultModel": "C20"
+        },
+        "systemInfo": {
+          "enabled": true,
+          "showVersion": true,
+          "showBuildDate": true,
+          "showEnvironment": true
+        }
+      },
+      "center": {
+        "buildInfo": {
+          "enabled": true,
+          "showBuildNumber": true,
+          "defaultVersion": "3.0.0",
+          "defaultBuildNumber": "2024.001"
+        },
+        "currentTime": {
+          "enabled": true,
+          "format": "HH:mm:ss",
+          "updateInterval": 1000
+        }
+      },
+      "right": {
+        "deviceStatus": {
+          "enabled": true,
+          "defaultStatus": "ONLINE",
+          "statusColors": {
+            "ONLINE": "#27ae60",
+            "OFFLINE": "#e74c3c",
+            "CONNECTING": "#f39c12",
+            "ERROR": "#c0392b"
+          }
+        },
+        "userInfo": {
+          "enabled": true,
+          "showName": true,
+          "showRole": true,
+          "defaultName": "Guest",
+          "defaultRole": "OPERATOR"
+        }
+      }
+    }
+  },
+  "data": {
+    "systemInfo": {
+      "version": "v3.0",
+      "buildDate": "2024-01-26",
+      "environment": "development"
+    },
+    "deviceInfo": {
+      "name": "TEST_DEVICE",
+      "model": "C20"
+    },
+    "buildInfo": {
+      "version": "3.0.0",
+      "buildNumber": "2024.001"
+    },
+    "currentUser": {
+      "name": "Guest",
+      "role": "OPERATOR"
+    },
+    "deviceStatus": "ONLINE"
+  },
+  "responsive": {
+    "display79": {
+      "enabled": true,
+      "maxWidth": "1280px",
+      "maxHeight": "400px",
+      "optimizations": ["compact-spacing", "reduced-padding"]
+    }
+  },
+  "accessibility": {
+    "ariaLabels": true,
+    "keyboardNavigation": true,
+    "highContrast": false,
+    "screenReader": true
+  },
+  "performance": {
+    "updateInterval": 1000,
+    "enableCaching": true,
+    "lazyLoading": false
+  }
+}

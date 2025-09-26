@@ -1,1 +1,210 @@
-{}
+{
+  "component": {
+    "name": "pressurePanel",
+    "displayName": "Pressure Panel",
+    "type": "monitoring",
+    "category": "ui-component"
+  },
+  "ui": {
+    "layout": {
+      "width": 120,
+      "background": "#ffffff",
+      "borderLeft": "1px solid #ddd",
+      "fontSize": "10px",
+      "padding": "8px"
+    },
+    "gauges": {
+      "size": "80px",
+      "strokeWidth": 4,
+      "backgroundColor": "#f8f9fa",
+      "textColor": "#212529",
+      "spacing": "12px"
+    },
+    "alerts": {
+      "fontSize": "9px",
+      "padding": "4px 6px",
+      "borderRadius": "3px",
+      "colors": {
+        "normal": "#28a745",
+        "warning": "#ffc107",
+        "critical": "#dc3545",
+        "unknown": "#6c757d"
+      }
+    },
+    "indicators": {
+      "size": "12px",
+      "blinkDuration": "1s",
+      "spacing": "4px"
+    }
+  },
+  "sensors": {
+    "pressure1": {
+      "label": "P1",
+      "unit": "bar",
+      "minValue": 0,
+      "maxValue": 10,
+      "normalRange": {
+        "min": 2,
+        "max": 8
+      },
+      "warningRange": {
+        "min": 1.5,
+        "max": 9
+      },
+      "criticalRange": {
+        "min": 0,
+        "max": 10
+      },
+      "enabled": true,
+      "position": 1
+    },
+    "pressure2": {
+      "label": "P2",
+      "unit": "bar",
+      "minValue": 0,
+      "maxValue": 5,
+      "normalRange": {
+        "min": 1,
+        "max": 4
+      },
+      "warningRange": {
+        "min": 0.5,
+        "max": 4.5
+      },
+      "criticalRange": {
+        "min": 0,
+        "max": 5
+      },
+      "enabled": true,
+      "position": 2
+    },
+    "pressure3": {
+      "label": "P3",
+      "unit": "mbar",
+      "minValue": 0,
+      "maxValue": 1000,
+      "normalRange": {
+        "min": 200,
+        "max": 800
+      },
+      "warningRange": {
+        "min": 100,
+        "max": 900
+      },
+      "criticalRange": {
+        "min": 0,
+        "max": 1000
+      },
+      "enabled": true,
+      "position": 3
+    }
+  },
+  "alerting": {
+    "enabled": true,
+    "soundAlerts": false,
+    "visualAlerts": true,
+    "blinkingAlerts": true,
+    "alertLevels": {
+      "normal": {
+        "color": "#28a745",
+        "priority": 0,
+        "sound": false
+      },
+      "warning": {
+        "color": "#ffc107",
+        "priority": 1,
+        "sound": false,
+        "blink": true
+      },
+      "critical": {
+        "color": "#dc3545",
+        "priority": 2,
+        "sound": true,
+        "blink": true
+      }
+    },
+    "acknowledgment": {
+      "required": true,
+      "timeout": 300000
+    }
+  },
+  "data": {
+    "sensorValues": {
+      "pressure1": {
+        "value": 0,
+        "status": "unknown",
+        "lastUpdate": null,
+        "trend": "stable"
+      },
+      "pressure2": {
+        "value": 0,
+        "status": "unknown",
+        "lastUpdate": null,
+        "trend": "stable"
+      },
+      "pressure3": {
+        "value": 0,
+        "status": "unknown",
+        "lastUpdate": null,
+        "trend": "stable"
+      }
+    },
+    "alerts": [],
+    "connectionStatus": "disconnected",
+    "lastDataUpdate": null
+  },
+  "realTime": {
+    "enabled": true,
+    "updateInterval": 1000,
+    "websocketUrl": "ws://localhost:5000/ws/pressure",
+    "reconnectAttempts": 5,
+    "reconnectDelay": 2000,
+    "dataRetention": {
+      "enabled": true,
+      "maxPoints": 1000,
+      "timeWindow": 3600000
+    }
+  },
+  "responsive": {
+    "display79": {
+      "enabled": true,
+      "maxWidth": "1280px",
+      "maxHeight": "400px",
+      "optimizations": ["compact-layout", "small-gauges", "minimal-text"]
+    },
+    "adaptiveLayout": {
+      "enabled": true,
+      "stackOnSmallScreen": true,
+      "hideLabelsOnTinyScreen": true
+    }
+  },
+  "accessibility": {
+    "ariaLabels": true,
+    "announceAlerts": true,
+    "highContrast": false,
+    "screenReader": true,
+    "colorBlindFriendly": true
+  },
+  "performance": {
+    "enableCaching": false,
+    "lazyLoading": false,
+    "throttleUpdates": true,
+    "maxUpdateFrequency": 10
+  },
+  "calibration": {
+    "enabled": false,
+    "coefficients": {
+      "pressure1": { "offset": 0, "scale": 1 },
+      "pressure2": { "offset": 0, "scale": 1 },
+      "pressure3": { "offset": 0, "scale": 1 }
+    },
+    "lastCalibration": null
+  },
+  "logging": {
+    "enabled": true,
+    "logLevel": "info",
+    "logAlerts": true,
+    "logValues": false,
+    "maxLogSize": 1000
+  }
+}

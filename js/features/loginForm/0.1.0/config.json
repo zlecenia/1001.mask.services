@@ -1,1 +1,156 @@
-{}
+{
+  "component": {
+    "name": "loginForm",
+    "displayName": "Login Form",
+    "type": "authentication",
+    "category": "ui-component"
+  },
+  "ui": {
+    "layout": {
+      "maxWidth": "400px",
+      "background": "#ffffff",
+      "borderRadius": "8px",
+      "boxShadow": "0 4px 6px rgba(0, 0, 0, 0.1)",
+      "padding": "24px",
+      "margin": "auto"
+    },
+    "form": {
+      "fieldSpacing": "16px",
+      "labelFontSize": "12px",
+      "inputHeight": "40px",
+      "inputFontSize": "14px",
+      "borderRadius": "4px"
+    },
+    "virtualKeyboard": {
+      "enabled": true,
+      "layout": "qwerty",
+      "keyHeight": "40px",
+      "keySpacing": "2px",
+      "backgroundColor": "#f8f9fa",
+      "keyColor": "#495057",
+      "activeKeyColor": "#007bff"
+    },
+    "buttons": {
+      "height": "44px",
+      "fontSize": "14px",
+      "borderRadius": "4px",
+      "primaryColor": "#007bff",
+      "primaryHover": "#0056b3",
+      "secondaryColor": "#6c757d",
+      "secondaryHover": "#545b62"
+    }
+  },
+  "authentication": {
+    "roles": {
+      "OPERATOR": {
+        "permissions": ["view_sensors", "view_alerts"],
+        "defaultRoute": "/monitoring",
+        "color": "#27ae60"
+      },
+      "ADMIN": {
+        "permissions": ["manage_tests", "manage_reports", "manage_users"],
+        "defaultRoute": "/dashboard",
+        "color": "#f39c12"
+      },
+      "SUPERUSER": {
+        "permissions": ["full_system_access", "config_edit"],
+        "defaultRoute": "/system",
+        "color": "#e74c3c"
+      },
+      "SERWISANT": {
+        "permissions": ["service_mode", "calibration", "diagnostics"],
+        "defaultRoute": "/service",
+        "color": "#3498db"
+      }
+    },
+    "validation": {
+      "minPasswordLength": 3,
+      "maxAttempts": 3,
+      "lockoutDuration": 300000,
+      "sessionTimeout": 1800000
+    },
+    "defaultCredentials": {
+      "username": "",
+      "password": "",
+      "role": "OPERATOR"
+    }
+  },
+  "data": {
+    "formState": {
+      "username": "",
+      "password": "",
+      "selectedRole": "OPERATOR",
+      "showVirtualKeyboard": false,
+      "activeInput": null,
+      "errors": {},
+      "isSubmitting": false
+    },
+    "authState": {
+      "isAuthenticated": false,
+      "currentUser": null,
+      "loginAttempts": 0,
+      "lastLoginTime": null
+    }
+  },
+  "virtualKeyboard": {
+    "layouts": {
+      "qwerty": {
+        "rows": [
+          ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
+          ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+          ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+          ["z", "x", "c", "v", "b", "n", "m"],
+          ["SPACE", "BACKSPACE", "ENTER"]
+        ]
+      },
+      "numeric": {
+        "rows": [
+          ["1", "2", "3"],
+          ["4", "5", "6"],
+          ["7", "8", "9"],
+          ["0", "BACKSPACE", "ENTER"]
+        ]
+      }
+    },
+    "specialKeys": {
+      "SPACE": " ",
+      "BACKSPACE": "⌫",
+      "ENTER": "↵",
+      "SHIFT": "⇧",
+      "CAPS": "⇪"
+    }
+  },
+  "responsive": {
+    "display79": {
+      "enabled": true,
+      "maxWidth": "1280px",
+      "maxHeight": "400px",
+      "optimizations": ["touch-friendly", "large-buttons", "virtual-keyboard"]
+    },
+    "breakpoints": {
+      "mobile": "400px",
+      "tablet": "768px",
+      "desktop": "1024px"
+    }
+  },
+  "accessibility": {
+    "ariaLabels": true,
+    "keyboardNavigation": true,
+    "highContrast": false,
+    "screenReader": true,
+    "focusManagement": true,
+    "announcements": true
+  },
+  "performance": {
+    "enableCaching": false,
+    "lazyLoading": false,
+    "debounceInput": 300
+  },
+  "security": {
+    "encryptPassword": true,
+    "validateInput": true,
+    "preventBruteForce": true,
+    "auditLogging": true,
+    "csrfProtection": true
+  }
+}

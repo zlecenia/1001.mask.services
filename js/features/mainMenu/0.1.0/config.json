@@ -1,1 +1,163 @@
-{}
+{
+  "component": {
+    "name": "mainMenu",
+    "displayName": "Main Menu",
+    "type": "navigation",
+    "category": "ui-component"
+  },
+  "ui": {
+    "layout": {
+      "width": 180,
+      "background": "#ffffff",
+      "borderRight": "1px solid #ddd",
+      "fontSize": "11px",
+      "padding": "8px"
+    },
+    "menuItem": {
+      "padding": "8px",
+      "fontSize": "11px",
+      "hoverBackground": "#f0f0f0",
+      "activeBackground": "#3498db",
+      "activeColor": "#ffffff",
+      "iconSpacing": "8px"
+    },
+    "accessibility": {
+      "focusVisible": true,
+      "keyboardNavigation": true,
+      "ariaLabels": true
+    }
+  },
+  "roleBasedAccess": {
+    "OPERATOR": {
+      "menuItems": 2,
+      "permissions": ["view_sensors", "view_alerts"],
+      "color": "#27ae60",
+      "allowedRoutes": ["/monitoring", "/alerts"]
+    },
+    "ADMIN": {
+      "menuItems": 4,
+      "permissions": ["manage_tests", "manage_reports", "manage_users"],
+      "color": "#f39c12",
+      "allowedRoutes": ["/tests", "/reports", "/users", "/system"]
+    },
+    "SUPERUSER": {
+      "menuItems": 4,
+      "permissions": ["full_system_access", "config_edit"],
+      "color": "#e74c3c",
+      "allowedRoutes": ["*"]
+    },
+    "SERWISANT": {
+      "menuItems": 5,
+      "permissions": ["service_mode", "calibration", "diagnostics"],
+      "color": "#3498db",
+      "allowedRoutes": ["/service", "/calibration", "/diagnostics", "/workshop", "/maintenance"]
+    }
+  },
+  "menuStructure": {
+    "dashboard": {
+      "label": "Dashboard",
+      "icon": "dashboard",
+      "route": "/dashboard",
+      "roles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+      "order": 1
+    },
+    "monitoring": {
+      "label": "Monitoring",
+      "icon": "monitor",
+      "route": "/monitoring",
+      "roles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+      "order": 2
+    },
+    "tests": {
+      "label": "Tests",
+      "icon": "test-tube",
+      "route": "/tests",
+      "roles": ["ADMIN", "SUPERUSER"],
+      "order": 3
+    },
+    "reports": {
+      "label": "Reports",
+      "icon": "chart",
+      "route": "/reports",
+      "roles": ["ADMIN", "SUPERUSER"],
+      "order": 4
+    },
+    "users": {
+      "label": "Users",
+      "icon": "users",
+      "route": "/users",
+      "roles": ["ADMIN", "SUPERUSER"],
+      "order": 5
+    },
+    "system": {
+      "label": "System",
+      "icon": "settings",
+      "route": "/system",
+      "roles": ["SUPERUSER"],
+      "order": 6
+    },
+    "service": {
+      "label": "Service",
+      "icon": "wrench",
+      "route": "/service",
+      "roles": ["SERWISANT"],
+      "order": 7
+    },
+    "calibration": {
+      "label": "Calibration",
+      "icon": "adjust",
+      "route": "/calibration",
+      "roles": ["SERWISANT"],
+      "order": 8
+    },
+    "diagnostics": {
+      "label": "Diagnostics",
+      "icon": "stethoscope",
+      "route": "/diagnostics",
+      "roles": ["SERWISANT"],
+      "order": 9
+    },
+    "workshop": {
+      "label": "Workshop",
+      "icon": "tools",
+      "route": "/workshop",
+      "roles": ["SERWISANT"],
+      "order": 10
+    }
+  },
+  "data": {
+    "currentUser": {
+      "role": "OPERATOR"
+    },
+    "currentRoute": "/dashboard",
+    "menuState": {
+      "collapsed": false,
+      "activeItem": null
+    }
+  },
+  "responsive": {
+    "display79": {
+      "enabled": true,
+      "maxWidth": "1280px",
+      "compactMode": true,
+      "collapsible": true
+    }
+  },
+  "accessibility": {
+    "ariaLabels": true,
+    "keyboardNavigation": true,
+    "highContrast": false,
+    "screenReader": true,
+    "focusManagement": true
+  },
+  "performance": {
+    "enableCaching": true,
+    "lazyLoading": false,
+    "virtualScrolling": false
+  },
+  "security": {
+    "validatePermissions": true,
+    "auditAccess": true,
+    "sessionTimeout": 1800000
+  }
+}

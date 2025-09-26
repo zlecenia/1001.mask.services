@@ -3,33 +3,33 @@ const template = `
 <footer class="app-footer" :class="deviceClass">
   <div class="footer-left">
     <div class="footer-copyright">
-      © 2025 MASKTRONIC
+      {{ $t('footer.copyright') || '© 2025 MASKTRONIC' }}
     </div>
     <div class="footer-device-info">
-      <span class="device-name">{{ deviceInfo.name || 'TEST_DEVICE' }}</span>
+      <span class="device-name">{{ deviceInfo.name || $t('footer.default_device') || 'TEST_DEVICE' }}</span>
       <span class="device-model">{{ deviceInfo.model || 'C20' }}</span>
     </div>
     <span class="system-info" v-if="systemInfo">
       <span class="build-date">{{ formatBuildDate(systemInfo.buildDate) }}</span>
-      <span class="environment" :class="systemInfo.environment">{{ systemInfo.environment }}</span>
+      <span class="environment" :class="systemInfo.environment">{{ $t('footer.environment') || systemInfo.environment }}</span>
     </span>
   </div>
   
   <div class="footer-center">
     <div class="footer-build-info">
-      <span class="version">{{ buildInfo.version || '3.0.0' }}</span>
-      <span class="build-number">{{ buildInfo.buildNumber || '2024.001' }}</span>
+      <span class="version">{{ $t('footer.version') }}: {{ buildInfo.version || '3.0.0' }}</span>
+      <span class="build-number">{{ $t('footer.build') }}: {{ buildInfo.buildNumber || '2024.001' }}</span>
     </div>
     <span class="current-time footer-text">{{ currentTime }}</span>
   </div>
   
   <div class="footer-right">
     <div class="footer-status" :class="statusClass">
-      <span class="status-text">{{ deviceStatus || 'ONLINE' }}</span>
+      <span class="status-text">{{ $t(`footer.status.${deviceStatus.toLowerCase()}`) || deviceStatus || $t('footer.status.online') }}</span>
     </div>
     <span class="user-info footer-info">
       <span class="user-name">{{ currentUser.name }}</span>
-      <span class="user-role" :class="currentUser.role.toLowerCase()">{{ currentUser.role }}</span>
+      <span class="user-role" :class="currentUser.role.toLowerCase()">{{ $t(`footer.role.${currentUser.role.toLowerCase()}`) || currentUser.role }}</span>
     </span>
   </div>
 </footer>`;
@@ -357,7 +357,9 @@ export default {
     formatBuildDate(dateString) {
       if (!dateString) return '';
       const date = new Date(dateString);
-      return date.toLocaleDateString('pl-PL', { 
+      const locale = window.$getCurrentLanguage ? window.$getCurrentLanguage() : 'pl';
+      const localeMap = { 'pl': 'pl-PL', 'en': 'en-US', 'de': 'de-DE' };
+      return date.toLocaleDateString(localeMap[locale] || 'pl-PL', { 
         year: 'numeric', 
         month: '2-digit', 
         day: '2-digit' 
@@ -366,7 +368,9 @@ export default {
     
     updateTime() {
       const now = new Date();
-      this.currentTime = now.toLocaleTimeString('pl-PL', {
+      const locale = window.$getCurrentLanguage ? window.$getCurrentLanguage() : 'pl';
+      const localeMap = { 'pl': 'pl-PL', 'en': 'en-US', 'de': 'de-DE' };
+      this.currentTime = now.toLocaleTimeString(localeMap[locale] || 'pl-PL', {
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit'

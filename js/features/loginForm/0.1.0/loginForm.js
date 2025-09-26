@@ -11,8 +11,8 @@ const template = `
       <div class="branding">
         <img src="/favicon.ico" alt="MASKSERVICE" class="login-logo" />
         <div class="title-block">
-          <h2 class="system-title">MASKSERVICE C20 1001</h2>
-          <p class="system-subtitle">Industrial Access Console</p>
+          <h2 class="system-title">{{ $t('global.system_title') || 'MASKSERVICE C20 1001' }}</h2>
+          <p class="system-subtitle">{{ $t('login.subtitle') || 'Industrial Access Console' }}</p>
         </div>
       </div>
       <div class="language-selector">
