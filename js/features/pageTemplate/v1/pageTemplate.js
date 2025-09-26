@@ -50,7 +50,7 @@ const template = `
       <div class="pressure-panel" v-if="showPressurePanel">
         <div class="pressure-item" v-for="sensor in computedPressureSensors" :key="sensor.type">
           <label class="pressure-label">{{ $t('pressure.' + sensor.type) }}</label>
-          <div class="pressure-value" :class="{ 'warning': sensor.isWarning, 'critical': sensor.isCritical }">
+          <div :class="['pressure-value', 'pressure-' + sensor.type, { 'warning': sensor.isWarning, 'critical': sensor.isCritical }]">
             {{ sensor.value || '--' }}
           </div>
           <div class="pressure-unit">{{ sensor.unit }}</div>
@@ -422,11 +422,11 @@ export default {
       // Use store data if available, otherwise fallback to default data
       const storeData = this.$store?.state?.system?.pressureData;
       
-      if (storeData) {
+      if (storeData && storeData !== null) {
         return [
           {
             type: 'inlet',
-            value: storeData.inlet,
+            value: storeData.inlet || null,
             unit: 'bar',
             chartPoints: '0,15 10,12 20,8 30,10 40,5',
             isWarning: storeData.inlet > 20,
@@ -434,7 +434,7 @@ export default {
           },
           {
             type: 'outlet', 
-            value: storeData.outlet,
+            value: storeData.outlet || null,
             unit: 'bar',
             chartPoints: '0,10 10,15 20,12 30,8 40,14',
             isWarning: storeData.outlet > 15,
@@ -442,17 +442,53 @@ export default {
           },
           {
             type: 'differential',
-            value: storeData.differential,
+            value: storeData.differential || null,
             unit: 'bar',
             chartPoints: '0,5 10,8 20,12 30,15 40,10',
-            isWarning: storeData.differential > 5,
-            isCritical: storeData.differential > 10
+            isWarning: storeData.differential && storeData.differential > 5,
+            isCritical: storeData.differential && storeData.differential > 10
           }
         ];
       } else {
-        // Fallback to default data from component state
-        return this.pressureSensors;
+        // Return empty data to show '--' when store data is null/missing
+        return [
+          {
+            type: 'inlet',
+            value: null,
+            unit: 'bar',
+            chartPoints: '0,15 10,12 20,8 30,10 40,5',
+            isWarning: false,
+            isCritical: false
+          },
+          {
+            type: 'outlet', 
+            value: null,
+            unit: 'bar',
+            chartPoints: '0,10 10,15 20,12 30,8 40,14',
+            isWarning: false,
+            isCritical: false
+          },
+          {
+            type: 'differential',
+            value: null,
+            unit: 'bar',
+            chartPoints: '0,5 10,8 20,12 30,15 40,10',
+            isWarning: false,
+            isCritical: false
+          }
+        ];
       }
+    }
+  },
+  watch: {
+    // Watch for changes in store pressure data to ensure reactivity
+    '$store.state.system.pressureData': {
+      handler(newData, oldData) {
+        // Force re-evaluation of computed properties when store data changes
+        this.$forceUpdate();
+      },
+      deep: true,
+      immediate: false
     }
   },
   methods: {
@@ -490,11 +526,17 @@ export default {
   mounted() {
     this.updateDateTime();
     this.dateTimeInterval = setInterval(this.updateDateTime, 1000);
+    
+    // Add window resize event listener
+    window.addEventListener('resize', this.handleResize);
   },
   beforeUnmount() {
     if (this.dateTimeInterval) {
       clearInterval(this.dateTimeInterval);
     }
+    
+    // Remove window resize event listener
+    window.removeEventListener('resize', this.handleResize);
   },
   emits: ['menu-selected', 'language-changed', 'logout']
 };
