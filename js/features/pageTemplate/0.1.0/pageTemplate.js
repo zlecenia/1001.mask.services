@@ -15,13 +15,13 @@ const template = `
     <div class="header-center">
       <div class="connection-status" :class="connectionStatus">
         <i class="status-icon"></i>
-        <span>{{ $t(`global.${connectionStatus}`) || connectionText }}</span>
+        <span>{{ $t('global.' + connectionStatus) || connectionText }}</span>
       </div>
     </div>
     <div class="header-right">
       <div class="device-info">
         <span class="device-id">{{ deviceId }}</span>
-        <span class="device-status">{{ $t(`global.${deviceStatus.toLowerCase()}`) || deviceStatus }}</span>
+        <span class="device-status">{{ $t('global.' + deviceStatus.toLowerCase()) || deviceStatus }}</span>
       </div>
     </div>
   </header>
