@@ -244,15 +244,40 @@ describe('PageTemplate Module', () => {
     });
 
     it('should handle window resize events', async () => {
-      const resizeSpy = vi.spyOn(wrapper.vm, 'handleResize');
+      // Create spy on the component constructor before mounting
+      const handleResizeSpy = vi.fn();
+      const ComponentWithSpy = {
+        ...pageTemplateModule.component,
+        methods: {
+          ...pageTemplateModule.component.methods,
+          handleResize: handleResizeSpy
+        }
+      };
+      
+      // Mount component with spy
+      const testWrapper = mount(ComponentWithSpy, {
+        global: {
+          mocks: {
+            $store: mockStore,
+            $router: mockRouter,
+            $t: (key) => key
+          }
+        },
+        props: {
+          title: 'Test Page'
+        }
+      });
       
       // Simulate window resize
       window.dispatchEvent(new Event('resize'));
       
       // Wait for next tick
-      await wrapper.vm.$nextTick();
+      await testWrapper.vm.$nextTick();
       
-      expect(resizeSpy).toHaveBeenCalled();
+      expect(handleResizeSpy).toHaveBeenCalled();
+      
+      // Cleanup
+      testWrapper.unmount();
     });
   });
 

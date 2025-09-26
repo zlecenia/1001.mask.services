@@ -8,15 +8,82 @@
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="css/style.css" as="style">
+    <link rel="preload" href="css/vue.css" as="style">
+    <link rel="preload" href="css/lcd-optimization.css" as="style">
+    
     <!-- CSS Files -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/vue.css">
     <link rel="stylesheet" href="css/lcd-optimization.css">
     
     <!-- Font Awesome for icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" as="style" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous">
     
+    <!-- Prevent FOUC with critical styles -->
     <style>
+        /* Critical styles to prevent FOUC */
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            background: #fafafa;
+        }
+        
+        #app {
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        
+        #app.loaded {
+            opacity: 1;
+        }
+        
+        /* Loading spinner */
+        .initial-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.5s ease-out;
+        }
+        
+        .initial-loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        .initial-loader .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .initial-loader .text {
+            color: white;
+            font-size: 14px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
         /* Global styles for 7.9" landscape display optimization */
         * {
             box-sizing: border-box;
@@ -142,6 +209,12 @@
     </style>
 </head>
 <body>
+    <!-- Initial loader to prevent FOUC -->
+    <div class="initial-loader" id="initial-loader">
+        <div class="spinner"></div>
+        <div class="text">Ładowanie systemu...</div>
+    </div>
+
     <div id="app">
         <!-- Loading Screen -->
         <div class="loading-screen">

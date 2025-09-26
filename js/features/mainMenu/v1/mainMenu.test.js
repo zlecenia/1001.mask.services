@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { mount } from '@vue/test-utils';
-import { createApp } from 'vue';
+import { createApp, reactive, ref } from 'vue';
 
 // Import the module
 import mainMenuModule from './index.js';
@@ -11,14 +11,21 @@ describe('MainMenu Module', () => {
   let mockRouter;
 
   beforeEach(() => {
-    // Mock Vuex store
+    // Mock Vuex store using Vue reactive system for proper reactivity
     mockStore = {
-      state: {
-        user: {
+      state: reactive({
+        user: ref({
           role: 'OPERATOR',
           name: 'Test User'
-        }
-      },
+        }),
+        system: ref({
+          pressureData: {
+            inlet: 25.5,
+            outlet: 18.3,
+            differential: 7.2
+          }
+        })
+      }),
       commit: vi.fn(),
       dispatch: vi.fn()
     };
@@ -158,7 +165,10 @@ describe('MainMenu Module', () => {
 
   describe('Component Functionality - OPERATOR Role', () => {
     beforeEach(() => {
-      mockStore.state.user.role = 'OPERATOR';
+      mockStore.state.user.value = {
+        role: 'OPERATOR',
+        name: 'Test User'
+      };
       const Component = mainMenuModule.component;
       wrapper = mount(Component, {
         global: {
@@ -205,7 +215,10 @@ describe('MainMenu Module', () => {
 
   describe('Component Functionality - ADMIN Role', () => {
     beforeEach(() => {
-      mockStore.state.user.role = 'ADMIN';
+      mockStore.state.user.value = {
+        role: 'ADMIN',
+        name: 'Test User'
+      };
       const Component = mainMenuModule.component;
       wrapper = mount(Component, {
         global: {
@@ -241,7 +254,10 @@ describe('MainMenu Module', () => {
 
   describe('Component Functionality - SUPERUSER Role', () => {
     beforeEach(() => {
-      mockStore.state.user.role = 'SUPERUSER';
+      mockStore.state.user.value = {
+        role: 'SUPERUSER',
+        name: 'Test User'
+      };
       const Component = mainMenuModule.component;
       wrapper = mount(Component, {
         global: {
@@ -277,7 +293,10 @@ describe('MainMenu Module', () => {
 
   describe('Component Functionality - SERWISANT Role', () => {
     beforeEach(() => {
-      mockStore.state.user.role = 'SERWISANT';
+      mockStore.state.user.value = {
+        role: 'SERWISANT',
+        name: 'Test User'
+      };
       const Component = mainMenuModule.component;
       wrapper = mount(Component, {
         global: {
@@ -314,7 +333,7 @@ describe('MainMenu Module', () => {
 
   describe('Error Handling', () => {
     it('should handle missing user role gracefully', () => {
-      mockStore.state.user.role = null;
+      mockStore.state.user.value = null;
       
       const Component = mainMenuModule.component;
       expect(() => {
@@ -334,7 +353,7 @@ describe('MainMenu Module', () => {
     });
 
     it('should handle invalid user role gracefully', () => {
-      mockStore.state.user.role = 'INVALID_ROLE';
+      mockStore.state.user.value = 'INVALID_ROLE';
       
       const Component = mainMenuModule.component;
       wrapper = mount(Component, {
@@ -453,7 +472,10 @@ describe('MainMenu Module', () => {
 
   describe('Accessibility Tests', () => {
     beforeEach(() => {
-      mockStore.state.user.role = 'OPERATOR';
+      mockStore.state.user.value = {
+        role: 'OPERATOR',
+        name: 'Test User'
+      };
       const Component = mainMenuModule.component;
       wrapper = mount(Component, {
         global: {
@@ -495,7 +517,10 @@ describe('MainMenu Module', () => {
       roles.forEach(role => {
         const start = performance.now();
         
-        mockStore.state.user.role = role;
+        mockStore.state.user.value = {
+          role,
+          name: 'Test User'
+        };
         const Component = mainMenuModule.component;
         const testWrapper = mount(Component, {
           global: {

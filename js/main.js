@@ -12,6 +12,30 @@ import pl from '../locales/pl.json';
 import en from '../locales/en.json';
 import de from '../locales/de.json';
 
+// Hide initial loader when app is ready
+function hideInitialLoader() {
+  const loader = document.getElementById('initial-loader');
+  if (loader) {
+    loader.classList.add('hidden');
+    setTimeout(() => {
+      loader.style.display = 'none';
+    }, 500);
+  }
+  
+  const app = document.getElementById('app');
+  if (app) {
+    app.classList.add('loaded');
+  }
+}
+
+// Global error handler for dynamic imports
+window.addEventListener('error', (event) => {
+  if (event.message.includes('dynamically imported module')) {
+    console.warn('Dynamic import error:', event.message);
+    hideInitialLoader();
+  }
+});
+
 // Create Vue app instance
 const app = createApp({
   data() {
@@ -35,7 +59,11 @@ const app = createApp({
   },
   
   async mounted() {
-    await this.initializeApplication();
+    try {
+      await this.initializeApplication();
+    } finally {
+      hideInitialLoader();
+    }
   },
   
   methods: {
@@ -58,8 +86,13 @@ const app = createApp({
         // Initialize feature registry
         this.registry = new FeatureRegistry();
         
-        // Register all modules
-        await registerAllModules(this.registry);
+        // Register all modules with error handling
+        try {
+          await registerAllModules(this.registry);
+        } catch (error) {
+          console.warn('Module registration failed, using fallback:', error);
+          await this.registerFallbackModules();
+        }
         
         // Set up user (mock for now)
         this.currentUser = {
@@ -81,13 +114,30 @@ const app = createApp({
       }
     },
     
+    async registerFallbackModules() {
+      // Register basic mock modules as fallback
+      const mockModules = ['mainMenu', 'loginForm', 'pageTemplate'];
+      for (const name of mockModules) {
+        const mockModule = {
+          name,
+          version: '1.0.0',
+          init: async () => true,
+          handle: (request) => ({ success: true, data: {} }),
+          render: (container) => {
+            container.innerHTML = `<div class="fallback-${name}">Moduł ${name} (wersja podstawowa)</div>`;
+          },
+          getMenuForRole: async (role) => this.getDefaultMenu()
+        };
+        await this.registry.register(name, '1.0.0', mockModule);
+      }
+    },
+    
     async loadMenuForRole(role) {
       try {
         const mainMenuModule = await this.registry.load('mainMenu', 'latest');
         if (mainMenuModule && mainMenuModule.getMenuForRole) {
           this.menuItems = await mainMenuModule.getMenuForRole(role);
         } else {
-          // Fallback menu if mainMenu module is not available
           this.menuItems = this.getDefaultMenu();
         }
       } catch (error) {
@@ -127,10 +177,8 @@ const app = createApp({
       if (!contentArea) return;
       
       try {
-        // Clear previous content
         contentArea.innerHTML = '<div class="loading-content">Ładowanie...</div>';
         
-        // Find module for this route
         const routeModule = await this.registry.findModuleForRoute(route);
         if (routeModule && routeModule.render) {
           await routeModule.render(contentArea, { route, user: this.currentUser });
