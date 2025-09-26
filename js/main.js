@@ -1,7 +1,9 @@
 import { createApp } from 'vue';
 import { createI18n } from 'vue-i18n';
-import { createStore } from 'vuex';
 import { createRouter, createWebHashHistory } from 'vue-router';
+
+// Import the new modular Vuex store
+import store from './store/index.js';
 
 // Import Feature Registry
 import { FeatureRegistry } from './FeatureRegistry.js';
@@ -331,36 +333,8 @@ I18nService.subscribe('languageChanged', (data) => {
   i18n.global.locale.value = data.to;
 });
 
-// Configure Vuex store
-const store = createStore({
-  state: {
-    user: null,
-    settings: {},
-    modules: {}
-  },
-  mutations: {
-    SET_USER(state, user) {
-      state.user = user;
-    },
-    SET_SETTINGS(state, settings) {
-      state.settings = settings;
-    },
-    REGISTER_MODULE(state, { name, module }) {
-      state.modules[name] = module;
-    }
-  },
-  actions: {
-    setUser({ commit }, user) {
-      commit('SET_USER', user);
-    },
-    setSettings({ commit }, settings) {
-      commit('SET_SETTINGS', settings);
-    },
-    registerModule({ commit }, payload) {
-      commit('REGISTER_MODULE', payload);
-    }
-  }
-});
+// Note: Store is now imported from ./store/index.js with modular structure
+// The store includes auth, navigation, sensors, and system modules
 
 // Configure router
 const router = createRouter({
