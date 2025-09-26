@@ -1,11 +1,12 @@
 // PressurePanel component for real-time sensor monitoring with 7.9" display optimization
+import WebSocketService from '../../services/websocketService.js';
 const template = `
 <div class="pressure-panel" :class="deviceClass">
   <h3 class="panel-title">{{ $t('sensors.pressure_monitoring') || 'Monitoring Ciśnienia' }}</h3>
   
   <div class="pressure-sensors">
     <div 
-      v-for="(sensor, key) in pressureData" 
+      v-for="(sensor, key) in effectivePressureData" 
       :key="key"
       class="pressure-item"
       :class="getSensorStatusClass(sensor, key)"
@@ -325,13 +326,26 @@ export default {
   data() {
     return {
       lastUpdateTime: '',
-      isRefreshing: false
+      isRefreshing: false,
+      realTimePressureData: {
+        low: { value: 10.5, unit: 'mbar', status: 'normal', lastUpdate: Date.now() },
+        medium: { value: 2.1, unit: 'bar', status: 'normal', lastUpdate: Date.now() },
+        high: { value: 15.8, unit: 'bar', status: 'normal', lastUpdate: Date.now() }
+      },
+      connectionStatus: 'disconnected',
+      alertHistory: [],
+      webSocketSubscriptions: []
     };
   },
   
   computed: {
     deviceClass() {
       return 'landscape-7-9';
+    },
+    
+    // Use real-time data if available, otherwise fall back to props
+    effectivePressureData() {
+      return this.connectionStatus === 'connected' ? this.realTimePressureData : this.pressureData;
     }
   },
   
