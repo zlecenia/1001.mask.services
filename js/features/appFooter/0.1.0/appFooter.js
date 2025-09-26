@@ -48,6 +48,27 @@ const styles = `
 .footer-left {
   display: flex;
   align-items: center;
+  gap: 12px;
+}
+
+.footer-copyright {
+  color: #bdc3c7;
+  font-size: 10px;
+}
+
+.footer-device-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.device-name, .device-model {
+  background: #34495e;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
 }
 
 .system-info {
@@ -261,6 +282,14 @@ export default {
     deviceClass() {
       // Return class for 7.9" landscape optimization
       return 'landscape-7-9';
+    },
+    statusClass() {
+      return {
+        'status-online': this.deviceStatus === 'ONLINE',
+        'status-offline': this.deviceStatus === 'OFFLINE',
+        'status-connecting': this.deviceStatus === 'CONNECTING',
+        'status-error': this.deviceStatus === 'ERROR'
+      };
     }
   },
   
