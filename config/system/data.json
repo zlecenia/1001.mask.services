@@ -1,0 +1,68 @@
+{
+  "roles": {
+    "valid_roles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERVICEUSER"],
+    "default_role": "OPERATOR",
+    "role_hierarchy": {
+      "OPERATOR": 1,
+      "ADMIN": 2,
+      "SUPERUSER": 3,
+      "SERVICEUSER": 4
+    }
+  },
+  "authentication": {
+    "session_timeout": 1800000,
+    "token_refresh_interval": 300000,
+    "max_login_attempts": 5,
+    "lockout_duration": 900000,
+    "password_requirements": {
+      "min_length": 4,
+      "require_uppercase": false,
+      "require_lowercase": false,
+      "require_numbers": false,
+      "require_symbols": false
+    }
+  },
+  "ui": {
+    "animations_enabled": true,
+    "auto_logout_warning": 300000,
+    "notification_timeout": 5000,
+    "toast_position": "top-right",
+    "keyboard": {
+      "virtual_keyboard_enabled": true,
+      "auto_focus_enabled": true,
+      "mobile_prevention": true
+    }
+  },
+  "sensors": {
+    "update_interval": 1000,
+    "max_readings": 100,
+    "pressure_units": "mbar",
+    "temperature_units": "celsius",
+    "calibration_interval": 86400000,
+    "alarm_thresholds": {
+      "pressure_low": -15,
+      "pressure_high": 50,
+      "temperature_low": -10,
+      "temperature_high": 60
+    }
+  },
+  "reports": {
+    "formats": ["PDF", "XML", "CSV", "JSON"],
+    "default_format": "PDF",
+    "batch_size": 50,
+    "retention_days": 365,
+    "auto_cleanup": true
+  },
+  "workshop": {
+    "parts_categories": ["FILTER", "SEAL", "VALVE", "STRAP", "VISOR", "OTHER"],
+    "default_currency": "PLN",
+    "low_stock_threshold": 5,
+    "maintenance_intervals": {
+      "daily": 1,
+      "weekly": 7,
+      "monthly": 30,
+      "quarterly": 90,
+      "yearly": 365
+    }
+  }
+}

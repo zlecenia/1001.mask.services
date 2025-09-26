@@ -1,0 +1,104 @@
+{
+  "name": "router",
+  "title": "Konfiguracja Routingu", 
+  "description": "Konfiguracja podstawowa i języki - struktura nawigacji chroniona",
+  "rules": {
+    "editable": [
+      "default/protocol",
+      "default/domain", 
+      "default/port",
+      "default/view",
+      "default/language",
+      "default/action",
+      "languages/*/name",
+      "languages/*/flag",
+      "languages/*/default",
+      "storage/enabled",
+      "navigation/preserveView",
+      "navigation/preserveLanguage",
+      "navigation/actionOnlyChanges"
+    ],
+    "addable": [
+      "views",
+      "languages"
+    ],
+    "deletable": [
+      "views/*",
+      "languages/*"
+    ],
+    "readonly": [
+      "storage/keys",
+      "navigation/hashPrefix"
+    ],
+    "protected": [
+      "default",
+      "storage", 
+      "navigation"
+    ]
+  },
+  "field_types": {
+    "protocol": "select",
+    "domain": "string",
+    "port": "number",
+    "view": "string", 
+    "language": "language_code",
+    "action": "string",
+    "enabled": "boolean",
+    "preserveView": "boolean",
+    "preserveLanguage": "boolean",
+    "actionOnlyChanges": "boolean"
+  },
+  "validation_rules": {
+    "protocol": {
+      "enum": ["http", "https"]
+    },
+    "port": {
+      "pattern": "^\\d{1,5}$",
+      "min": 1,
+      "max": 65535
+    },
+    "language": {
+      "pattern": "^[a-z]{2}$"
+    },
+    "code": {
+      "pattern": "^[a-z]{2}$",
+      "unique_within_array": true
+    }
+  },
+  "ui_hints": {
+    "protocol": {
+      "options": ["http", "https"],
+      "help": "Protokół komunikacji z serwerem"
+    },
+    "domain": {
+      "placeholder": "localhost",
+      "help": "Nazwa domeny lub adres IP"
+    },
+    "port": {
+      "placeholder": "8080",
+      "help": "Port serwera (1-65535)"
+    },
+    "view": {
+      "placeholder": "login-screen",
+      "help": "Domyślny widok przy starcie"
+    },
+    "language": {
+      "placeholder": "pl",
+      "help": "Domyślny kod języka (2 litery)"
+    },
+    "enabled": {
+      "help": "Włącz lokalne przechowywanie danych"
+    }
+  },
+  "default_new_language": {
+    "code": "en",
+    "name": "English", 
+    "flag": "🇺🇸",
+    "default": false
+  },
+  "default_new_view": {
+    "name": "Nowy Widok",
+    "description": "Opis nowego widoku",
+    "actions": ["default"]
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "type": "object",
+  "title": "Konfiguracja Routingu",
+  "description": "Ustawienia nawigacji, widoków i lokalizacji aplikacji",
+  "properties": {
+    "default": {
+      "type": "object",
+      "title": "Ustawienia Domyślne",
+      "description": "Domyślna konfiguracja routera",
+      "properties": {
+        "protocol": {
+          "type": "string",
+          "enum": ["http", "https"],
+          "description": "Protokół komunikacji"
+        },
+        "domain": {
+          "type": "string",
+          "description": "Nazwa domeny"
+        },
+        "port": {
+          "type": "string",
+          "pattern": "^\\d{1,5}$",
+          "description": "Port serwera"
+        },
+        "view": {
+          "type": "string",
+          "description": "Domyślny widok aplikacji"
+        },
+        "language": {
+          "type": "string",
+          "pattern": "^[a-z]{2}$",
+          "description": "Kod języka (ISO 639-1)"
+        },
+        "action": {
+          "type": "string",
+          "description": "Domyślna akcja"
+        }
+      },
+      "required": ["protocol", "domain", "port", "view", "language", "action"]
+    },
+    "views": {
+      "type": "object",
+      "title": "Definicje Widoków",
+      "description": "Konfiguracja dostępnych widoków aplikacji",
+      "patternProperties": {
+        "^[a-z-]+$": {
+          "$ref": "#/definitions/viewDefinition"
+        }
+      }
+    },
+    "languages": {
+      "type": "array",
+      "title": "Obsługiwane Języki",
+      "description": "Lista dostępnych języków interfejsu",
+      "items": {
+        "$ref": "#/definitions/languageDefinition"
+      }
+    },
+    "storage": {
+      "type": "object",
+      "title": "Konfiguracja Przechowywania",
+      "description": "Ustawienia lokalnego przechowywania danych",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Czy włączyć lokalne przechowywanie"
+        },
+        "keys": {
+          "type": "object",
+          "description": "Klucze do przechowywania w localStorage"
+        }
+      }
+    },
+    "navigation": {
+      "type": "object",
+      "title": "Ustawienia Nawigacji",
+      "description": "Konfiguracja zachowania nawigacji",
+      "properties": {
+        "preserveView": {
+          "type": "boolean",
+          "description": "Zachowaj widok po odświeżeniu"
+        },
+        "preserveLanguage": {
+          "type": "boolean", 
+          "description": "Zachowaj język po odświeżeniu"
+        },
+        "actionOnlyChanges": {
+          "type": "boolean",
+          "description": "Zmieniaj tylko akcje, nie widoki"
+        },
+        "hashPrefix": {
+          "type": "string",
+          "description": "Prefiks dla hash routingu"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "viewDefinition": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nazwa widoku"
+        },
+        "description": {
+          "type": "string",
+          "description": "Opis funkcjonalności widoku"
+        },
+        "actions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Dostępne akcje w widoku"
+        }
+      },
+      "required": ["name", "description", "actions"]
+    },
+    "languageDefinition": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "pattern": "^[a-z]{2}$",
+          "description": "Kod języka (ISO 639-1)"
+        },
+        "name": {
+          "type": "string",
+          "description": "Nazwa języka"
+        },
+        "flag": {
+          "type": "string",
+          "description": "Emoji flagi kraju"
+        },
+        "default": {
+          "type": "boolean",
+          "description": "Czy to domyślny język"
+        }
+      },
+      "required": ["code", "name", "flag", "default"]
+    }
+  },
+  "required": ["default", "views", "languages"],
+  "additionalProperties": false
+}

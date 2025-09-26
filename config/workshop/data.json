@@ -1,0 +1,178 @@
+{
+  "spare_parts": {
+    "default_parts": [
+      {
+        "id": "F001",
+        "name": "Filtr P3 uniwersalny",
+        "category": "FILTER",
+        "quantity": 25,
+        "min_level": 5,
+        "price": 45.50,
+        "supplier": "SafetyTech Sp. z o.o.",
+        "part_number": "ST-P3-001",
+        "shelf_life_days": 1095
+      },
+      {
+        "id": "S001", 
+        "name": "Uszczelka główna",
+        "category": "SEAL",
+        "quantity": 15,
+        "min_level": 3,
+        "price": 12.80,
+        "supplier": "ProSeal Ltd.",
+        "part_number": "PS-MAIN-001"
+      },
+      {
+        "id": "V001",
+        "name": "Zawór wydechowy",
+        "category": "VALVE",
+        "quantity": 8,
+        "min_level": 2,
+        "price": 89.00,
+        "supplier": "ValveTech GmbH",
+        "part_number": "VT-EXH-001"
+      },
+      {
+        "id": "ST001",
+        "name": "Pas nośny regulowany", 
+        "category": "STRAP",
+        "quantity": 12,
+        "min_level": 2,
+        "price": 34.20,
+        "supplier": "ComfortGear Inc.",
+        "part_number": "CG-STRAP-001"
+      },
+      {
+        "id": "V002",
+        "name": "Wizjer panoramiczny",
+        "category": "VISOR",
+        "quantity": 6,
+        "min_level": 1,
+        "price": 156.70,
+        "supplier": "ClearView Systems",
+        "part_number": "CV-PANO-001"
+      }
+    ]
+  },
+  "tools": {
+    "calibration_tools": [
+      {
+        "id": "CAL001",
+        "name": "Manometr wzorcowy ±50mbar",
+        "location": "LAB-001",
+        "last_calibration": "2024-01-15",
+        "next_calibration": "2025-01-15",
+        "status": "OK",
+        "calibration_interval": 365,
+        "serial_number": "MAN-2024-001"
+      },
+      {
+        "id": "CAL002", 
+        "name": "Generator podciśnienia",
+        "location": "LAB-001",
+        "last_calibration": "2024-01-10",
+        "next_calibration": "2025-01-10",
+        "status": "OK",
+        "calibration_interval": 365,
+        "serial_number": "GEN-VAC-002"
+      },
+      {
+        "id": "CAL003",
+        "name": "Rotametr wzorcowy 0-50L/min",
+        "location": "LAB-002", 
+        "last_calibration": "2023-12-20",
+        "next_calibration": "2024-12-20",
+        "status": "ATTENTION",
+        "calibration_interval": 365,
+        "serial_number": "ROT-STD-003"
+      }
+    ]
+  },
+  "maintenance": {
+    "default_schedules": [
+      {
+        "id": "MAINT001",
+        "device": "PRESS-STATION-01",
+        "type": "Kalibracja stanowiska",
+        "frequency": "monthly",
+        "estimated_duration": 120,
+        "required_tools": ["CAL001", "CAL002"],
+        "technician_level": "certified"
+      },
+      {
+        "id": "MAINT002",
+        "device": "LEAK-TESTER-01", 
+        "type": "Przegląd szczelności",
+        "frequency": "weekly",
+        "estimated_duration": 60,
+        "required_tools": ["CAL001"],
+        "technician_level": "standard"
+      },
+      {
+        "id": "MAINT003",
+        "device": "FLOW-METER-01",
+        "type": "Sprawdzenie przepływomierza",
+        "frequency": "quarterly",
+        "estimated_duration": 90,
+        "required_tools": ["CAL003"],
+        "technician_level": "certified"
+      }
+    ]
+  },
+  "suppliers": {
+    "default_suppliers": [
+      {
+        "id": "SUP001",
+        "name": "SafetyTech Sp. z o.o.",
+        "contact_person": "Jan Kowalski",
+        "email": "j.kowalski@safetytech.pl",
+        "phone": "+48 22 123 45 67",
+        "address": "ul. Bezpieczna 10, 00-001 Warszawa",
+        "payment_terms": 30,
+        "delivery_time": 7
+      },
+      {
+        "id": "SUP002",
+        "name": "ProSeal Ltd.",
+        "contact_person": "Anna Nowak",
+        "email": "a.nowak@proseal.com",
+        "phone": "+48 61 987 65 43",
+        "address": "ul. Uszczelkowa 5, 60-001 Poznań",
+        "payment_terms": 14,
+        "delivery_time": 5
+      }
+    ]
+  },
+  "categories": {
+    "FILTER": {
+      "name": "Filtry",
+      "description": "Filtry ochronne wszystkich typów",
+      "icon": "🔽"
+    },
+    "SEAL": {
+      "name": "Uszczelki",
+      "description": "Uszczelki i elementy uszczelniające",
+      "icon": "⭕"
+    },
+    "VALVE": {
+      "name": "Zawory",
+      "description": "Zawory wydechowe i regulacyjne", 
+      "icon": "🔧"
+    },
+    "STRAP": {
+      "name": "Pasy",
+      "description": "Pasy nośne i elementy mocujące",
+      "icon": "🎽"
+    },
+    "VISOR": {
+      "name": "Wizjery",
+      "description": "Szyby i wizjery panoramiczne",
+      "icon": "👁️"
+    },
+    "OTHER": {
+      "name": "Inne",
+      "description": "Pozostałe części zamienne",
+      "icon": "🔹"
+    }
+  }
+}

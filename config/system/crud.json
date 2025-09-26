@@ -1,0 +1,176 @@
+{
+  "name": "system",
+  "title": "Konfiguracja Systemu",
+  "description": "Tylko bezpieczne parametry - struktura systemu chroniona",
+  "rules": {
+    "editable": [
+      "authentication/session_timeout",
+      "authentication/token_refresh_interval", 
+      "authentication/max_login_attempts",
+      "authentication/lockout_duration",
+      "authentication/password_requirements/min_length",
+      "authentication/password_requirements/require_uppercase",
+      "authentication/password_requirements/require_lowercase",
+      "authentication/password_requirements/require_numbers",
+      "authentication/password_requirements/require_symbols",
+      "ui/animations_enabled",
+      "ui/auto_logout_warning",
+      "ui/notification_timeout",
+      "ui/toast_position",
+      "ui/keyboard/virtual_keyboard_enabled",
+      "ui/keyboard/auto_focus_enabled",
+      "ui/keyboard/mobile_prevention",
+      "sensors/update_interval",
+      "sensors/max_readings",
+      "sensors/pressure_units",
+      "sensors/temperature_units",
+      "sensors/calibration_interval",
+      "sensors/alarm_thresholds/*",
+      "reports/default_format",
+      "reports/batch_size",
+      "reports/retention_days",
+      "reports/auto_cleanup",
+      "workshop/default_currency",
+      "workshop/low_stock_threshold"
+    ],
+    "addable": [
+      "sensors/alarm_thresholds",
+      "reports/formats"
+    ],
+    "deletable": [
+      "sensors/alarm_thresholds/*"
+    ],
+    "readonly": [
+      "roles/valid_roles",
+      "roles/default_role",
+      "roles/role_hierarchy",
+      "reports/formats",
+      "workshop/parts_categories",
+      "workshop/maintenance_intervals"
+    ],
+    "protected": [
+      "roles",
+      "workshop/parts_categories",
+      "workshop/maintenance_intervals"
+    ]
+  },
+  "field_types": {
+    "session_timeout": "duration_ms",
+    "token_refresh_interval": "duration_ms",
+    "max_login_attempts": "number",
+    "lockout_duration": "duration_ms",
+    "min_length": "number",
+    "require_uppercase": "boolean",
+    "require_lowercase": "boolean",
+    "require_numbers": "boolean",
+    "require_symbols": "boolean",
+    "animations_enabled": "boolean",
+    "auto_logout_warning": "duration_ms",
+    "notification_timeout": "duration_ms",
+    "toast_position": "select",
+    "virtual_keyboard_enabled": "boolean",
+    "auto_focus_enabled": "boolean",
+    "mobile_prevention": "boolean",
+    "update_interval": "duration_ms",
+    "max_readings": "number",
+    "pressure_units": "select",
+    "temperature_units": "select",
+    "calibration_interval": "duration_ms",
+    "default_format": "select",
+    "batch_size": "number",
+    "retention_days": "number",
+    "auto_cleanup": "boolean",
+    "default_currency": "currency",
+    "low_stock_threshold": "number"
+  },
+  "validation_rules": {
+    "session_timeout": {
+      "min": 300000,
+      "max": 86400000
+    },
+    "token_refresh_interval": {
+      "min": 60000,
+      "max": 1800000
+    },
+    "max_login_attempts": {
+      "min": 1,
+      "max": 10
+    },
+    "lockout_duration": {
+      "min": 300000,
+      "max": 3600000
+    },
+    "min_length": {
+      "min": 4,
+      "max": 128
+    },
+    "update_interval": {
+      "min": 100,
+      "max": 10000
+    },
+    "max_readings": {
+      "min": 10,
+      "max": 1000
+    },
+    "calibration_interval": {
+      "min": 3600000
+    },
+    "batch_size": {
+      "min": 1,
+      "max": 1000
+    },
+    "retention_days": {
+      "min": 1,
+      "max": 3650
+    },
+    "low_stock_threshold": {
+      "min": 1,
+      "max": 100
+    }
+  },
+  "ui_hints": {
+    "session_timeout": {
+      "help": "Czas trwania sesji w milisekundach (5min - 24h)",
+      "format": "duration"
+    },
+    "max_login_attempts": {
+      "help": "Maksymalna liczba nieudanych prób logowania"
+    },
+    "lockout_duration": {
+      "help": "Czas blokady konta po przekroczeniu prób",
+      "format": "duration"
+    },
+    "toast_position": {
+      "options": ["top-left", "top-right", "bottom-left", "bottom-right"],
+      "help": "Pozycja powiadomień na ekranie"
+    },
+    "pressure_units": {
+      "options": ["mbar", "hPa", "Pa", "mmHg"],
+      "help": "Jednostki miary ciśnienia"
+    },
+    "temperature_units": {
+      "options": ["celsius", "fahrenheit", "kelvin"],
+      "help": "Jednostki miary temperatury"
+    },
+    "default_format": {
+      "options": ["PDF", "XML", "CSV", "JSON", "XLSX"],
+      "help": "Domyślny format eksportu raportów"
+    },
+    "default_currency": {
+      "placeholder": "PLN",
+      "help": "Kod waluty ISO 4217 (np. PLN, EUR, USD)"
+    }
+  },
+  "critical_settings": [
+    "roles",
+    "authentication/password_requirements",
+    "sensors/calibration_interval"
+  ],
+  "duration_formats": {
+    "ms": "milisekundy",
+    "s": "sekundy",
+    "min": "minuty", 
+    "h": "godziny",
+    "d": "dni"
+  }
+}

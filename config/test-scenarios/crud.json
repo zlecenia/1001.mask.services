@@ -1,0 +1,166 @@
+{
+  "name": "test-scenarios",
+  "title": "Scenariusze Testów",
+  "description": "Parametry testów i opisy - normy chronione",
+  "rules": {
+    "editable": [
+      "default_scenarios/*/*/name",
+      "default_scenarios/*/*/description", 
+      "default_scenarios/*/*/parameters/pressure_min",
+      "default_scenarios/*/*/parameters/pressure_max",
+      "default_scenarios/*/*/parameters/duration",
+      "default_scenarios/*/*/parameters/leak_threshold",
+      "default_scenarios/*/*/steps/*",
+      "device_types/*/name",
+      "device_types/*/test_frequency"
+    ],
+    "addable": [
+      "default_scenarios",
+      "default_scenarios/*",
+      "default_scenarios/*/*/steps",
+      "test_standards",
+      "device_types"
+    ],
+    "deletable": [
+      "default_scenarios/*",
+      "default_scenarios/*/*",
+      "default_scenarios/*/*/steps/*",
+      "device_types/*"
+    ],
+    "readonly": [
+      "default_scenarios/*/*/norm",
+      "test_standards/*/name",
+      "test_standards/*/version",
+      "test_standards/*/requirements",
+      "device_types/*/category"
+    ],
+    "protected": [
+      "test_standards"
+    ]
+  },
+  "field_types": {
+    "name": "string",
+    "norm": "norm_reference",
+    "description": "text",
+    "pressure_min": "number",
+    "pressure_max": "number", 
+    "duration": "duration_seconds",
+    "leak_threshold": "number",
+    "test_frequency": "select",
+    "category": "select"
+  },
+  "validation_rules": {
+    "name": {
+      "minLength": 5,
+      "maxLength": 100,
+      "required": true
+    },
+    "norm": {
+      "pattern": "^(PN-EN|ISO|ANSI|BS)\\s+\\d+",
+      "required": true
+    },
+    "description": {
+      "minLength": 10,
+      "maxLength": 500,
+      "required": true
+    },
+    "pressure_min": {
+      "type": "number",
+      "required": true
+    },
+    "pressure_max": {
+      "type": "number",
+      "required": true
+    },
+    "duration": {
+      "min": 30,
+      "max": 3600,
+      "required": true
+    },
+    "leak_threshold": {
+      "min": 0,
+      "max": 10,
+      "required": true
+    }
+  },
+  "ui_hints": {
+    "name": {
+      "placeholder": "Test po użyciu - Maska pełnotwarzowa",
+      "help": "Krótka, opisowa nazwa scenariusza testu"
+    },
+    "norm": {
+      "placeholder": "PN-EN 136",
+      "help": "Odniesienie do obowiązującej normy (format: STANDARD NUMER)"
+    },
+    "description": {
+      "placeholder": "Standardowy test szczelności po każdym użyciu maski...",
+      "help": "Szczegółowy opis procedury testowej",
+      "multiline": true
+    },
+    "pressure_min": {
+      "placeholder": "-10",
+      "help": "Minimalne ciśnienie testowe w mbar (wartości ujemne dla podciśnienia)"
+    },
+    "pressure_max": {
+      "placeholder": "5",
+      "help": "Maksymalne ciśnienie testowe w mbar"
+    },
+    "duration": {
+      "placeholder": "300",
+      "help": "Czas trwania testu w sekundach (30-3600s)"
+    },
+    "leak_threshold": {
+      "placeholder": "0.5",
+      "help": "Maksymalny dopuszczalny wyciek w l/min"
+    },
+    "test_frequency": {
+      "options": [
+        "after_each_use", 
+        "daily", 
+        "weekly", 
+        "monthly", 
+        "quarterly", 
+        "yearly", 
+        "before_use"
+      ],
+      "help": "Jak często należy wykonywać test tego urządzenia"
+    },
+    "category": {
+      "options": ["RPE", "SCSR", "CPC", "PAPR"],
+      "help": "RPE=Respiratory Protective Equipment, SCSR=Self-Contained Self-Rescue, CPC=Chemical Protective Clothing, PAPR=Powered Air-Purifying Respirator"
+    }
+  },
+  "device_type_codes": {
+    "PP_MASK": "Maska pełnotwarzowa",
+    "NP_MASK": "Półmaska filtrująca",
+    "SCBA": "Aparat oddechowy ze sprężonym powietrzem",
+    "CPS": "Kombinezony ochronne"
+  },
+  "test_type_codes": {
+    "post_use": "Test po użyciu",
+    "periodic": "Test okresowy", 
+    "full_test": "Test kompletny",
+    "calibration": "Kalibracja"
+  },
+  "default_new_scenario": {
+    "name": "Nowy scenariusz testu",
+    "norm": "PN-EN 136",
+    "description": "Opis nowego scenariusza testowego",
+    "parameters": {
+      "pressure_min": -10,
+      "pressure_max": 0,
+      "duration": 300,
+      "leak_threshold": 0.5
+    },
+    "steps": [
+      "Przygotuj urządzenie do testu",
+      "Wykonaj test zgodnie z procedurą", 
+      "Zapisz wyniki"
+    ]
+  },
+  "default_new_device_type": {
+    "name": "Nowy typ urządzenia",
+    "category": "RPE",
+    "test_frequency": "monthly"
+  }
+}

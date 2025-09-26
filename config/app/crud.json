@@ -1,0 +1,53 @@
+{
+  "name": "app",
+  "title": "Konfiguracja Aplikacji",
+  "description": "Tylko wartości konfiguracyjne, struktura chroniona",
+  "rules": {
+    "editable": [
+      "API_URL",
+      "WS_URL", 
+      "MOCK_MODE",
+      "UPDATE_INTERVAL"
+    ],
+    "addable": false,
+    "deletable": false,
+    "readonly": [],
+    "protected": ["*"]
+  },
+  "field_types": {
+    "API_URL": "url",
+    "WS_URL": "url",
+    "MOCK_MODE": "boolean",
+    "UPDATE_INTERVAL": "number"
+  },
+  "validation_rules": {
+    "API_URL": {
+      "required": true,
+      "pattern": "^https?://"
+    },
+    "WS_URL": {
+      "required": true,
+      "pattern": "^wss?://"
+    },
+    "UPDATE_INTERVAL": {
+      "min": 1000,
+      "max": 60000
+    }
+  },
+  "ui_hints": {
+    "API_URL": {
+      "placeholder": "http://localhost:3000",
+      "help": "Adres URL serwera API"
+    },
+    "WS_URL": {
+      "placeholder": "ws://localhost:3000",
+      "help": "Adres WebSocket dla komunikacji real-time"
+    },
+    "MOCK_MODE": {
+      "help": "Włącz tryb symulacji dla testów"
+    },
+    "UPDATE_INTERVAL": {
+      "help": "Częstotliwość odświeżania w milisekundach"
+    }
+  }
+}

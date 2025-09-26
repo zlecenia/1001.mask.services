@@ -1,0 +1,59 @@
+{
+  "OPERATOR": [
+    { "key": "test_wizard", "label": "Test Wizard", "icon": "🧙" },
+    { "key": "test_quick", "label": "Quick Test", "icon": "⚡" },
+    { "key": "test_scenarios", "label": "Test Scenarios", "icon": "📋" },
+    { "key": "device_history", "label": "Device History", "icon": "📜" },
+    { "key": "reports_view", "label": "View Reports", "icon": "📄" },
+    { "key": "reports_batch", "label": "Batch Reports", "icon": "📊" },
+    { "key": "reports_schedule", "label": "Report Schedule", "icon": "⏰" }
+  ],
+  "ADMIN": [
+    { "key": "test_scenarios", "label": "Test Scenarios", "icon": "📋" },
+    { "key": "user_data", "label": "User Data", "icon": "👤" },
+    { "key": "realtime_sensors", "label": "Real-time Sensors", "icon": "📊" },
+    { "key": "workshop_parts", "label": "Workshop Parts", "icon": "🔧" },
+    { "key": "workshop_maintenance", "label": "Maintenance Schedule", "icon": "📅" },
+    { "key": "workshop_tools", "label": "Calibration Tools", "icon": "⚙️" },
+    { "key": "workshop_inventory", "label": "Inventory", "icon": "📦" },
+    { "key": "users", "label": "Users", "icon": "👥" },
+    { "key": "service_menu", "label": "Service Menu", "icon": "🛡️" }
+  ],
+  "SUPERUSER": [
+    { "key": "user_data", "label": "User Data", "icon": "👤" },
+    { "key": "realtime_sensors", "label": "Real-time Sensors", "icon": "📊" },
+    { "key": "reports_view", "label": "View Reports", "icon": "📄" },
+    { "key": "reports_batch", "label": "Batch Reports", "icon": "📊" },
+    { "key": "reports_schedule", "label": "Report Schedule", "icon": "⏰" },
+    { "key": "workshop_parts", "label": "Workshop Parts", "icon": "🔧" },
+    { "key": "workshop_maintenance", "label": "Maintenance Schedule", "icon": "📅" },
+    { "key": "workshop_tools", "label": "Calibration Tools", "icon": "⚙️" },
+    { "key": "workshop_inventory", "label": "Inventory", "icon": "📦" },
+    { "key": "users", "label": "Users", "icon": "👥" },
+    { "key": "service_menu", "label": "Service Menu", "icon": "🛡️" },
+    { "key": "settings_scenarios", "label": "Test Scenarios", "icon": "📝" },
+    { "key": "settings_integration", "label": "Integrations", "icon": "🔗" },
+    { "key": "settings_standards", "label": "Standards", "icon": "📋" },
+    { "key": "settings_system", "label": "System Config", "icon": "⚙️" }
+  ],
+  "SERVICEUSER": [
+    { "key": "test_scenarios", "label": "Test Scenarios", "icon": "📋" },
+    { "key": "user_data", "label": "User Data", "icon": "👤" },
+    { "key": "realtime_sensors", "label": "Real-time Sensors", "icon": "📊" },
+    { "key": "device_history", "label": "Device History", "icon": "📜" },
+    { "key": "reports_view", "label": "View Reports", "icon": "📄" },
+    { "key": "reports_batch", "label": "Batch Reports", "icon": "📊" },
+    { "key": "reports_schedule", "label": "Report Schedule", "icon": "⏰" },
+    { "key": "workshop_parts", "label": "Workshop Parts", "icon": "🔧" },
+    { "key": "workshop_maintenance", "label": "Maintenance Schedule", "icon": "📅" },
+    { "key": "workshop_tools", "label": "Calibration Tools", "icon": "⚙️" },
+    { "key": "workshop_inventory", "label": "Inventory", "icon": "📦" },
+    { "key": "users", "label": "Users", "icon": "👥" },
+    { "key": "service_menu", "label": "Service Menu", "icon": "🛡️" },
+    { "key": "settings_scenarios", "label": "Test Scenarios", "icon": "📝" },
+    { "key": "settings_integration", "label": "Integrations", "icon": "🔗" },
+    { "key": "settings_standards", "label": "Standards", "icon": "📋" },
+    { "key": "settings_system", "label": "System Config", "icon": "⚙️" },
+    { "key": "advanced_diagnostics", "label": "Advanced Diagnostics", "icon": "🔍" }
+  ]
+}

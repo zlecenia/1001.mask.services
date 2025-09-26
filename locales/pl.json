@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "language": "pl",
+    "name": "Polski",
+    "rtl": false
+  },
+  "global": {
+    "title": "MASKTRONIC C20 1001 - System Mock v2.0",
+    "company": "MASKTRONIC",
+    "hardware": "C20",
+    "product": "1001",
+    "version": "v2.0 MOCK",
+    "offline": "OFFLINE",
+    "online": "ONLINE",
+    "loading": "Ładowanie...",
+    "error": "Błąd",
+    "success": "Sukces",
+    "warning": "Ostrzeżenie",
+    "info": "Informacja"
+  },
+  "login": {
+    "menu_header": "MENU LOGOWANIA",
+    "scanner": "Skaner",
+    "keyword": "Hasło",
+    "user_login_by_keyword": "Logowanie Użytkownika Hasłem",
+    "user_login_by_scanner": "Logowanie Użytkownika Skanerem QR/Barcode",
+    "password": "Hasło",
+    "password_placeholder": "Wprowadź hasło",
+    "login_as_operator": "Zaloguj jako OPERATOR",
+    "login_as_admin": "Zaloguj jako ADMIN", 
+    "login_as_superuser": "Zaloguj jako SUPER USER",
+    "login_as_serviceuser": "Zaloguj jako SERVICE USER",
+    "scanner_not_detected": "Skaner nie został wykryty",
+    "code_not_read": "Kod nie został poprawnie sczytany",
+    "use_keyboard": "Użyj klawiatury",
+    "enter_password": "Wprowadź hasło",
+    "login_failed": "Logowanie nieudane",
+    "invalid_credentials": "Nieprawidłowe dane logowania"
+  },
+  "loading": {
+    "title": "Logowanie...",
+    "message": "Proszę czekać"
+  },
+  "keyboard": {
+    "caps": "Caps",
+    "shift": "Shift",
+    "tab": "Tab",
+    "space": "Spacja",
+    "clear": "Wyczyść",
+    "backspace": "Cofnij",
+    "enter": "Enter",
+    "toggle": "123"
+  },
+  "menu": {
+    "user_menu": "MENU UŻYTKOWNIKA",
+    "welcome": "Wybierz opcję z menu",
+    "system_ready": "System gotowy do pracy",
+    "inactive": "Nieaktywny",
+    "logout": "Wyloguj",
+    "test_menu": "Menu Testów",
+    "user_data": "Dane Użytkownika", 
+    "realtime_sensors": "Czujniki w czasie rzeczywistym",
+    "device_history": "Historia urządzenia",
+    "reports_view": "Przeglądanie raportów",
+    "reports_batch": "Raporty zbiorcze",
+    "reports_schedule": "Harmonogram raportów",
+    "workshop_parts": "Części zamienne",
+    "workshop_maintenance": "Harmonogram przeglądów",
+    "workshop_tools": "Narzędzia kalibracyjne",
+    "workshop_inventory": "Magazyn",
+    "test_wizard": "Kreator testów",
+    "test_quick": "Szybki test",
+    "test_scenarios": "Scenariusze testowe",
+    "settings_scenarios": "Scenariusze testowe",
+    "settings_integration": "Integracje",
+    "settings_standards": "Standardy",
+    "settings_system": "Konfiguracja systemu",
+    "users": "Użytkownicy",
+    "service_menu": "Menu Serwisowe",
+    "advanced_diagnostics": "Zaawansowana Diagnostyka"
+  },
+  "system": {
+    "welcome": "Witamy",
+    "system_starting": "System uruchamia się...",
+    "loading_progress": "Postęp ładowania",
+    "masktronic": "MASKTRONIC",
+    "system_ready": "System gotowy"
+  },
+  "data": {
+    "pressure": "Ciśnienie",
+    "sensors": "CZUJNIKI DANYCH",
+    "low": "Niskie",
+    "medium": "Średnie", 
+    "high": "Wysokie",
+    "temperature": "Temperatura",
+    "humidity": "Wilgotność",
+    "uptime": "Czas pracy"
+  },
+  "device": {
+    "realtime_sensors": "Czujniki czasu rzeczywistego",
+    "pressure_sensors": "Czujniki ciśnienia",
+    "pressure_low": "Niskie",
+    "pressure_medium": "Średnie",
+    "pressure_high": "Wysokie",
+    "history_title": "Historia urządzenia",
+    "history_loading": "Ładowanie historii urządzenia..."
+  },
+  "alarms": {
+    "title": "Aktywne alarmy",
+    "acknowledge_all": "Potwierdź wszystkie",
+    "mute": "Wycisz"
+  },
+  "settings": {
+    "device_settings": "Ustawienia Urządzenia",
+    "network_config": "Konfiguracja Sieciowa",
+    "system_config": "Konfiguracja Systemu",
+    "update_interval": "Interwał Aktualizacji",
+    "debug_mode": "Tryb Debugowania",
+    "save_settings": "Zapisz Ustawienia",
+    "seconds": "sekund"
+  },
+  "roles": {
+    "OPERATOR": "Operator",
+    "ADMIN": "Admin",
+    "SUPERUSER": "Super User",
+    "SERVICEUSER": "Service User"
+  },
+  "messages": {
+    "please_enter_password": "Proszę wprowadzić hasło",
+    "login_successful": "Logowanie pomyślne",
+    "session_expired": "Sesja wygasła",
+    "access_denied": "Dostęp zabroniony",
+    "function_in_development": "Funkcja w przygotowaniu...",
+    "no_permissions": "Brak uprawnień!",
+    "settings_saved": "Ustawienia zostały zapisane!"
+  }
+}

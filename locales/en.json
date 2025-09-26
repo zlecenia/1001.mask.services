@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "language": "en",
+    "name": "English",
+    "rtl": false
+  },
+  "global": {
+    "title": "MASKTRONIC C20 1001 - System Mock v2.0",
+    "company": "MASKTRONIC",
+    "hardware": "C20",
+    "product": "1001",
+    "version": "v2.0 MOCK",
+    "offline": "OFFLINE",
+    "online": "ONLINE",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "login": {
+    "menu_header": "LOGIN MENU",
+    "scanner": "Scanner",
+    "keyword": "Keyword",
+    "user_login_by_keyword": "User Login By Keyword",
+    "user_login_by_scanner": "User Login by QR-CODE / BARCODE",
+    "password": "Password",
+    "password_placeholder": "Enter password",
+    "login_as_operator": "Login as OPERATOR",
+    "login_as_admin": "Login as ADMIN",
+    "login_as_superuser": "Login as SUPERUSER",
+    "login_as_serviceuser": "Login as SERVICEUSER",
+    "scanner_not_detected": "Scanner not detected",
+    "code_not_read": "Code not read correctly",
+    "use_keyboard": "Use keyboard",
+    "enter_password": "Enter password",
+    "login_failed": "Login failed",
+    "invalid_credentials": "Invalid credentials"
+  },
+  "loading": {
+    "title": "Logging in...",
+    "message": "Please wait"
+  },
+  "keyboard": {
+    "caps": "Caps",
+    "shift": "Shift",
+    "tab": "Tab",
+    "space": "Space",
+    "clear": "Clear",
+    "backspace": "Backspace",
+    "enter": "Enter",
+    "toggle": "123"
+  },
+  "menu": {
+    "user_menu": "USER MENU",
+    "welcome": "Select menu option",
+    "system_ready": "System ready to work",
+    "inactive": "Inactive",
+    "logout": "Logout",
+    "test_menu": "Test Menu",
+    "user_data": "User Data",
+    "realtime_sensors": "Real-time Sensors",
+    "device_history": "Device History",
+    "reports_view": "View Reports",
+    "reports_batch": "Batch Reports",
+    "reports_schedule": "Report Schedule",
+    "workshop_parts": "Spare Parts",
+    "workshop_maintenance": "Maintenance Schedule",
+    "workshop_tools": "Calibration Tools",
+    "workshop_inventory": "Inventory",
+    "test_wizard": "Test Wizard",
+    "test_quick": "Quick Test",
+    "test_scenarios": "Test Scenarios",
+    "settings_scenarios": "Test Scenarios",
+    "settings_integration": "Integrations",
+    "settings_standards": "Standards",
+    "settings_system": "System Config",
+    "users": "Users",
+    "service_menu": "Service Menu",
+    "advanced_diagnostics": "Advanced Diagnostics"
+  },
+  "system": {
+    "welcome": "Welcome",
+    "system_starting": "System starting in Progress...",
+    "loading_progress": "Loading Progress",
+    "masktronic": "MASKTRONIC",
+    "system_ready": "System Ready"
+  },
+  "data": {
+    "pressure": "Pressure",
+    "sensors": "DATA SENSORS",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "temperature": "Temperature",
+    "humidity": "Humidity",
+    "uptime": "Uptime"
+  },
+  "device": {
+    "realtime_sensors": "Real-time Sensors",
+    "pressure_sensors": "Pressure Sensors",
+    "pressure_low": "Low",
+    "pressure_medium": "Medium", 
+    "pressure_high": "High",
+    "history_title": "Device History",
+    "history_loading": "Loading device history..."
+  },
+  "alarms": {
+    "title": "Active Alarms",
+    "acknowledge_all": "Acknowledge All",
+    "mute": "Mute"
+  },
+  "settings": {
+    "device_settings": "Device Settings",
+    "network_config": "Network Configuration",
+    "system_config": "System Configuration",
+    "update_interval": "Update Interval",
+    "debug_mode": "Debug Mode",
+    "save_settings": "Save Settings",
+    "seconds": "seconds"
+  },
+  "roles": {
+    "OPERATOR": "Operator",
+    "ADMIN": "Administrator",
+    "SUPERUSER": "Super User",
+    "SERVICEUSER": "Service Technician"
+  },
+  "messages": {
+    "please_enter_password": "Please enter a password",
+    "login_successful": "Login successful",
+    "session_expired": "Session expired",
+    "access_denied": "Access denied",
+    "function_in_development": "Function in development...",
+    "no_permissions": "No permissions!",
+    "settings_saved": "Settings have been saved!"
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "name": "1001.mask.services",
+  "version": "3.0.0",
+  "description": "Modular MASKSERVICE C20 1001 system with FeatureRegistry and automated module generation",
+  "type": "module",
+  "main": "js/main.js",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "build": "npm run lint && npm run test",
+    "lint": "eslint js/ --ext .js,.vue",
+    "lint:fix": "eslint js/ --ext .js,.vue --fix",
+    "dev": "http-server -p 8080 -c-1",
+    "generate:module": "node js/moduleManagerWithPackageJson.js"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "vue-router": "^4.0.0",
+    "vuex": "^4.0.0",
+    "vue-i18n": "^9.0.0",
+    "axios": "^1.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "http-server": "^14.0.0",
+    "@vitejs/plugin-vue": "^4.0.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zlecenia/1001.mask.services"
+  },
+  "keywords": [
+    "mask-service",
+    "vue3",
+    "modular-architecture",
+    "feature-registry",
+    "testing-equipment"
+  ],
+  "license": "PROPRIETARY"
+}

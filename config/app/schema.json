@@ -1,0 +1,33 @@
+{
+  "type": "object",
+  "title": "Konfiguracja Aplikacji",
+  "description": "Podstawowe ustawienia połączenia i trybu pracy aplikacji",
+  "properties": {
+    "API_URL": {
+      "type": "string",
+      "pattern": "^https?://",
+      "description": "URL API serwera (protokół http lub https)",
+      "examples": ["http://localhost:3000", "https://api.example.com"]
+    },
+    "WS_URL": {
+      "type": "string", 
+      "pattern": "^wss?://",
+      "description": "URL WebSocket (protokół ws lub wss)",
+      "examples": ["ws://localhost:3000", "wss://ws.example.com"]
+    },
+    "MOCK_MODE": {
+      "type": "boolean",
+      "description": "Tryb symulacji - true dla testów, false dla produkcji",
+      "default": true
+    },
+    "UPDATE_INTERVAL": {
+      "type": "number",
+      "minimum": 1000,
+      "maximum": 60000,
+      "description": "Interwał odświeżania danych w milisekundach (1s - 60s)",
+      "default": 5000
+    }
+  },
+  "required": ["API_URL", "WS_URL", "MOCK_MODE", "UPDATE_INTERVAL"],
+  "additionalProperties": false
+}

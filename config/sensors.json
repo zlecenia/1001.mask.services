@@ -1,0 +1,98 @@
+{
+  "sensorDefaults": {
+    "pressure": {
+      "low": {
+        "min": 8,
+        "max": 12,
+        "unit": "mbar",
+        "alarm": false,
+        "current": 10.0,
+        "status": "normal",
+        "description": "Low pressure sensor for mask testing"
+      },
+      "medium": {
+        "min": 18,
+        "max": 22,
+        "unit": "bar",
+        "alarm": false,
+        "current": 20.0,
+        "status": "normal",
+        "description": "Medium pressure sensor for standard operations"
+      },
+      "high": {
+        "min": 28,
+        "max": 32,
+        "unit": "bar",
+        "alarm": false,
+        "current": 30.0,
+        "status": "normal",
+        "description": "High pressure sensor for stress testing"
+      }
+    },
+    "flow": {
+      "inlet": {
+        "current": 25.0,
+        "unit": "l/min",
+        "max": 50,
+        "min": 0,
+        "alarm": false,
+        "status": "normal",
+        "description": "Inlet flow measurement"
+      },
+      "outlet": {
+        "current": 23.0,
+        "unit": "l/min",
+        "max": 45,
+        "min": 0,
+        "alarm": false,
+        "status": "normal",
+        "description": "Outlet flow measurement"
+      }
+    },
+    "temperature": {
+      "current": 22.5,
+      "unit": "°C",
+      "min": 18,
+      "max": 35,
+      "alarm": false,
+      "status": "normal",
+      "description": "Environmental temperature monitoring"
+    },
+    "humidity": {
+      "current": 45,
+      "unit": "%",
+      "min": 30,
+      "max": 70,
+      "alarm": false,
+      "status": "normal",
+      "description": "Environmental humidity monitoring"
+    }
+  },
+  "alarmThresholds": {
+    "pressure_low": { "min": 8, "max": 12 },
+    "pressure_medium": { "min": 18, "max": 22 },
+    "pressure_high": { "min": 28, "max": 32 },
+    "flow_inlet": { "min": 0, "max": 50 },
+    "flow_outlet": { "min": 0, "max": 45 },
+    "temperature": { "min": 18, "max": 35 },
+    "humidity": { "min": 30, "max": 70 }
+  },
+  "updateSettings": {
+    "interval": 1000,
+    "simulationVariance": {
+      "pressure_low": 0.5,
+      "pressure_medium": 1.0,
+      "pressure_high": 1.5,
+      "flow_inlet": 2.0,
+      "flow_outlet": 1.8,
+      "temperature": 0.3,
+      "humidity": 2.0
+    }
+  },
+  "metadata": {
+    "version": "2.0.1001",
+    "description": "MASKTRONIC C20 - Sensor Configuration",
+    "lastModified": "2025-09-24T13:00:00Z",
+    "extractedFrom": "vue-sensor-monitoring.js"
+  }
+}

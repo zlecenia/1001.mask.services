@@ -1,0 +1,474 @@
+/**
+ * MASKSERVICE C20 - LCD Optimization CSS
+ * Target: LCD IPS 7.9" Touch Screen (400px W × 1280px H)
+ * Proporcje: wysokość = 30% szerokości (1280/400 = 3.2)
+ * PROMPT 3: Optymalizacja dla LCD 7.9"
+ */
+
+/* ==========================================================================
+   LCD SCREEN MEDIA QUERY - 400x1280px Portrait
+   ========================================================================== */
+
+@media screen and (max-width: 400px) and (min-height: 1280px) {
+    
+    /* ==========================================================================
+       TOUCH-OPTIMIZED INTERFACE
+       ========================================================================== */
+    
+    .lcd-optimized {
+        font-size: 16px;
+        line-height: 1.4;
+        padding: 8px;
+        box-sizing: border-box;
+    }
+    
+    /* Touch Button Optimization - Minimum 44px per WCAG */
+    .touch-button,
+    .btn,
+    .menu-item,
+    .login-btn,
+    .keyboard-key {
+        min-height: 44px;
+        min-width: 44px;
+        font-size: 18px;
+        border-radius: 4px;
+        margin: 4px;
+        padding: 8px 12px;
+        background: linear-gradient(135deg, #4A90E2, #357ABD);
+        color: white;
+        border: 2px solid #2E5A87;
+        cursor: pointer;
+        touch-action: manipulation;
+        user-select: none;
+        transition: all 0.1s ease;
+    }
+    
+    .touch-button:active,
+    .btn:active,
+    .menu-item:active {
+        transform: scale(0.95);
+        box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        background: linear-gradient(135deg, #357ABD, #2E5A87);
+    }
+    
+    /* High contrast colors for LCD visibility */
+    .touch-button:hover,
+    .btn:hover,
+    .menu-item:hover {
+        background: linear-gradient(135deg, #5BA0F2, #4A90E2);
+        border-color: #357ABD;
+        box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
+    }
+    
+    /* ==========================================================================
+       SINGLE-COLUMN LAYOUTS dla wąskiego ekranu
+       ========================================================================== */
+    
+    .container,
+    .main-content,
+    .vue-app {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 0 8px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .menu-grid,
+    .button-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+    
+    /* Force single column for menu items */
+    .menu-item {
+        width: calc(100% - 16px);
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        text-align: left;
+        margin: 4px 8px;
+    }
+    
+    .menu-icon {
+        font-size: 24px;
+        margin-right: 12px;
+        min-width: 32px;
+    }
+    
+    .menu-label {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
+    /* ==========================================================================
+       VERTICAL SCROLLING NAVIGATION
+       ========================================================================== */
+    
+    .scroll-container {
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: thin;
+    }
+    
+    .scroll-container::-webkit-scrollbar {
+        width: 8px;
+    }
+    
+    .scroll-container::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    
+    .scroll-container::-webkit-scrollbar-thumb {
+        background: #4A90E2;
+        border-radius: 4px;
+    }
+    
+    /* ==========================================================================
+       TYPOGRAPHY & ICONOGRAPHY
+       ========================================================================== */
+    
+    /* Minimum 16px font-size for readability */
+    body, .lcd-text {
+        font-size: 16px;
+        font-weight: 500;
+        color: #333;
+        line-height: 1.5;
+    }
+    
+    h1, .title {
+        font-size: 24px;
+        font-weight: bold;
+        margin: 16px 0;
+        text-align: center;
+    }
+    
+    h2, .subtitle {
+        font-size: 20px;
+        font-weight: 600;
+        margin: 12px 0;
+    }
+    
+    h3, .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        margin: 8px 0;
+    }
+    
+    /* Large icons for touch interface */
+    .icon, .menu-icon, .button-icon {
+        font-size: 24px;
+        min-width: 24px;
+        min-height: 24px;
+        display: inline-block;
+        text-align: center;
+    }
+    
+    .icon-large {
+        font-size: 32px;
+        min-width: 32px;
+        min-height: 32px;
+    }
+    
+    /* ==========================================================================
+       VIRTUAL KEYBOARD OPTIMIZATION
+       ========================================================================== */
+    
+    .virtual-keyboard {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #f8f9fa;
+        border-top: 2px solid #dee2e6;
+        padding: 8px;
+        z-index: 1000;
+    }
+    
+    .keyboard-row {
+        display: flex;
+        justify-content: center;
+        gap: 4px;
+        margin: 4px 0;
+    }
+    
+    .keyboard-key {
+        min-height: 44px;
+        min-width: 32px;
+        flex: 1;
+        max-width: 44px;
+        font-size: 16px;
+        font-weight: bold;
+        background: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .keyboard-key:active {
+        background: #e9ecef;
+        transform: scale(0.95);
+    }
+    
+    .keyboard-key.special {
+        background: #6c757d;
+        color: white;
+        font-size: 14px;
+    }
+    
+    /* ==========================================================================
+       LOGIN SCREEN OPTIMIZATION
+       ========================================================================== */
+    
+    .login-container {
+        width: 100%;
+        max-width: 400px;
+        margin: 0 auto;
+        padding: 16px;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        justify-content: center;
+    }
+    
+    .login-form {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+    
+    .login-input {
+        width: calc(100% - 16px);
+        min-height: 44px;
+        font-size: 18px;
+        padding: 12px;
+        border: 2px solid #ced4da;
+        border-radius: 4px;
+        background: #fff;
+    }
+    
+    .login-input:focus {
+        outline: none;
+        border-color: #4A90E2;
+        box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.25);
+    }
+    
+    .role-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        margin: 16px 0;
+    }
+    
+    .role-button {
+        min-height: 52px;
+        font-size: 18px;
+        font-weight: bold;
+        padding: 12px;
+        border-radius: 6px;
+        border: none;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .role-button.operator { background: linear-gradient(135deg, #28a745, #20c997); }
+    .role-button.admin { background: linear-gradient(135deg, #007bff, #0056b3); }
+    .role-button.serviceuser { background: linear-gradient(135deg, #fd7e14, #e65100); }
+    .role-button.superuser { background: linear-gradient(135deg, #6f42c1, #563d7c); }
+    
+    .role-button:active {
+        transform: scale(0.98);
+        filter: brightness(0.9);
+    }
+    
+    /* ==========================================================================
+       MENU SCREEN OPTIMIZATION
+       ========================================================================== */
+    
+    .user-menu {
+        width: 100%;
+        padding: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .menu-header {
+        background: linear-gradient(135deg, #4A90E2, #357ABD);
+        color: white;
+        padding: 16px;
+        border-radius: 6px;
+        text-align: center;
+        margin-bottom: 16px;
+    }
+    
+    .user-info {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-top: 8px;
+    }
+    
+    /* ==========================================================================
+       PERFORMANCE OPTIMIZATIONS for LCD
+       ========================================================================== */
+    
+    /* Minimal animations for battery saving */
+    * {
+        animation-duration: 0.2s !important;
+        transition-duration: 0.1s !important;
+    }
+    
+    /* Fast rendering for touch response */
+    .touch-button,
+    .menu-item,
+    .keyboard-key {
+        will-change: transform;
+        backface-visibility: hidden;
+        transform: translateZ(0);
+    }
+    
+    /* Memory-efficient layouts */
+    .vue-component {
+        contain: layout style paint;
+    }
+    
+    /* ==========================================================================
+       STATUS PANELS & REAL-TIME DATA
+       ========================================================================== */
+    
+    .status-panel {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 6px;
+        padding: 12px;
+        margin: 8px 0;
+    }
+    
+    .sensor-reading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #e9ecef;
+        font-size: 16px;
+    }
+    
+    .sensor-reading:last-child {
+        border-bottom: none;
+    }
+    
+    .sensor-value {
+        font-weight: bold;
+        color: #28a745;
+        font-size: 18px;
+    }
+    
+    .sensor-value.warning {
+        color: #ffc107;
+    }
+    
+    .sensor-value.error {
+        color: #dc3545;
+    }
+    
+    /* ==========================================================================
+       ERROR MESSAGES & ALERTS
+       ========================================================================== */
+    
+    .alert {
+        padding: 12px;
+        border-radius: 4px;
+        margin: 8px 0;
+        font-size: 16px;
+        font-weight: 500;
+    }
+    
+    .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    
+    .alert-warning {
+        background: #fff3cd;
+        color: #856404;
+        border: 1px solid #ffeaa7;
+    }
+    
+    .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f1aeb5;
+    }
+    
+    .alert-info {
+        background: #cce7ff;
+        color: #004085;
+        border: 1px solid #99d6ff;
+    }
+}
+
+/* ==========================================================================
+   FALLBACK STYLES dla standardowych ekranów
+   ========================================================================== */
+
+@media screen and (min-width: 401px) or (max-height: 1279px) {
+    .lcd-only {
+        display: none;
+    }
+    
+    .desktop-only {
+        display: block;
+    }
+}
+
+@media screen and (max-width: 400px) and (min-height: 1280px) {
+    .desktop-only {
+        display: none;
+    }
+    
+    .lcd-only {
+        display: block;
+    }
+}
+
+/* ==========================================================================
+   ACCESSIBILITY IMPROVEMENTS
+   ========================================================================== */
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .touch-button,
+    .btn,
+    .menu-item {
+        border-width: 3px;
+        font-weight: bold;
+    }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+/* Focus indicators for accessibility */
+.touch-button:focus,
+.btn:focus,
+.menu-item:focus,
+.login-input:focus {
+    outline: 3px solid #4A90E2;
+    outline-offset: 2px;
+}

@@ -1,0 +1,73 @@
+{
+  "name": "menu",
+  "title": "Struktura Menu",
+  "description": "Pełna kontrola nad pozycjami menu dla wszystkich ról użytkowników",
+  "rules": {
+    "editable": [
+      "*/*/key",
+      "*/*/label", 
+      "*/*/icon"
+    ],
+    "addable": [
+      "OPERATOR",
+      "ADMIN",
+      "SUPERUSER", 
+      "SERVICEUSER"
+    ],
+    "deletable": [
+      "OPERATOR/*",
+      "ADMIN/*",
+      "SUPERUSER/*",
+      "SERVICEUSER/*"
+    ],
+    "readonly": [],
+    "protected": ["OPERATOR", "ADMIN", "SUPERUSER", "SERVICEUSER"]
+  },
+  "field_types": {
+    "key": "string",
+    "label": "string",
+    "icon": "emoji"
+  },
+  "validation_rules": {
+    "key": {
+      "required": true,
+      "pattern": "^[a-z_][a-z0-9_]*$",
+      "unique_within_parent": true
+    },
+    "label": {
+      "required": true,
+      "minLength": 1,
+      "maxLength": 50
+    },
+    "icon": {
+      "required": true,
+      "minLength": 1,
+      "maxLength": 10
+    }
+  },
+  "ui_hints": {
+    "key": {
+      "placeholder": "test_wizard",
+      "help": "Unikalny klucz (tylko małe litery, cyfry, podkreślenia)"
+    },
+    "label": {
+      "placeholder": "Test Wizard",
+      "help": "Nazwa wyświetlana w menu"
+    },
+    "icon": {
+      "placeholder": "🧙",
+      "help": "Emoji lub ikona dla pozycji menu"
+    }
+  },
+  "role_descriptions": {
+    "OPERATOR": "Podstawowe funkcje operatorskie",
+    "ADMIN": "Funkcje administracyjne systemu", 
+    "SUPERUSER": "Pełny dostęp do wszystkich funkcji",
+    "SERVICEUSER": "Funkcje serwisowe i diagnostyczne"
+  },
+  "default_new_item": {
+    "key": "new_item",
+    "label": "Nowa pozycja",
+    "icon": "⚡"
+  }
+}

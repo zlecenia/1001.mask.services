@@ -1,0 +1,137 @@
+{
+  "meta": {
+    "language": "de",
+    "name": "Deutsch",
+    "rtl": false
+  },
+  "global": {
+    "title": "MASKTRONIC C20 1001 - System Mock v2.0",
+    "company": "MASKTRONIC",
+    "hardware": "C20",
+    "product": "1001",
+    "version": "v2.0 MOCK",
+    "offline": "OFFLINE",
+    "online": "ONLINE",
+    "loading": "Laden...",
+    "error": "Fehler",
+    "success": "Erfolg",
+    "warning": "Warnung",
+    "info": "Information"
+  },
+  "login": {
+    "menu_header": "ANMELDE-MENÜ",
+    "scanner": "Scanner",
+    "keyword": "Passwort",
+    "user_login_by_keyword": "Benutzeranmeldung per Passwort",
+    "user_login_by_scanner": "Benutzeranmeldung per QR-CODE / BARCODE",
+    "password": "Passwort",
+    "password_placeholder": "Passwort eingeben",
+    "login_as_operator": "Als OPERATOR anmelden",
+    "login_as_admin": "Als ADMIN anmelden",
+    "login_as_superuser": "Als SUPERUSER anmelden",
+    "login_as_serviceuser": "Als SERVICEUSER anmelden",
+    "scanner_not_detected": "Scanner nicht erkannt",
+    "code_not_read": "Code nicht korrekt gelesen",
+    "use_keyboard": "Tastatur verwenden",
+    "enter_password": "Passwort eingeben",
+    "login_failed": "Anmeldung fehlgeschlagen",
+    "invalid_credentials": "Ungültige Anmeldedaten"
+  },
+  "loading": {
+    "title": "Anmelden...",
+    "message": "Bitte warten"
+  },
+  "keyboard": {
+    "caps": "Caps",
+    "shift": "Shift",
+    "tab": "Tab",
+    "space": "Leertaste",
+    "clear": "Löschen",
+    "backspace": "Rücktaste",
+    "enter": "Eingabe",
+    "toggle": "123"
+  },
+  "menu": {
+    "user_menu": "BENUTZER-MENÜ",
+    "welcome": "Menüoption auswählen",
+    "system_ready": "System arbeitsbereit",
+    "inactive": "Inaktiv",
+    "logout": "Abmelden",
+    "test_menu": "Test-Menü",
+    "user_data": "Benutzerdaten",
+    "realtime_sensors": "Echtzeit-Sensoren",
+    "device_history": "Geräte-Historie",
+    "reports_view": "Berichte anzeigen",
+    "reports_batch": "Sammelberichte",
+    "reports_schedule": "Bericht-Zeitplan",
+    "workshop_parts": "Ersatzteile",
+    "workshop_maintenance": "Wartungsplan",
+    "workshop_tools": "Kalibrierwerkzeuge",
+    "workshop_inventory": "Lager",
+    "test_wizard": "Test-Assistent",
+    "test_quick": "Schnelltest",
+    "test_scenarios": "Test-Szenarien",
+    "settings_scenarios": "Test-Szenarien",
+    "settings_integration": "Integrationen",
+    "settings_standards": "Standards",
+    "settings_system": "Systemkonfiguration",
+    "users": "Benutzer",
+    "service_menu": "Service-Menü",
+    "advanced_diagnostics": "Erweiterte Diagnose"
+  },
+  "system": {
+    "welcome": "Willkommen",
+    "system_starting": "System startet...",
+    "loading_progress": "Ladefortschritt",
+    "masktronic": "MASKTRONIC",
+    "system_ready": "System bereit"
+  },
+  "data": {
+    "pressure": "Druck",
+    "sensors": "DATENSENSOREN",
+    "low": "Niedrig",
+    "medium": "Mittel",
+    "high": "Hoch",
+    "temperature": "Temperatur",
+    "humidity": "Feuchtigkeit",
+    "uptime": "Betriebszeit"
+  },
+  "device": {
+    "realtime_sensors": "Echtzeit-Sensoren",
+    "pressure_sensors": "Drucksensoren",
+    "pressure_low": "Niedrig",
+    "pressure_medium": "Mittel",
+    "pressure_high": "Hoch",
+    "history_title": "Gerätehistorie",
+    "history_loading": "Lade Gerätehistorie..."
+  },
+  "alarms": {
+    "title": "Aktive Alarme",
+    "acknowledge_all": "Alle bestätigen",
+    "mute": "Stumm schalten"
+  },
+  "settings": {
+    "device_settings": "Geräteeinstellungen",
+    "network_config": "Netzwerkkonfiguration",
+    "system_config": "Systemkonfiguration",
+    "update_interval": "Aktualisierungsintervall",
+    "debug_mode": "Debug-Modus",
+    "save_settings": "Einstellungen speichern",
+    "seconds": "Sekunden"
+  },
+  "roles": {
+    "OPERATOR": "Bediener",
+    "ADMIN": "Administrator",
+    "SUPERUSER": "Super-Benutzer",
+    "SERVICEUSER": "Servicetechniker"
+  },
+  "messages": {
+    "please_enter_password": "Bitte Passwort eingeben",
+    "login_successful": "Anmeldung erfolgreich",
+    "session_expired": "Sitzung abgelaufen",
+    "access_denied": "Zugriff verweigert",
+    "function_in_development": "Funktion in Entwicklung...",
+    "no_permissions": "Keine Berechtigung!",
+    "settings_saved": "Einstellungen wurden gespeichert!"
+  }
+}

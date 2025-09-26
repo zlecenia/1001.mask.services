@@ -1,0 +1,240 @@
+{
+  "type": "object",
+  "title": "Konfiguracja Systemu",
+  "description": "Główne ustawienia systemu - role, bezpieczeństwo, sensory i raporty",
+  "properties": {
+    "roles": {
+      "type": "object",
+      "title": "Zarządzanie Rolami",
+      "description": "Definicje ról użytkowników i hierarchii uprawnień",
+      "properties": {
+        "valid_roles": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["OPERATOR", "ADMIN", "SUPERUSER", "SERVICEUSER"]
+          },
+          "description": "Lista dostępnych ról w systemie"
+        },
+        "default_role": {
+          "type": "string", 
+          "enum": ["OPERATOR", "ADMIN", "SUPERUSER", "SERVICEUSER"],
+          "description": "Domyślna rola dla nowych użytkowników"
+        },
+        "role_hierarchy": {
+          "type": "object",
+          "description": "Hierarchia uprawnień (wyższa liczba = więcej uprawnień)",
+          "patternProperties": {
+            "^(OPERATOR|ADMIN|SUPERUSER|SERVICEUSER)$": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10
+            }
+          }
+        }
+      },
+      "required": ["valid_roles", "default_role", "role_hierarchy"]
+    },
+    "authentication": {
+      "type": "object",
+      "title": "Ustawienia Autentykacji",
+      "description": "Parametry bezpieczeństwa i sesji użytkowników",
+      "properties": {
+        "session_timeout": {
+          "type": "integer",
+          "minimum": 300000,
+          "maximum": 86400000,
+          "description": "Timeout sesji w milisekundach (5min - 24h)"
+        },
+        "token_refresh_interval": {
+          "type": "integer",
+          "minimum": 60000,
+          "maximum": 1800000,
+          "description": "Interwał odświeżania tokena w ms (1min - 30min)"
+        },
+        "max_login_attempts": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 10,
+          "description": "Maksymalna liczba prób logowania"
+        },
+        "lockout_duration": {
+          "type": "integer",
+          "minimum": 300000,
+          "maximum": 3600000,
+          "description": "Czas blokady po przekroczeniu prób (5min - 1h)"
+        },
+        "password_requirements": {
+          "type": "object",
+          "description": "Wymagania dotyczące haseł",
+          "properties": {
+            "min_length": {
+              "type": "integer",
+              "minimum": 4,
+              "maximum": 128
+            },
+            "require_uppercase": { "type": "boolean" },
+            "require_lowercase": { "type": "boolean" },
+            "require_numbers": { "type": "boolean" },
+            "require_symbols": { "type": "boolean" }
+          }
+        }
+      },
+      "required": ["session_timeout", "max_login_attempts"]
+    },
+    "ui": {
+      "type": "object",
+      "title": "Ustawienia Interfejsu",
+      "description": "Konfiguracja wyglądu i zachowania UI",
+      "properties": {
+        "animations_enabled": {
+          "type": "boolean",
+          "description": "Włącz animacje interfejsu"
+        },
+        "auto_logout_warning": {
+          "type": "integer",
+          "minimum": 60000,
+          "description": "Ostrzeżenie przed auto-wylogowaniem (ms)"
+        },
+        "notification_timeout": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 30000,
+          "description": "Czas wyświetlania powiadomień (ms)"
+        },
+        "toast_position": {
+          "type": "string",
+          "enum": ["top-left", "top-right", "bottom-left", "bottom-right"],
+          "description": "Pozycja powiadomień toast"
+        },
+        "keyboard": {
+          "type": "object",
+          "properties": {
+            "virtual_keyboard_enabled": { "type": "boolean" },
+            "auto_focus_enabled": { "type": "boolean" },
+            "mobile_prevention": { "type": "boolean" }
+          }
+        }
+      }
+    },
+    "sensors": {
+      "type": "object",
+      "title": "Konfiguracja Sensorów",
+      "description": "Parametry pomiarów i monitorowania",
+      "properties": {
+        "update_interval": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 10000,
+          "description": "Interwał odczytu sensorów (ms)"
+        },
+        "max_readings": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 1000,
+          "description": "Maksymalna liczba przechowywanych odczytów"
+        },
+        "pressure_units": {
+          "type": "string",
+          "enum": ["mbar", "hPa", "Pa", "mmHg"],
+          "description": "Jednostki ciśnienia"
+        },
+        "temperature_units": {
+          "type": "string",
+          "enum": ["celsius", "fahrenheit", "kelvin"],
+          "description": "Jednostki temperatury"
+        },
+        "calibration_interval": {
+          "type": "integer",
+          "minimum": 3600000,
+          "description": "Interwał kalibracji w ms (min 1h)"
+        },
+        "alarm_thresholds": {
+          "type": "object",
+          "description": "Progi alarmowe dla różnych parametrów",
+          "properties": {
+            "pressure_low": { "type": "number" },
+            "pressure_high": { "type": "number" },
+            "temperature_low": { "type": "number" },
+            "temperature_high": { "type": "number" }
+          }
+        }
+      }
+    },
+    "reports": {
+      "type": "object",
+      "title": "Konfiguracja Raportów",
+      "description": "Ustawienia generowania i przechowywania raportów",
+      "properties": {
+        "formats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["PDF", "XML", "CSV", "JSON", "XLSX"]
+          },
+          "description": "Dostępne formaty eksportu"
+        },
+        "default_format": {
+          "type": "string",
+          "enum": ["PDF", "XML", "CSV", "JSON", "XLSX"],
+          "description": "Domyślny format raportów"
+        },
+        "batch_size": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 1000,
+          "description": "Rozmiar paczki dla generowania batch"
+        },
+        "retention_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 3650,
+          "description": "Okres przechowywania raportów (dni)"
+        },
+        "auto_cleanup": {
+          "type": "boolean",
+          "description": "Automatyczne usuwanie starych raportów"
+        }
+      }
+    },
+    "workshop": {
+      "type": "object",
+      "title": "Ustawienia Warsztatu",
+      "description": "Konfiguracja zarządzania warsztatem i konserwacją",
+      "properties": {
+        "parts_categories": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["FILTER", "SEAL", "VALVE", "STRAP", "VISOR", "OTHER"]
+          },
+          "description": "Kategorie części zamiennych"
+        },
+        "default_currency": {
+          "type": "string",
+          "pattern": "^[A-Z]{3}$",
+          "description": "Domyślna waluta (kod ISO 4217)"
+        },
+        "low_stock_threshold": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Próg niskiego stanu magazynowego"
+        },
+        "maintenance_intervals": {
+          "type": "object",
+          "description": "Interwały konserwacji w dniach",
+          "properties": {
+            "daily": { "type": "integer", "minimum": 1 },
+            "weekly": { "type": "integer", "minimum": 7 },
+            "monthly": { "type": "integer", "minimum": 28 },
+            "quarterly": { "type": "integer", "minimum": 90 },
+            "yearly": { "type": "integer", "minimum": 365 }
+          }
+        }
+      }
+    }
+  },
+  "required": ["roles", "authentication"],
+  "additionalProperties": false
+}

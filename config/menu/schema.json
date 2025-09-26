@@ -1,0 +1,57 @@
+{
+  "type": "object",
+  "title": "Struktura Menu",
+  "description": "Definicje menu dla różnych ról użytkowników systemu",
+  "properties": {
+    "OPERATOR": {
+      "type": "array",
+      "description": "Pozycje menu dostępne dla roli Operator",
+      "items": { "$ref": "#/definitions/menuItem" }
+    },
+    "ADMIN": {
+      "type": "array", 
+      "description": "Pozycje menu dostępne dla roli Administrator",
+      "items": { "$ref": "#/definitions/menuItem" }
+    },
+    "SUPERUSER": {
+      "type": "array",
+      "description": "Pozycje menu dostępne dla roli Superuser", 
+      "items": { "$ref": "#/definitions/menuItem" }
+    },
+    "SERVICEUSER": {
+      "type": "array",
+      "description": "Pozycje menu dostępne dla roli Serwisant",
+      "items": { "$ref": "#/definitions/menuItem" }
+    }
+  },
+  "definitions": {
+    "menuItem": {
+      "type": "object",
+      "title": "Pozycja Menu",
+      "description": "Pojedyncza pozycja w menu użytkownika",
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "Unikalny identyfikator pozycji menu",
+          "pattern": "^[a-z_][a-z0-9_]*$"
+        },
+        "label": {
+          "type": "string",
+          "description": "Nazwa wyświetlana użytkownikowi",
+          "minLength": 1,
+          "maxLength": 50
+        },
+        "icon": {
+          "type": "string", 
+          "description": "Emoji lub kod ikony",
+          "minLength": 1,
+          "maxLength": 10
+        }
+      },
+      "required": ["key", "label", "icon"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["OPERATOR", "ADMIN", "SUPERUSER", "SERVICEUSER"],
+  "additionalProperties": false
+}

@@ -1,0 +1,119 @@
+{
+  "default_scenarios": {
+    "PP_MASK": {
+      "post_use": {
+        "name": "Test po użyciu - Maska pełnotwarzowa",
+        "norm": "PN-EN 136",
+        "description": "Standardowy test szczelności po każdym użyciu maski",
+        "parameters": {
+          "pressure_min": -10,
+          "pressure_max": 0,
+          "duration": 300,
+          "leak_threshold": 0.5
+        },
+        "steps": [
+          "Przygotuj maskę do testu",
+          "Podłącz do stanowiska testowego", 
+          "Sprawdź szczelność przy ciśnieniu roboczym",
+          "Sprawdź działanie zaworów",
+          "Zapisz wyniki testu"
+        ]
+      },
+      "periodic": {
+        "name": "Test okresowy - Maska pełnotwarzowa",
+        "norm": "PN-EN 136",
+        "description": "Okresowy test kompletny zgodny z normą",
+        "parameters": {
+          "pressure_min": -15,
+          "pressure_max": 5,
+          "duration": 600,
+          "leak_threshold": 0.3
+        }
+      }
+    },
+    "NP_MASK": {
+      "post_use": {
+        "name": "Test po użyciu - Półmaska",
+        "norm": "PN-EN 137", 
+        "description": "Test podstawowy półmaski po użyciu",
+        "parameters": {
+          "pressure_min": -8,
+          "pressure_max": 0,
+          "duration": 180,
+          "leak_threshold": 1.0
+        }
+      }
+    },
+    "SCBA": {
+      "full_test": {
+        "name": "Test kompletny - Aparat oddechowy",
+        "norm": "PN-EN 137",
+        "description": "Pełny test aparatu oddechowego",
+        "parameters": {
+          "pressure_min": -20,
+          "pressure_max": 10,
+          "duration": 900,
+          "leak_threshold": 0.2
+        }
+      }
+    }
+  },
+  "test_standards": {
+    "PN-EN 136": {
+      "name": "Aparaty ochrony dróg oddechowych - Maski pełnotwarzowe",
+      "version": "2019",
+      "requirements": {
+        "leak_test": {
+          "pressure": -10,
+          "max_leakage": 0.5,
+          "duration": 300
+        },
+        "valve_test": {
+          "inlet_pressure": 5,
+          "outlet_pressure": 0
+        }
+      }
+    },
+    "PN-EN 137": {
+      "name": "Aparaty ochrony dróg oddechowych - Autonomiczne aparaty oddechowe",
+      "version": "2021", 
+      "requirements": {
+        "leak_test": {
+          "pressure": -20,
+          "max_leakage": 0.2,
+          "duration": 600
+        }
+      }
+    },
+    "ISO 16900": {
+      "name": "Aparaty ochrony dróg oddechowych - Metody badań",
+      "version": "2022",
+      "requirements": {
+        "calibration_interval": 365,
+        "documentation_retention": 2555
+      }
+    }
+  },
+  "device_types": {
+    "PP_MASK": {
+      "name": "Maska pełnotwarzowa",
+      "category": "RPE",
+      "test_frequency": "after_each_use"
+    },
+    "NP_MASK": {
+      "name": "Półmaska filtrująca", 
+      "category": "RPE",
+      "test_frequency": "monthly"
+    },
+    "SCBA": {
+      "name": "Aparat oddechowy ze sprężonym powietrzem",
+      "category": "SCSR",
+      "test_frequency": "monthly"
+    },
+    "CPS": {
+      "name": "Kombinezony ochronne",
+      "category": "CPC",
+      "test_frequency": "before_use"
+    }
+  }
+}

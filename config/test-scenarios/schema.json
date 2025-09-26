@@ -1,0 +1,183 @@
+{
+  "type": "object",
+  "title": "Scenariusze Testów",
+  "description": "Definicje testów dla urządzeń ochrony dróg oddechowych zgodnie z normami",
+  "properties": {
+    "default_scenarios": {
+      "type": "object",
+      "title": "Domyślne Scenariusze",
+      "description": "Predefiniowane scenariusze testów dla różnych typów urządzeń",
+      "patternProperties": {
+        "^[A-Z_]+$": {
+          "$ref": "#/definitions/deviceScenarios"
+        }
+      }
+    },
+    "test_standards": {
+      "type": "object",
+      "title": "Normy i Standardy",
+      "description": "Definicje norm testowania (PN-EN, ISO, etc.)",
+      "patternProperties": {
+        "^[A-Z-]+\\s+[A-Z-0-9]+$": {
+          "$ref": "#/definitions/testStandard"
+        }
+      }
+    },
+    "device_types": {
+      "type": "object",
+      "title": "Typy Urządzeń", 
+      "description": "Klasyfikacja urządzeń ochrony dróg oddechowych",
+      "patternProperties": {
+        "^[A-Z_]+$": {
+          "$ref": "#/definitions/deviceType"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "deviceScenarios": {
+      "type": "object",
+      "title": "Scenariusze Urządzenia",
+      "description": "Zestaw scenariuszy testów dla konkretnego typu urządzenia",
+      "patternProperties": {
+        "^[a-z_]+$": {
+          "$ref": "#/definitions/testScenario"
+        }
+      }
+    },
+    "testScenario": {
+      "type": "object",
+      "title": "Scenariusz Testu",
+      "description": "Pojedynczy scenariusz testowy z parametrami",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nazwa scenariusza testu",
+          "minLength": 5,
+          "maxLength": 100
+        },
+        "norm": {
+          "type": "string",
+          "pattern": "^(PN-EN|ISO|ANSI|BS)\\s+\\d+",
+          "description": "Odniesienie do normy (np. PN-EN 136)"
+        },
+        "description": {
+          "type": "string",
+          "description": "Szczegółowy opis procedury testowej",
+          "minLength": 10,
+          "maxLength": 500
+        },
+        "parameters": {
+          "type": "object",
+          "title": "Parametry Testu",
+          "description": "Wartości graniczne i ustawienia testu",
+          "properties": {
+            "pressure_min": {
+              "type": "number",
+              "description": "Minimalne ciśnienie testowe (mbar)"
+            },
+            "pressure_max": {
+              "type": "number", 
+              "description": "Maksymalne ciśnienie testowe (mbar)"
+            },
+            "duration": {
+              "type": "integer",
+              "minimum": 30,
+              "maximum": 3600,
+              "description": "Czas trwania testu (sekundy)"
+            },
+            "leak_threshold": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 10,
+              "description": "Próg dopuszczalnego wycieku (l/min)"
+            }
+          },
+          "required": ["pressure_min", "pressure_max", "duration", "leak_threshold"]
+        },
+        "steps": {
+          "type": "array",
+          "title": "Kroki Procedury",
+          "description": "Sekwencja kroków do wykonania testu",
+          "items": {
+            "type": "string",
+            "minLength": 5,
+            "maxLength": 200
+          },
+          "minItems": 1
+        }
+      },
+      "required": ["name", "norm", "description", "parameters"]
+    },
+    "testStandard": {
+      "type": "object",
+      "title": "Standard Testowy",
+      "description": "Definicja normy lub standardu testowania",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Pełna nazwa normy"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d{4}$",
+          "description": "Rok wydania normy (YYYY)"
+        },
+        "requirements": {
+          "type": "object",
+          "description": "Wymagania techniczne normy",
+          "properties": {
+            "leak_test": {
+              "type": "object",
+              "properties": {
+                "pressure": { "type": "number" },
+                "max_leakage": { "type": "number" },
+                "duration": { "type": "integer" }
+              }
+            },
+            "valve_test": {
+              "type": "object",
+              "properties": {
+                "inlet_pressure": { "type": "number" },
+                "outlet_pressure": { "type": "number" }
+              }
+            },
+            "calibration_interval": {
+              "type": "integer",
+              "description": "Interwał kalibracji w dniach"
+            },
+            "documentation_retention": {
+              "type": "integer",
+              "description": "Okres przechowywania dokumentacji w dniach"
+            }
+          }
+        }
+      },
+      "required": ["name", "version", "requirements"]
+    },
+    "deviceType": {
+      "type": "object", 
+      "title": "Typ Urządzenia",
+      "description": "Klasyfikacja typu urządzenia ochronnego",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nazwa typu urządzenia"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["RPE", "SCSR", "CPC", "PAPR"],
+          "description": "Kategoria urządzenia (RPE=Respiratory Protective Equipment, SCSR=Self-Contained Self-Rescue, CPC=Chemical Protective Clothing, PAPR=Powered Air-Purifying Respirator)"
+        },
+        "test_frequency": {
+          "type": "string",
+          "enum": ["after_each_use", "daily", "weekly", "monthly", "quarterly", "yearly", "before_use"],
+          "description": "Częstotliwość wymaganych testów"
+        }
+      },
+      "required": ["name", "category", "test_frequency"]
+    }
+  },
+  "required": ["default_scenarios", "test_standards", "device_types"],
+  "additionalProperties": false
+}

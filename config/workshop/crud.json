@@ -1,0 +1,304 @@
+{
+  "name": "workshop",
+  "title": "Zarządzanie Warsztatem",
+  "description": "Zarządzanie magazynem - ID chronione, struktura kategorii chroniona",
+  "rules": {
+    "editable": [
+      "spare_parts/default_parts/*/name",
+      "spare_parts/default_parts/*/quantity",
+      "spare_parts/default_parts/*/min_level",
+      "spare_parts/default_parts/*/price",
+      "spare_parts/default_parts/*/supplier",
+      "spare_parts/default_parts/*/part_number",
+      "spare_parts/default_parts/*/shelf_life_days",
+      "tools/calibration_tools/*/name",
+      "tools/calibration_tools/*/location",
+      "tools/calibration_tools/*/last_calibration",
+      "tools/calibration_tools/*/next_calibration",
+      "tools/calibration_tools/*/status",
+      "tools/calibration_tools/*/calibration_interval",
+      "suppliers/default_suppliers/*/name",
+      "suppliers/default_suppliers/*/contact_person",
+      "suppliers/default_suppliers/*/email",
+      "suppliers/default_suppliers/*/phone",
+      "suppliers/default_suppliers/*/address",
+      "suppliers/default_suppliers/*/payment_terms",
+      "suppliers/default_suppliers/*/delivery_time",
+      "maintenance/default_schedules/*/device",
+      "maintenance/default_schedules/*/type",
+      "maintenance/default_schedules/*/frequency",
+      "maintenance/default_schedules/*/estimated_duration",
+      "maintenance/default_schedules/*/required_tools/*",
+      "maintenance/default_schedules/*/technician_level"
+    ],
+    "addable": [
+      "spare_parts/default_parts",
+      "tools/calibration_tools",
+      "suppliers/default_suppliers",
+      "maintenance/default_schedules",
+      "maintenance/default_schedules/*/required_tools"
+    ],
+    "deletable": [
+      "spare_parts/default_parts/*",
+      "tools/calibration_tools/*",
+      "suppliers/default_suppliers/*",
+      "maintenance/default_schedules/*",
+      "maintenance/default_schedules/*/required_tools/*"
+    ],
+    "readonly": [
+      "spare_parts/default_parts/*/id",
+      "spare_parts/default_parts/*/category",
+      "tools/calibration_tools/*/id",
+      "tools/calibration_tools/*/serial_number",
+      "suppliers/default_suppliers/*/id",
+      "maintenance/default_schedules/*/id"
+    ],
+    "protected": [
+      "categories"
+    ]
+  },
+  "field_types": {
+    "id": "readonly_string",
+    "name": "string",
+    "category": "select",
+    "quantity": "number",
+    "min_level": "number",
+    "price": "currency",
+    "supplier": "string",
+    "part_number": "string",
+    "shelf_life_days": "number",
+    "location": "location_code",
+    "last_calibration": "date",
+    "next_calibration": "date",
+    "status": "select",
+    "calibration_interval": "number",
+    "serial_number": "readonly_string",
+    "contact_person": "string",
+    "email": "email",
+    "phone": "phone",
+    "address": "text",
+    "payment_terms": "number",
+    "delivery_time": "number",
+    "device": "string",
+    "type": "string",
+    "frequency": "select",
+    "estimated_duration": "duration_minutes",
+    "technician_level": "select"
+  },
+  "validation_rules": {
+    "id": {
+      "pattern": "^[A-Z]\\d{3}$|^CAL\\d{3}$|^SUP\\d{3}$|^MAINT\\d{3}$",
+      "readonly": true
+    },
+    "name": {
+      "minLength": 3,
+      "maxLength": 100,
+      "required": true
+    },
+    "category": {
+      "enum": ["FILTER", "SEAL", "VALVE", "STRAP", "VISOR", "OTHER"],
+      "readonly": true
+    },
+    "quantity": {
+      "min": 0,
+      "max": 9999,
+      "type": "integer"
+    },
+    "min_level": {
+      "min": 1,
+      "max": 100,
+      "type": "integer"
+    },
+    "price": {
+      "min": 0,
+      "multipleOf": 0.01
+    },
+    "part_number": {
+      "minLength": 3,
+      "maxLength": 50
+    },
+    "shelf_life_days": {
+      "min": 1,
+      "max": 7300
+    },
+    "location": {
+      "pattern": "^[A-Z]+-\\d{3}$"
+    },
+    "status": {
+      "enum": ["OK", "ATTENTION", "FAILED", "OUT_OF_SERVICE"]
+    },
+    "calibration_interval": {
+      "min": 30,
+      "max": 1095
+    },
+    "email": {
+      "format": "email"
+    },
+    "phone": {
+      "pattern": "^\\+?[0-9\\s\\-\\(\\)]{7,20}$"
+    },
+    "payment_terms": {
+      "min": 0,
+      "max": 365
+    },
+    "delivery_time": {
+      "min": 1,
+      "max": 90
+    },
+    "frequency": {
+      "enum": ["daily", "weekly", "monthly", "quarterly", "yearly"]
+    },
+    "estimated_duration": {
+      "min": 15,
+      "max": 480
+    },
+    "technician_level": {
+      "enum": ["basic", "standard", "certified", "expert"]
+    }
+  },
+  "ui_hints": {
+    "name": {
+      "placeholder": "Filtr P3 uniwersalny",
+      "help": "Nazwa części zamiennej"
+    },
+    "quantity": {
+      "placeholder": "25",
+      "help": "Aktualny stan magazynowy"
+    },
+    "min_level": {
+      "placeholder": "5",
+      "help": "Minimalny stan - poniżej tej wartości zostanie wyświetlone ostrzeżenie"
+    },
+    "price": {
+      "placeholder": "45.50",
+      "help": "Cena jednostkowa w walucie systemowej",
+      "format": "currency"
+    },
+    "supplier": {
+      "placeholder": "SafetyTech Sp. z o.o.",
+      "help": "Nazwa dostawcy tej części"
+    },
+    "part_number": {
+      "placeholder": "ST-P3-001", 
+      "help": "Numer katalogowy producenta"
+    },
+    "shelf_life_days": {
+      "placeholder": "1095",
+      "help": "Okres przydatności w dniach (opcjonalne)"
+    },
+    "location": {
+      "placeholder": "LAB-001",
+      "help": "Kod lokalizacji (format: AAA-999)"
+    },
+    "status": {
+      "options": ["OK", "ATTENTION", "FAILED", "OUT_OF_SERVICE"],
+      "help": "Status techniczny narzędzia"
+    },
+    "calibration_interval": {
+      "placeholder": "365",
+      "help": "Co ile dni należy kalibrować narzędzie"
+    },
+    "contact_person": {
+      "placeholder": "Jan Kowalski",
+      "help": "Osoba odpowiedzialna za kontakt"
+    },
+    "payment_terms": {
+      "placeholder": "30",
+      "help": "Terminy płatności w dniach od daty faktury"
+    },
+    "delivery_time": {
+      "placeholder": "7",
+      "help": "Standardowy czas realizacji zamówienia w dniach"
+    },
+    "frequency": {
+      "options": ["daily", "weekly", "monthly", "quarterly", "yearly"],
+      "help": "Jak często wykonywać konserwację"
+    },
+    "estimated_duration": {
+      "placeholder": "120",
+      "help": "Przewidywany czas konserwacji w minutach"
+    },
+    "technician_level": {
+      "options": ["basic", "standard", "certified", "expert"],
+      "help": "Wymagany poziom uprawnień do wykonania konserwacji"
+    }
+  },
+  "categories_info": {
+    "FILTER": {
+      "name": "Filtry",
+      "description": "Filtry ochronne wszystkich typów",
+      "icon": "🔽"
+    },
+    "SEAL": {
+      "name": "Uszczelki",
+      "description": "Uszczelki i elementy uszczelniające",
+      "icon": "⭕"
+    },
+    "VALVE": {
+      "name": "Zawory",
+      "description": "Zawory wydechowe i regulacyjne",
+      "icon": "🔧"
+    },
+    "STRAP": {
+      "name": "Pasy",
+      "description": "Pasy nośne i elementy mocujące",
+      "icon": "🎽"
+    },
+    "VISOR": {
+      "name": "Wizjery",
+      "description": "Szyby i wizjery panoramiczne",
+      "icon": "👁️"
+    },
+    "OTHER": {
+      "name": "Inne",
+      "description": "Pozostałe części zamienne",
+      "icon": "🔹"
+    }
+  },
+  "default_new_spare_part": {
+    "id": "F999",
+    "name": "Nowa część zamienna",
+    "category": "OTHER",
+    "quantity": 0,
+    "min_level": 1,
+    "price": 0.00,
+    "supplier": "Nowy dostawca",
+    "part_number": "PART-001"
+  },
+  "default_new_calibration_tool": {
+    "id": "CAL999",
+    "name": "Nowe narzędzie kalibracyjne",
+    "location": "LAB-001",
+    "last_calibration": "2024-01-01",
+    "next_calibration": "2025-01-01",
+    "status": "OK",
+    "calibration_interval": 365,
+    "serial_number": "SN-001"
+  },
+  "default_new_supplier": {
+    "id": "SUP999",
+    "name": "Nowy dostawca",
+    "contact_person": "Osoba kontaktowa",
+    "email": "kontakt@dostawca.pl",
+    "phone": "+48 12 345 67 89",
+    "address": "ul. Przykładowa 1, 00-000 Miasto",
+    "payment_terms": 30,
+    "delivery_time": 7
+  },
+  "default_new_maintenance_schedule": {
+    "id": "MAINT999",
+    "device": "DEVICE-001",
+    "type": "Konserwacja podstawowa",
+    "frequency": "monthly",
+    "estimated_duration": 60,
+    "required_tools": [],
+    "technician_level": "standard"
+  },
+  "critical_fields": [
+    "spare_parts/default_parts/*/id",
+    "spare_parts/default_parts/*/category",
+    "tools/calibration_tools/*/id",
+    "suppliers/default_suppliers/*/id",
+    "maintenance/default_schedules/*/id"
+  ]
+}

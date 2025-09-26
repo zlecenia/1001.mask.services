@@ -1,0 +1,323 @@
+{
+  "type": "object",
+  "title": "Zarządzanie Warsztatem",
+  "description": "Kompleksowe zarządzanie częściami zamiennymi, narzędziami, konserwacją i dostawcami",
+  "properties": {
+    "spare_parts": {
+      "type": "object",
+      "title": "Części Zamienne",
+      "description": "Katalog i zarządzanie magazynem części zamiennych",
+      "properties": {
+        "default_parts": {
+          "type": "array",
+          "title": "Katalog Części",
+          "description": "Lista dostępnych części zamiennych",
+          "items": {
+            "$ref": "#/definitions/sparePart"
+          }
+        }
+      },
+      "required": ["default_parts"]
+    },
+    "tools": {
+      "type": "object",
+      "title": "Narzędzia Kalibracyjne",
+      "description": "Zarządzanie narzędziami pomiarowymi i kalibracyjnymi",
+      "properties": {
+        "calibration_tools": {
+          "type": "array",
+          "title": "Narzędzia Kalibracyjne",
+          "description": "Lista narzędzi wymagających okresowej kalibracji",
+          "items": {
+            "$ref": "#/definitions/calibrationTool"
+          }
+        }
+      },
+      "required": ["calibration_tools"]
+    },
+    "maintenance": {
+      "type": "object",
+      "title": "Harmonogramy Konserwacji",
+      "description": "Planowanie i zarządzanie konserwacją urządzeń",
+      "properties": {
+        "default_schedules": {
+          "type": "array",
+          "title": "Harmonogramy",
+          "description": "Domyślne harmonogramy konserwacji",
+          "items": {
+            "$ref": "#/definitions/maintenanceSchedule"
+          }
+        }
+      },
+      "required": ["default_schedules"]
+    },
+    "suppliers": {
+      "type": "object",
+      "title": "Dostawcy",
+      "description": "Baza danych dostawców i kontrahentów",
+      "properties": {
+        "default_suppliers": {
+          "type": "array",
+          "title": "Lista Dostawców",
+          "description": "Dane kontaktowe i warunki współpracy",
+          "items": {
+            "$ref": "#/definitions/supplier"
+          }
+        }
+      },
+      "required": ["default_suppliers"]
+    },
+    "categories": {
+      "type": "object",
+      "title": "Kategorie Części",
+      "description": "Klasyfikacja części zamiennych",
+      "patternProperties": {
+        "^[A-Z_]+$": {
+          "$ref": "#/definitions/partCategory"
+        }
+      }
+    }
+  },
+  "definitions": {
+    "sparePart": {
+      "type": "object",
+      "title": "Część Zamienna",
+      "description": "Definicja części zamiennej z parametrami magazynowymi",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[A-Z]\\d{3}$",
+          "description": "Unikalny identyfikator części (format: X999)"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100,
+          "description": "Nazwa części"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["FILTER", "SEAL", "VALVE", "STRAP", "VISOR", "OTHER"],
+          "description": "Kategoria części"
+        },
+        "quantity": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9999,
+          "description": "Aktualny stan magazynowy"
+        },
+        "min_level": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100,
+          "description": "Minimalny stan magazynowy"
+        },
+        "price": {
+          "type": "number",
+          "minimum": 0,
+          "multipleOf": 0.01,
+          "description": "Cena jednostkowa"
+        },
+        "supplier": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 100,
+          "description": "Nazwa dostawcy"
+        },
+        "part_number": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 50,
+          "description": "Numer katalogowy producenta"
+        },
+        "shelf_life_days": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 7300,
+          "description": "Okres przydatności w dniach (opcjonalnie)"
+        }
+      },
+      "required": ["id", "name", "category", "quantity", "min_level", "price", "supplier", "part_number"],
+      "additionalProperties": false
+    },
+    "calibrationTool": {
+      "type": "object",
+      "title": "Narzędzie Kalibracyjne",
+      "description": "Narzędzie pomiarowe wymagające okresowej kalibracji",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^CAL\\d{3}$",
+          "description": "Identyfikator narzędzia (format: CAL999)"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 100,
+          "description": "Nazwa narzędzia"
+        },
+        "location": {
+          "type": "string",
+          "pattern": "^[A-Z]+-\\d{3}$",
+          "description": "Lokalizacja (format: LAB-001)"
+        },
+        "last_calibration": {
+          "type": "string",
+          "format": "date",
+          "description": "Data ostatniej kalibracji (YYYY-MM-DD)"
+        },
+        "next_calibration": {
+          "type": "string",
+          "format": "date",
+          "description": "Data następnej kalibracji (YYYY-MM-DD)"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["OK", "ATTENTION", "FAILED", "OUT_OF_SERVICE"],
+          "description": "Status narzędzia"
+        },
+        "calibration_interval": {
+          "type": "integer",
+          "minimum": 30,
+          "maximum": 1095,
+          "description": "Interwał kalibracji w dniach"
+        },
+        "serial_number": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 50,
+          "description": "Numer seryjny narzędzia"
+        }
+      },
+      "required": ["id", "name", "location", "last_calibration", "next_calibration", "status", "calibration_interval", "serial_number"],
+      "additionalProperties": false
+    },
+    "maintenanceSchedule": {
+      "type": "object",
+      "title": "Harmonogram Konserwacji",
+      "description": "Plan okresowej konserwacji urządzenia",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^MAINT\\d{3}$",
+          "description": "Identyfikator harmonogramu (format: MAINT999)"
+        },
+        "device": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 50,
+          "description": "Identyfikator urządzenia"
+        },
+        "type": {
+          "type": "string",
+          "minLength": 5,
+          "maxLength": 100,
+          "description": "Typ konserwacji"
+        },
+        "frequency": {
+          "type": "string",
+          "enum": ["daily", "weekly", "monthly", "quarterly", "yearly"],
+          "description": "Częstotliwość konserwacji"
+        },
+        "estimated_duration": {
+          "type": "integer",
+          "minimum": 15,
+          "maximum": 480,
+          "description": "Szacowany czas trwania w minutach"
+        },
+        "required_tools": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^CAL\\d{3}$"
+          },
+          "description": "Lista wymaganych narzędzi (ID)"
+        },
+        "technician_level": {
+          "type": "string",
+          "enum": ["basic", "standard", "certified", "expert"],
+          "description": "Wymagany poziom uprawnień technika"
+        }
+      },
+      "required": ["id", "device", "type", "frequency", "estimated_duration", "technician_level"],
+      "additionalProperties": false
+    },
+    "supplier": {
+      "type": "object",
+      "title": "Dostawca",
+      "description": "Dane kontaktowe i warunki współpracy z dostawcą",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^SUP\\d{3}$",
+          "description": "Identyfikator dostawcy (format: SUP999)"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100,
+          "description": "Nazwa firmy dostawcy"
+        },
+        "contact_person": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 100,
+          "description": "Osoba kontaktowa"
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Adres email kontaktowy"
+        },
+        "phone": {
+          "type": "string",
+          "pattern": "^\\+?[0-9\\s\\-\\(\\)]{7,20}$",
+          "description": "Numer telefonu"
+        },
+        "address": {
+          "type": "string",
+          "minLength": 10,
+          "maxLength": 200,
+          "description": "Adres siedziby"
+        },
+        "payment_terms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 365,
+          "description": "Terminy płatności w dniach"
+        },
+        "delivery_time": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 90,
+          "description": "Standardowy czas dostawy w dniach"
+        }
+      },
+      "required": ["id", "name", "contact_person", "email", "phone", "address", "payment_terms", "delivery_time"],
+      "additionalProperties": false
+    },
+    "partCategory": {
+      "type": "object",
+      "title": "Kategoria Części",
+      "description": "Definicja kategorii części zamiennych",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Nazwa kategorii"
+        },
+        "description": {
+          "type": "string",
+          "description": "Opis kategorii"
+        },
+        "icon": {
+          "type": "string",
+          "description": "Emoji lub kod ikony"
+        }
+      },
+      "required": ["name", "description", "icon"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["spare_parts", "tools", "categories"],
+  "additionalProperties": false
+}

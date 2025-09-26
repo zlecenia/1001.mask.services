@@ -1,0 +1,82 @@
+{
+  "routerDefaults": {
+    "protocol": "http",
+    "domain": "localhost", 
+    "port": "8081",
+    "view": "login-screen",
+    "language": "pl",
+    "action": "default"
+  },
+  "routerSettings": {
+    "storage": { "enabled": true },
+    "navigation": { "actionOnlyChanges": true }
+  },
+  "routes": {
+    "login-screen": {
+      "element": "#login-screen",
+      "title": "Login Screen",
+      "component": "LoginScreen",
+      "description": "User authentication and role selection",
+      "actions": [
+        "login-scanner-btn",
+        "login-keyword-btn", 
+        "login-operator-btn",
+        "login-admin-btn",
+        "login-superuser-btn",
+        "login-serviceuser-btn",
+        "key-*",
+        "password-input"
+      ]
+    },
+    "user-menu-screen": {
+      "element": "#user-menu-screen",
+      "title": "User Menu",
+      "component": "UserMenuScreen",
+      "description": "Main user navigation menu",
+      "actions": [
+        "menu-item-*",
+        "logout-btn"
+      ]
+    },
+    "system-screen": {
+      "element": "#system-screen",
+      "title": "System View",
+      "component": "SystemScreen",
+      "description": "System information and status",
+      "actions": [
+        "system-info",
+        "system-status"
+      ]
+    },
+    "data-screen": {
+      "element": "#data-screen", 
+      "title": "Data Sensors",
+      "component": "RealtimeSensorsTemplate",
+      "description": "Real-time sensor data monitoring",
+      "actions": [
+        "pressure-sensor",
+        "temperature-sensor",
+        "humidity-sensor"
+      ]
+    },
+    "settings-screen": {
+      "element": "#settings-screen",
+      "title": "System Settings",
+      "component": "SystemSettingsTemplate",
+      "description": "System configuration and preferences",
+      "actions": [
+        "device-settings",
+        "network-settings",
+        "system-config",
+        "save-settings-btn"
+      ]
+    }
+  },
+  "languages": ["pl", "en", "de"],
+  "metadata": {
+    "version": "2.0.1001",
+    "description": "MASKTRONIC C20 - Routing Configuration",
+    "lastModified": "2025-09-24T13:10:00Z",
+    "extractedFrom": "router.js"
+  }
+}

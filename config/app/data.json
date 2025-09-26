@@ -1,0 +1,6 @@
+{
+  "API_URL": "http://localhost:3000",
+  "WS_URL": "ws://localhost:3000",
+  "MOCK_MODE": true,
+  "UPDATE_INTERVAL": 5000
+}

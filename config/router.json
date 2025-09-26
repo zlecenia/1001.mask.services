@@ -1,0 +1,103 @@
+{
+    "default": {
+        "protocol": "http",
+        "domain": "localhost", 
+        "port": "8081",
+        "view": "login-screen",
+        "language": "pl",
+        "action": "default"
+    },
+    "views": {
+        "login-screen": {
+            "name": "Login Screen",
+            "description": "Main login interface",
+            "actions": [
+                "default",
+                "login-admin-btn",
+                "login-operator-btn", 
+                "login-superuser-btn",
+                "virtual-keyboard",
+                "language-change"
+            ]
+        },
+        "system-screen": {
+            "name": "System Screen",
+            "description": "System overview and controls", 
+            "actions": [
+                "default",
+                "pressure-display",
+                "sensor-data",
+                "status-update"
+            ]
+        },
+        "user-menu-screen": {
+            "name": "User Menu Screen",
+            "description": "Main user interface menu",
+            "actions": [
+                "default",
+                "menu-item-1",
+                "menu-item-2", 
+                "menu-item-3",
+                "menu-item-4",
+                "menu-item-5",
+                "menu-item-6",
+                "menu-item-7"
+            ]
+        },
+        "data-screen": {
+            "name": "Data Screen",
+            "description": "Data management and reports",
+            "actions": [
+                "default",
+                "data-view",
+                "export-data",
+                "import-data"
+            ]
+        },
+        "settings-screen": {
+            "name": "Settings Screen", 
+            "description": "System configuration",
+            "actions": [
+                "default",
+                "user-settings",
+                "system-config",
+                "network-config"
+            ]
+        }
+    },
+    "languages": [
+        {
+            "code": "pl",
+            "name": "Polski",
+            "flag": "🇵🇱",
+            "default": true
+        },
+        {
+            "code": "en", 
+            "name": "English",
+            "flag": "🇺🇸",
+            "default": false
+        },
+        {
+            "code": "de",
+            "name": "Deutsch", 
+            "flag": "🇩🇪",
+            "default": false
+        }
+    ],
+    "storage": {
+        "enabled": false,
+        "keys": {
+            "lastView": "c20_last_view",
+            "lastLanguage": "c20_last_language", 
+            "lastAction": "c20_last_action",
+            "userPreferences": "c20_user_prefs"
+        }
+    },
+    "navigation": {
+        "preserveView": false,
+        "preserveLanguage": false,
+        "actionOnlyChanges": false,
+        "hashPrefix": "#/"
+    }
+}
