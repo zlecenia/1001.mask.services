@@ -138,6 +138,7 @@ const template = `
           @mousedown.prevent="onVirtualKeyDown(key)"
           @mouseup.prevent="onVirtualKeyUp"
           @mouseleave="onVirtualKeyUp"
+          @click.prevent="handleKeyPress(key)"
         >
           <span v-if="getKeyValue(key) === 'caps'">
             <i :class="capsLock ? 'fas fa-lock' : 'fas fa-unlock'"></i>
