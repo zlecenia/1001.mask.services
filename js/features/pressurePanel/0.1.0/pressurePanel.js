@@ -408,8 +408,13 @@ export default {
       this.isRefreshing = true;
       
       try {
-        // Simulate sensor refresh
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        if (this.connectionStatus === 'connected') {
+          // Request fresh sensor data via WebSocket
+          WebSocketService.requestSensorData(['pressure-01', 'pressure-02', 'pressure-03'], ['pressure']);
+        } else {
+          // Fallback: simulate sensor refresh
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
         
         this.updateTime();
         this.$emit('sensors-refreshed', { timestamp: new Date().toISOString() });
@@ -425,7 +430,7 @@ export default {
     },
     
     checkForAlerts() {
-      Object.entries(this.pressureData).forEach(([key, sensor]) => {
+      Object.entries(this.effectivePressureData).forEach(([key, sensor]) => {
         if (sensor.status === 'critical' || sensor.status === 'warning') {
           this.$emit('pressure-alert', {
             sensor: key,
@@ -436,20 +441,118 @@ export default {
           });
         }
       });
+    },
+
+    // WebSocket Integration Methods
+    async initializeWebSocket() {
+      try {
+        console.log('🔌 Initializing WebSocket connection for pressure monitoring...');
+        
+        // Connect to WebSocket service (fallback URL for development)
+        await WebSocketService.connect({
+          url: process.env.WEBSOCKET_URL || 'ws://localhost:8080/sensor-data',
+          protocols: ['pressure-monitoring-v1']
+        });
+        
+        // Subscribe to real-time events
+        const pressureDataSub = WebSocketService.subscribe('pressure-data', this.handlePressureData);
+        const alertSub = WebSocketService.subscribe('alert', this.handleAlert);
+        const connectedSub = WebSocketService.subscribe('connected', this.handleConnected);
+        const disconnectedSub = WebSocketService.subscribe('disconnected', this.handleDisconnected);
+        
+        // Store subscriptions for cleanup
+        this.webSocketSubscriptions = [pressureDataSub, alertSub, connectedSub, disconnectedSub];
+        
+        console.log('✅ WebSocket pressure monitoring initialized');
+        
+      } catch (error) {
+        console.error('❌ WebSocket initialization failed:', error);
+        this.connectionStatus = 'error';
+        this.$emit('websocket-error', error);
+      }
+    },
+    
+    handlePressureData(data) {
+      console.log('📡 Real-time pressure data received:', data);
+      
+      // Update real-time pressure data
+      if (data.pressure) {
+        Object.keys(data.pressure).forEach(key => {
+          if (this.realTimePressureData[key]) {
+            this.realTimePressureData[key] = {
+              ...this.realTimePressureData[key],
+              ...data.pressure[key],
+              lastUpdate: data.timestamp || Date.now()
+            };
+          }
+        });
+      }
+      
+      this.updateTime();
+      this.$emit('pressure-data-updated', data);
+    },
+    
+    handleAlert(alert) {
+      console.warn('🚨 Pressure alert received:', alert);
+      
+      // Add to alert history
+      this.alertHistory.unshift({
+        ...alert,
+        component: 'pressurePanel',
+        receivedAt: Date.now()
+      });
+      
+      // Keep only last 10 alerts
+      if (this.alertHistory.length > 10) {
+        this.alertHistory = this.alertHistory.slice(0, 10);
+      }
+      
+      // Emit alert to parent components
+      this.$emit('pressure-alert', alert);
+    },
+    
+    handleConnected(connectionData) {
+      console.log('✅ WebSocket connected for pressure monitoring:', connectionData);
+      this.connectionStatus = 'connected';
+      this.$emit('websocket-connected', connectionData);
+      
+      // Request initial sensor data
+      WebSocketService.requestSensorData(['pressure-01', 'pressure-02', 'pressure-03'], ['pressure']);
+    },
+    
+    handleDisconnected(disconnectionData) {
+      console.log('🔌 WebSocket disconnected from pressure monitoring:', disconnectionData);
+      this.connectionStatus = 'disconnected';
+      this.$emit('websocket-disconnected', disconnectionData);
     }
   },
   
-  mounted() {
+  async mounted() {
     console.log('PressurePanel component mounted successfully');
     this.updateTime();
+    
+    // Initialize WebSocket connection for real-time monitoring
+    await this.initializeWebSocket();
     
     // Update time every 5 seconds
     this.timeInterval = setInterval(this.updateTime, 5000);
   },
   
   beforeUnmount() {
+    console.log('🧹 Cleaning up PressurePanel WebSocket subscriptions...');
+    
+    // Unsubscribe from WebSocket events
+    this.webSocketSubscriptions.forEach(unsubscribe => {
+      if (typeof unsubscribe === 'function') {
+        unsubscribe();
+      }
+    });
+    
+    // Clear time update interval
     if (this.timeInterval) {
       clearInterval(this.timeInterval);
     }
+    
+    console.log('✅ PressurePanel cleanup completed');
   }
 };

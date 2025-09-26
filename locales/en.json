@@ -133,5 +133,46 @@
     "function_in_development": "Function in development...",
     "no_permissions": "No permissions!",
     "settings_saved": "Settings have been saved!"
+  },
+  "sensors": {
+    "pressure_monitoring": "Pressure Monitoring",
+    "last_update": "Last Update",
+    "refresh": "Refresh",
+    "low_pressure": "Low Pressure",
+    "medium_pressure": "Medium Pressure",
+    "high_pressure": "High Pressure",
+    "status_normal": "Normal",
+    "status_warning": "Warning",
+    "status_critical": "Critical",
+    "connection_status": "Connection Status",
+    "real_time_data": "Real-time Data",
+    "historical_data": "Historical Data",
+    "alert_acknowledged": "Alert Acknowledged",
+    "sensor_offline": "Sensor Offline",
+    "data_quality_good": "Good",
+    "data_quality_poor": "Poor"
+  },
+  "header": {
+    "device_status": "Device Status",
+    "language_selector": "Language",
+    "user_info": "User Information",
+    "system_time": "System Time",
+    "connection_indicator": "Connection"
+  },
+  "footer": {
+    "build_info": "Build Information",
+    "device_info": "Device Information", 
+    "user_role": "User Role",
+    "session_time": "Session Time",
+    "copyright": "© 2024 MASKTRONIC"
+  },
+  "websocket": {
+    "connecting": "Connecting...",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "reconnecting": "Reconnecting...",
+    "connection_failed": "Connection Failed",
+    "real_time_enabled": "Real-time Mode Enabled",
+    "fallback_mode": "Fallback Mode Active"
   }
 }

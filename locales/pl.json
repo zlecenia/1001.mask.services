@@ -133,5 +133,46 @@
     "function_in_development": "Funkcja w przygotowaniu...",
     "no_permissions": "Brak uprawnień!",
     "settings_saved": "Ustawienia zostały zapisane!"
+  },
+  "sensors": {
+    "pressure_monitoring": "Monitoring Ciśnienia",
+    "last_update": "Ostatnia Aktualizacja",
+    "refresh": "Odśwież",
+    "low_pressure": "Niskie Ciśnienie",
+    "medium_pressure": "Średnie Ciśnienie",
+    "high_pressure": "Wysokie Ciśnienie",
+    "status_normal": "Normalne",
+    "status_warning": "Ostrzeżenie",
+    "status_critical": "Krytyczne",
+    "connection_status": "Status Połączenia",
+    "real_time_data": "Dane Czasu Rzeczywistego",
+    "historical_data": "Dane Historyczne",
+    "alert_acknowledged": "Alert Potwierdzony",
+    "sensor_offline": "Sensor Offline",
+    "data_quality_good": "Dobra",
+    "data_quality_poor": "Słaba"
+  },
+  "header": {
+    "device_status": "Status Urządzenia",
+    "language_selector": "Język",
+    "user_info": "Informacje o Użytkowniku",
+    "system_time": "Czas Systemowy",
+    "connection_indicator": "Połączenie"
+  },
+  "footer": {
+    "build_info": "Informacje o Wersji",
+    "device_info": "Informacje o Urządzeniu",
+    "user_role": "Rola Użytkownika",
+    "session_time": "Czas Sesji",
+    "copyright": "© 2024 MASKTRONIC"
+  },
+  "websocket": {
+    "connecting": "Łączenie...",
+    "connected": "Połączono",
+    "disconnected": "Rozłączono",
+    "reconnecting": "Ponowne łączenie...",
+    "connection_failed": "Błąd Połączenia",
+    "real_time_enabled": "Tryb Czasu Rzeczywistego Aktywny",
+    "fallback_mode": "Tryb Zapasowy Aktywny"
   }
 }

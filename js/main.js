@@ -7,6 +7,10 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { FeatureRegistry } from './FeatureRegistry.js';
 import { registerAllModules } from './registerAllModulesBrowser.js';
 
+// Import our custom i18n service for industrial applications
+import I18nService from './services/i18nService.js';
+import { initializeI18n } from './initializeI18n.js';
+
 // Import locales
 import pl from '../locales/pl.json';
 import en from '../locales/en.json';
@@ -307,16 +311,24 @@ const app = createApp({
   }
 });
 
-// Configure i18n
+// Initialize our custom i18n service for industrial applications
+await initializeI18n();
+
+// Configure Vue i18n with our custom service integration
 const i18n = createI18n({
   legacy: false,
-  locale: 'pl',
+  locale: I18nService.getCurrentLanguage().code,
   fallbackLocale: 'en',
   messages: {
     pl,
     en,
     de
   }
+});
+
+// Sync Vue i18n with our custom service
+I18nService.subscribe('languageChanged', (data) => {
+  i18n.global.locale.value = data.to;
 });
 
 // Configure Vuex store

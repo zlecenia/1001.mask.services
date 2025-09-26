@@ -3,10 +3,10 @@ const template = `
 <header class="app-header" :class="deviceClass">
   <div class="header-left">
     <a href="/" @click.prevent="handleLogoClick">
-      <span class="logo">{{ $t('global.logo') || 'MASKTRONIC' }}</span>
+      <span class="logo">{{ $t('global.company') || 'MASKTRONIC' }}</span>
       <span class="hardware">{{ $t('global.hardware') || 'C20' }}</span>
       <span class="product">{{ $t('global.product') || '1001' }}</span>
-      <span class="software">{{ $t('global.software') || 'v3.0' }}</span>
+      <span class="software">{{ $t('global.version') || 'v3.0' }}</span>
     </a>
   </div>
   
@@ -26,8 +26,8 @@ const template = `
 
   <div class="header-right">
     <span class="device-info">
-      <span>{{ $t('global.device_name') || deviceInfo.name }}</span>
-      <span>{{ $t('global.device_type') || deviceInfo.type }}</span>
+      <span>{{ $t('header.device_info') || deviceInfo.name }}</span>
+      <span>{{ deviceInfo.type }}</span>
     </span>
     
     <!-- Language Selector -->
@@ -37,8 +37,8 @@ const template = `
         :key="lang.code"
         :class="['lang-btn', { active: currentLanguage === lang.code }]"
         @click="changeLanguage(lang.code)"
-        :title="lang.name"
-        :aria-label="\`Switch to \${lang.name}\`"
+        :title="lang.nativeName"
+        :aria-label="$t('header.language_selector') + ': ' + lang.nativeName"
       >
         {{ lang.flag }}
       </button>
@@ -305,10 +305,10 @@ export default {
   
   data() {
     return {
-      languages: [
-        { code: 'pl', name: 'Polski', flag: '🇵🇱' },
-        { code: 'en', name: 'English', flag: '🇺🇸' },
-        { code: 'de', name: 'Deutsch', flag: '🇩🇪' }
+      languages: window.$getSupportedLanguages ? window.$getSupportedLanguages() : [
+        { code: 'pl', name: 'Polski', nativeName: 'Polski', flag: '🇵🇱' },
+        { code: 'en', name: 'English', nativeName: 'English', flag: '🇺🇸' },
+        { code: 'de', name: 'Deutsch', nativeName: 'Deutsch', flag: '🇩🇪' }
       ]
     };
   },
@@ -323,6 +323,10 @@ export default {
   methods: {
     changeLanguage(languageCode) {
       if (languageCode !== this.currentLanguage) {
+        // Use global i18n service if available
+        if (window.$changeLanguage) {
+          window.$changeLanguage(languageCode);
+        }
         this.$emit('language-changed', languageCode);
       }
     },

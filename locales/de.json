@@ -133,5 +133,46 @@
     "function_in_development": "Funktion in Entwicklung...",
     "no_permissions": "Keine Berechtigung!",
     "settings_saved": "Einstellungen wurden gespeichert!"
+  },
+  "sensors": {
+    "pressure_monitoring": "Drucküberwachung",
+    "last_update": "Letzte Aktualisierung",
+    "refresh": "Aktualisieren",
+    "low_pressure": "Niederdruck",
+    "medium_pressure": "Mitteldruck",
+    "high_pressure": "Hochdruck",
+    "status_normal": "Normal",
+    "status_warning": "Warnung",
+    "status_critical": "Kritisch",
+    "connection_status": "Verbindungsstatus",
+    "real_time_data": "Echtzeitdaten",
+    "historical_data": "Historische Daten",
+    "alert_acknowledged": "Alarm Bestätigt",
+    "sensor_offline": "Sensor Offline",
+    "data_quality_good": "Gut",
+    "data_quality_poor": "Schlecht"
+  },
+  "header": {
+    "device_status": "Gerätestatus",
+    "language_selector": "Sprache",
+    "user_info": "Benutzerinformationen",
+    "system_time": "Systemzeit",
+    "connection_indicator": "Verbindung"
+  },
+  "footer": {
+    "build_info": "Build-Informationen",
+    "device_info": "Geräteinformationen",
+    "user_role": "Benutzerrolle",
+    "session_time": "Sitzungszeit",
+    "copyright": "© 2024 MASKTRONIC"
+  },
+  "websocket": {
+    "connecting": "Verbinde...",
+    "connected": "Verbunden",
+    "disconnected": "Getrennt",
+    "reconnecting": "Wiederverbindung...",
+    "connection_failed": "Verbindung Fehlgeschlagen",
+    "real_time_enabled": "Echtzeitmodus Aktiviert",
+    "fallback_mode": "Fallback-Modus Aktiv"
   }
 }
