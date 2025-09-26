@@ -1,0 +1,44 @@
+{
+  "name": "loginForm",
+  "version": "1.0.0",
+  "description": "Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9 cala",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run loginForm.spec.js",
+    "test:watch": "vitest watch loginForm.spec.js"
+  },
+  "dependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0"
+  },
+  "moduleMetadata": {
+    "contracts": [],
+    "rollbackConditions": {
+      "errorRate": ">5%",
+      "testFailures": ">0"
+    },
+    "generated": {
+      "prompt": "Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9 cala",
+      "timestamp": "2025-09-26T10:22:13.000Z",
+      "generator": "manual-creation v1.0.0"
+    },
+    "touchOptimization": {
+      "screenSize": "7.9inch",
+      "resolution": "1280x400px",
+      "orientation": "landscape",
+      "virtualKeyboard": true,
+      "preventNativeKeyboard": true,
+      "touchGestures": ["tap", "touch-and-hold"]
+    },
+    "authentication": {
+      "supportedRoles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+      "minPasswordLength": 3,
+      "minUsernameLength": 3,
+      "roleBasedAccess": true,
+      "passwordValidation": true
+    }
+  }
+}

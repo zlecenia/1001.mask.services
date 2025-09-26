@@ -1,0 +1,35 @@
+{
+  "name": "pageTemplate",
+  "version": "1.0.0",
+  "description": "Bazowy template strony dla systemu MASKSERVICE z układem dla wyświetlacza 7.9 cala (400x1280px landscape)",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run pageTemplate.spec.js",
+    "test:watch": "vitest watch pageTemplate.spec.js"
+  },
+  "dependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0"
+  },
+  "moduleMetadata": {
+    "contracts": [],
+    "rollbackConditions": {
+      "errorRate": ">5%",
+      "testFailures": ">0"
+    },
+    "generated": {
+      "prompt": "Bazowy template strony dla systemu MASKSERVICE z układem dla wyświetlacza 7.9 cala (400x1280px landscape)",
+      "timestamp": "2025-09-26T10:22:13.000Z",
+      "generator": "manual-creation v1.0.0"
+    },
+    "displayOptimization": {
+      "screenSize": "7.9inch",
+      "resolution": "400x1280px",
+      "orientation": "landscape",
+      "layoutType": "header-sidebar-content-footer"
+    }
+  }
+}

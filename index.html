@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=400, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>MASKSERVICE C20 1001 v3.0</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/vue.css">
+    <link rel="stylesheet" href="css/lcd-optimization.css">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Vue 3 from CDN -->
+    <script src="https://unpkg.com/vue@3.4.0/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vue-router@4.2.0/dist/vue-router.global.js"></script>
+    <script src="https://unpkg.com/vuex@4.1.0/dist/vuex.global.js"></script>
+    <script src="https://unpkg.com/vue-i18n@9.5.0/dist/vue-i18n.global.js"></script>
+    
+    <style>
+        /* Global styles for 7.9" landscape display optimization */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12px;
+            background: #fafafa;
+        }
+        
+        #app {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Loading screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 9999;
+        }
+        
+        .loading-logo {
+            width: 64px;
+            height: 64px;
+            margin-bottom: 20px;
+        }
+        
+        .loading-title {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .loading-subtitle {
+            font-size: 14px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        
+        .loading-progress {
+            width: 300px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .loading-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        .loading-status {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+        
+        /* Error screen */
+        .error-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #e74c3c;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            z-index: 9998;
+        }
+        
+        .error-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+        
+        .error-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .error-message {
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+            max-width: 400px;
+        }
+        
+        .error-actions {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .error-button {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        
+        .error-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Responsive adjustments for 400px height */
+        @media (max-height: 450px) {
+            html, body {
+                font-size: 11px;
+            }
+            
+            .loading-title {
+                font-size: 20px;
+            }
+            
+            .loading-subtitle {
+                font-size: 12px;
+            }
+            
+            .loading-progress {
+                width: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- Loading Screen -->
+        <div v-if="appState === 'loading'" class="loading-screen">
+            <img src="/favicon.ico" alt="MASKSERVICE" class="loading-logo">
+            <h1 class="loading-title">MASKSERVICE C20 1001</h1>
+            <p class="loading-subtitle">Modular System v3.0</p>
+            <div class="loading-progress">
+                <div class="loading-bar" :style="{ width: loadingProgress + '%' }"></div>
+            </div>
+            <p class="loading-status">{{ loadingStatus }}</p>
+        </div>
+        
+        <!-- Error Screen -->
+        <div v-if="appState === 'error'" class="error-screen">
+            <i class="fas fa-exclamation-triangle error-icon"></i>
+            <h2 class="error-title">System Error</h2>
+            <p class="error-message">{{ errorMessage }}</p>
+            <div class="error-actions">
+                <button class="error-button" @click="retryInitialization">
+                    <i class="fas fa-redo"></i> Retry
+                </button>
+                <button class="error-button" @click="showErrorDetails">
+                    <i class="fas fa-info-circle"></i> Details
+                </button>
+            </div>
+        </div>
+        
+        <!-- Main Application -->
+        <div v-if="appState === 'ready'" id="main-app">
+            <!-- Login Screen -->
+            <div v-if="!isAuthenticated" class="login-container">
+                <component 
+                    :is="loginFormComponent"
+                    @login-attempt="handleLoginAttempt"
+                    @language-changed="changeLanguage"
+                    :show-role-selection="true"
+                    :available-roles="availableRoles"
+                />
+            </div>
+            
+            <!-- Main Application Interface -->
+            <div v-if="isAuthenticated" class="app-container">
+                <component 
+                    :is="pageTemplateComponent"
+                    :show-sidebar="true"
+                    :show-pressure-panel="showPressurePanel"
+                    :menu-items="menuItems"
+                    :current-user="currentUser.username"
+                    :device-id="deviceId"
+                    @menu-selected="handleMenuSelection"
+                    @language-changed="changeLanguage"
+                    @logout="handleLogout"
+                >
+                    <template #content>
+                        <component 
+                            :is="currentMenuComponent"
+                            :user-role="currentUser.role"
+                            :current-user="currentUser.username"
+                            @menu-selected="handleSubMenuSelection"
+                        />
+                    </template>
+                </component>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Application Script -->
+    <script type="module">
+        import { createApp } from 'vue';
+        import { createI18n } from 'vue-i18n';
+        import { createStore } from 'vuex';
+        import { createRouter, createWebHashHistory } from 'vue-router';
+        
+        // Import our modular system
+        import { registry } from './js/FeatureRegistry.js';
+        import { registerExistingModules } from './js/registerAllModules.js';
+        
+        // Main application configuration
+        const app = createApp({
+            data() {
+                return {
+                    // Application state
+                    appState: 'loading', // 'loading', 'ready', 'error'
+                    loadingProgress: 0,
+                    loadingStatus: 'Initializing system...',
+                    errorMessage: '',
+                    
+                    // Authentication
+                    isAuthenticated: false,
+                    currentUser: null,
+                    availableRoles: [
+                        { value: 'OPERATOR', icon: 'fas fa-user' },
+                        { value: 'ADMIN', icon: 'fas fa-user-shield' },
+                        { value: 'SUPERUSER', icon: 'fas fa-user-crown' },
+                        { value: 'SERWISANT', icon: 'fas fa-user-cog' }
+                    ],
+                    
+                    // UI State
+                    currentLanguage: 'pl',
+                    deviceId: 'MASK-001',
+                    showPressurePanel: false,
+                    menuItems: [],
+                    currentMenuComponent: null,
+                    
+                    // Components
+                    loginFormComponent: null,
+                    pageTemplateComponent: null,
+                    mainMenuComponent: null
+                };
+            },
+            
+            async mounted() {
+                console.log('🚀 MASKSERVICE C20 1001 v3.0 starting...');
+                await this.initializeApplication();
+            },
+            
+            methods: {
+                async initializeApplication() {
+                    try {
+                        const steps = [
+                            { name: 'Loading modules...', progress: 20 },
+                            { name: 'Registering components...', progress: 40 },
+                            { name: 'Setting up localization...', progress: 60 },
+                            { name: 'Configuring system...', progress: 80 },
+                            { name: 'Ready!', progress: 100 }
+                        ];
+                        
+                        for (const step of steps) {
+                            this.loadingStatus = step.name;
+                            this.loadingProgress = step.progress;
+                            await this.sleep(300);
+                            
+                            if (step.progress === 20) {
+                                await this.loadModules();
+                            } else if (step.progress === 40) {
+                                await this.registerComponents();
+                            } else if (step.progress === 60) {
+                                await this.setupLocalization();
+                            } else if (step.progress === 80) {
+                                await this.configureSystem();
+                            }
+                        }
+                        
+                        this.appState = 'ready';
+                        console.log('✅ Application initialized successfully');
+                        
+                    } catch (error) {
+                        console.error('❌ Application initialization failed:', error);
+                        this.errorMessage = error.message || 'Unknown error occurred';
+                        this.appState = 'error';
+                    }
+                },
+                
+                async loadModules() {
+                    console.log('📦 Loading modules...');
+                    await registerExistingModules();
+                    
+                    // List loaded modules
+                    const modules = registry.listModules();
+                    console.log(`📋 Loaded ${modules.length} modules:`, modules.map(m => `${m.name}@${m.latestVersion}`));
+                },
+                
+                async registerComponents() {
+                    console.log('🔧 Registering components...');
+                    
+                    // Load the three main components
+                    const loginFormModule = await registry.load('loginForm', 'latest');
+                    const pageTemplateModule = await registry.load('pageTemplate', 'latest');
+                    const mainMenuModule = await registry.load('mainMenu', 'latest');
+                    
+                    // Register Vue components
+                    this.loginFormComponent = loginFormModule.Component;
+                    this.pageTemplateComponent = pageTemplateModule.Component;
+                    this.mainMenuComponent = mainMenuModule.Component;
+                    
+                    console.log('✅ Components registered successfully');
+                },
+                
+                async setupLocalization() {
+                    console.log('🌐 Setting up localization...');
+                    // Localization setup would go here
+                    // For now, we'll just set the default language
+                    this.currentLanguage = 'pl';
+                },
+                
+                async configureSystem() {
+                    console.log('⚙️ Configuring system...');
+                    // System configuration would go here
+                    this.deviceId = 'MASK-' + Math.random().toString(36).substr(2, 3).toUpperCase();
+                },
+                
+                async handleLoginAttempt(loginData) {
+                    console.log('🔐 Login attempt:', loginData);
+                    
+                    // Simulate authentication
+                    await this.sleep(1000);
+                    
+                    // For demo purposes, accept any login with valid format
+                    if (loginData.username.length >= 3 && loginData.password.length >= 3) {
+                        this.currentUser = {
+                            username: loginData.username,
+                            role: loginData.role,
+                            loginTime: new Date()
+                        };
+                        this.isAuthenticated = true;
+                        
+                        // Load menu items for the user's role
+                        await this.loadMenuForRole(loginData.role);
+                        
+                        console.log('✅ Login successful:', this.currentUser);
+                    } else {
+                        console.log('❌ Login failed: Invalid credentials');
+                        // Handle login error
+                    }
+                },
+                
+                async loadMenuForRole(role) {
+                    try {
+                        const mainMenuModule = await registry.load('mainMenu', 'latest');
+                        const menuConfig = mainMenuModule.getMenuConfigForRole(role);
+                        this.menuItems = menuConfig;
+                        this.currentMenuComponent = this.mainMenuComponent;
+                        
+                        // Show pressure panel for technical roles
+                        this.showPressurePanel = ['SERWISANT', 'SUPERUSER'].includes(role);
+                        
+                        console.log(`📋 Loaded ${menuConfig.length} menu items for role: ${role}`);
+                    } catch (error) {
+                        console.error('❌ Failed to load menu:', error);
+                    }
+                },
+                
+                handleMenuSelection(selection) {
+                    console.log('📋 Menu selected:', selection);
+                    // Handle menu selection logic here
+                },
+                
+                handleSubMenuSelection(selection) {
+                    console.log('📋 Submenu selected:', selection);
+                    // Handle submenu selection logic here
+                },
+                
+                handleLogout() {
+                    console.log('🚪 Logout requested');
+                    this.isAuthenticated = false;
+                    this.currentUser = null;
+                    this.menuItems = [];
+                    this.currentMenuComponent = null;
+                    this.showPressurePanel = false;
+                },
+                
+                changeLanguage(language) {
+                    console.log('🌐 Language changed to:', language);
+                    this.currentLanguage = language;
+                    // Implement language change logic
+                },
+                
+                retryInitialization() {
+                    console.log('🔄 Retrying initialization...');
+                    this.appState = 'loading';
+                    this.loadingProgress = 0;
+                    this.errorMessage = '';
+                    setTimeout(() => {
+                        this.initializeApplication();
+                    }, 500);
+                },
+                
+                showErrorDetails() {
+                    console.log('📋 Error details:', this.errorMessage);
+                    alert(`Error Details:\n\n${this.errorMessage}\n\nCheck the browser console for more information.`);
+                },
+                
+                sleep(ms) {
+                    return new Promise(resolve => setTimeout(resolve, ms));
+                }
+            }
+        });
+        
+        // Mount the application
+        app.mount('#app');
+        
+        console.log('🎯 MASKSERVICE C20 1001 v3.0 application mounted');
+    </script>
+</body>
+</html>
