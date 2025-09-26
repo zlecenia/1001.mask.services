@@ -5,12 +5,12 @@
 
 // Template for the page layout optimized for 7.9" landscape display
 const template = `
-<div class="page-template" :class="{'fullscreen': isFullscreen}">
+<div class="page-template landscape-7-9" :class="{'fullscreen': isFullscreen}">
   <!-- Header Section (40px height) -->
   <header class="page-header">
     <div class="header-left">
       <img src="/favicon.ico" alt="MASKSERVICE" class="logo">
-      <span class="system-title">MASKSERVICE C20 1001</span>
+      <h1 class="system-title">{{ title || 'MASKSERVICE C20 1001' }}</h1>
     </div>
     <div class="header-center">
       <div class="connection-status" :class="connectionStatus">
@@ -43,7 +43,7 @@ const template = `
     </aside>
 
     <!-- Content Body -->
-    <main class="page-main" :style="mainContentStyle">
+    <main class="page-body page-main" :style="mainContentStyle">
       <!-- Pressure Panel (when needed) -->
       <div class="pressure-panel" v-if="showPressurePanel">
         <div class="pressure-item" v-for="sensor in pressureSensors" :key="sensor.type">
@@ -60,7 +60,7 @@ const template = `
       </div>
 
       <!-- Dynamic Content Slot -->
-      <div class="content-area">
+      <div class="content-area page-content">
         <slot name="content">
           <div class="placeholder-content">
             <h3>{{ contentTitle }}</h3>

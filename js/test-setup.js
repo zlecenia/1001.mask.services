@@ -114,4 +114,21 @@ afterEach(() => {
   vi.clearAllTimers();
 });
 
+// Vue Test Utils global configuration for all tests
+import { config } from '@vue/test-utils';
+
+config.global.mocks = {
+  $t: global.$t,
+  $tc: global.$tc,
+  $te: global.$te,
+  $d: global.$d,
+  $n: global.$n,
+};
+
+config.global.provide = {};
+
+config.global.stubs = {
+  // Stub any problematic components if needed
+};
+
 export { vi };
