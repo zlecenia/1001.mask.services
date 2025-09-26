@@ -175,19 +175,41 @@ describe('AppFooter Module', () => {
 
   // TEST REAKTYWNOŚCI I PROPS
   describe('Reactivity and Props', () => {
-    it('should react to systemInfo prop changes', async () => {
+    it('should react to deviceInfo prop changes', async () => {
       await wrapper.setProps({ 
-        systemInfo: {
-          version: 'v4.0.0',
-          buildDate: '2024-02-01',
-          environment: 'production'
+        deviceInfo: {
+          name: 'NEW_DEVICE',
+          model: 'C30'
+        }
+      });
+      
+      const deviceNameEl = wrapper.find('.device-name');
+      const deviceModelEl = wrapper.find('.device-model');
+      expect(deviceNameEl.text()).toBe('NEW_DEVICE');
+      expect(deviceModelEl.text()).toBe('C30');
+    });
+
+    it('should react to buildInfo prop changes', async () => {
+      await wrapper.setProps({
+        buildInfo: {
+          version: '4.0.0',
+          buildNumber: '2024.002'
         }
       });
       
       const versionEl = wrapper.find('.version');
-      const environmentEl = wrapper.find('.environment');
-      expect(versionEl.text()).toBe('v4.0.0');
-      expect(environmentEl.text()).toBe('production');
+      const buildNumberEl = wrapper.find('.build-number');
+      expect(versionEl.text()).toBe('4.0.0');
+      expect(buildNumberEl.text()).toBe('2024.002');
+    });
+
+    it('should react to deviceStatus prop changes', async () => {
+      await wrapper.setProps({ deviceStatus: 'OFFLINE' });
+      
+      const statusTextEl = wrapper.find('.status-text');
+      const statusEl = wrapper.find('.footer-status');
+      expect(statusTextEl.text()).toBe('OFFLINE');
+      expect(statusEl.classes()).toContain('status-offline');
     });
 
     it('should react to currentUser prop changes', async () => {
@@ -256,14 +278,20 @@ describe('AppFooter Module', () => {
       await wrapper.setProps({
         currentUser: { name: 'Admin', role: 'ADMIN' }
       });
+      await wrapper.vm.$nextTick();
       
       expect(userRoleEl.classes()).toContain('admin');
     });
 
-    it('should format build date correctly', () => {
-      const buildDateEl = wrapper.find('.build-date');
-      expect(buildDateEl.exists()).toBe(true);
-      expect(buildDateEl.text()).toMatch(/\d{2}\.\d{2}\.\d{4}/); // DD.MM.YYYY format
+    it('should display device status with correct styling', async () => {
+      const statusEl = wrapper.find('.footer-status');
+      expect(statusEl.exists()).toBe(true);
+      
+      // Test different status styling
+      await wrapper.setProps({ deviceStatus: 'ERROR' });
+      await wrapper.vm.$nextTick();
+      
+      expect(statusEl.classes()).toContain('status-error');
     });
 
     it('should handle touch events for 7.9" display optimization', async () => {
