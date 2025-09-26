@@ -1,0 +1,5 @@
+- specyfikacja generowania
+- uzycie 1.0.0 zamiast v1
+- testowanie poszczegolnych modulow jeden po drugim
+- makefile dla wszystkich procesow
+- scripts/*.sh  scripts/*.py dla skryptow uzywanych z makefile
