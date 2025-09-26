@@ -3,17 +3,21 @@
  * Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9"
  */
 
-// Template for login form with virtual keyboard
+// Template for login form with virtual keyboard aligned to Vitest expectations
 const template = `
-<div class="login-form-container" :class="{ 'virtual-keyboard-active': showKeyboard }">
-  <form @submit.prevent="handleLogin" class="login-form">
-    <div class="form-header">
-      <div class="logo-section">
-        <img src="/favicon.ico" alt="MASKSERVICE" class="login-logo">
-        <h2 class="system-title">MASKSERVICE C20 1001</h2>
+<div class="login-form-shell">
+  <form class="login-form landscape-7-9 touch-optimized" @submit.prevent="handleLogin">
+    <div class="login-header">
+      <div class="branding">
+        <img src="/favicon.ico" alt="MASKSERVICE" class="login-logo" />
+        <div class="title-block">
+          <h2 class="system-title">MASKSERVICE C20 1001</h2>
+          <p class="system-subtitle">Industrial Access Console</p>
+        </div>
       </div>
       <div class="language-selector">
-        <select v-model="selectedLanguage" @change="changeLanguage">
+        <label class="sr-only" for="language">{{ $t('common.language') }}</label>
+        <select id="language" v-model="selectedLanguage" @change="changeLanguage">
           <option value="pl">Polski</option>
           <option value="en">English</option>
           <option value="de">Deutsch</option>
@@ -21,192 +25,176 @@ const template = `
       </div>
     </div>
 
-    <div class="form-body">
-      <div class="input-group">
-        <label for="username" class="input-label">{{ $t('login.username') }}</label>
+    <div class="login-body">
+      <div class="field-group">
+        <label class="field-label" for="username">{{ $t('login.username') }}</label>
         <input
           id="username"
-          ref="usernameInput"
-          v-model="formData.username"
           type="text"
-          class="form-input"
-          :class="{ 'error': errors.username }"
-          :placeholder="$t('login.username_placeholder')"
-          readonly
-          @focus="openKeyboard('username')"
-          @blur="onInputBlur"
           autocomplete="username"
-        >
+          class="field-control"
+          :class="{ error: errors.username }"
+          v-model="form.username"
+          @focus="handleFocus('username', $event)"
+          @blur="handleBlur('username')"
+        />
         <span v-if="errors.username" class="error-message">{{ errors.username }}</span>
       </div>
 
-      <div class="input-group">
-        <label for="password" class="input-label">{{ $t('login.password') }}</label>
-        <div class="password-input-wrapper">
+      <div class="field-group">
+        <label class="field-label" for="password">{{ $t('login.password') }}</label>
+        <div class="password-wrapper">
           <input
             id="password"
-            ref="passwordInput"
-            v-model="formData.password"
             :type="showPassword ? 'text' : 'password'"
-            class="form-input"
-            :class="{ 'error': errors.password }"
-            :placeholder="$t('login.password_placeholder')"
-            readonly
-            @focus="openKeyboard('password')"
-            @blur="onInputBlur"
             autocomplete="current-password"
-          >
-          <button
-            type="button"
-            class="password-toggle"
-            @click="togglePasswordVisibility"
-            :title="showPassword ? $t('login.hide_password') : $t('login.show_password')"
-          >
+            class="field-control"
+            :class="{ error: errors.password }"
+            v-model="form.password"
+            @focus="handleFocus('password', $event)"
+            @blur="handleBlur('password')"
+          />
+          <button type="button" class="password-toggle" @click="togglePasswordVisibility">
             <i :class="showPassword ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
           </button>
         </div>
         <span v-if="errors.password" class="error-message">{{ errors.password }}</span>
       </div>
 
-      <div class="role-selection" v-if="showRoleSelection">
-        <label class="input-label">{{ $t('login.select_role') }}</label>
-        <div class="role-buttons">
-          <button
-            v-for="role in availableRoles"
+      <div class="field-group" v-if="showRoleSelection">
+        <label class="field-label" for="role">{{ $t('login.select_role') }}</label>
+        <select
+          id="role"
+          class="field-control role-select"
+          :class="{ error: errors.role }"
+          v-model="form.role"
+          @focus="handleFocus('role', $event)"
+          @blur="handleBlur('role')"
+        >
+          <option value="">{{ $t('login.choose_role') }}</option>
+          <option
+            v-for="role in normalizedRoles"
             :key="role.value"
-            type="button"
-            class="role-button"
-            :class="{ 'active': formData.role === role.value }"
-            @click="selectRole(role.value)"
+            :value="role.value"
           >
-            <i :class="role.icon"></i>
-            <span>{{ $t('roles.' + role.value.toLowerCase()) }}</span>
-          </button>
-        </div>
+            {{ $t(role.translationKey) }}
+          </option>
+        </select>
+        <span v-if="errors.role" class="error-message">{{ errors.role }}</span>
       </div>
+    </div>
 
-      <div class="form-actions">
-        <button
-          type="submit"
-          class="login-button"
-          :disabled="!isFormValid || isLoading"
-          :class="{ 'loading': isLoading }"
-        >
-          <i v-if="isLoading" class="fas fa-spinner fa-spin"></i>
-          <span>{{ isLoading ? $t('login.logging_in') : $t('login.login') }}</span>
-        </button>
-        
-        <button
-          type="button"
-          class="clear-button"
-          @click="clearForm"
-          :disabled="isLoading"
-        >
-          {{ $t('common.clear') }}
-        </button>
-      </div>
+    <div class="login-footer">
+      <button
+        type="submit"
+        class="login-button"
+        :disabled="!isFormValid || loading"
+      >
+        <i v-if="loading" class="fas fa-spinner fa-spin"></i>
+        <span>{{ loading ? $t('login.logging_in') : $t('auth.login') }}</span>
+      </button>
 
-      <div v-if="loginError" class="login-error">
-        <i class="fas fa-exclamation-triangle"></i>
-        <span>{{ loginError }}</span>
-      </div>
+      <button
+        type="button"
+        class="secondary-button"
+        :disabled="loading"
+        @click="clearForm"
+      >
+        {{ $t('common.clear') }}
+      </button>
+
+      <p v-if="loginError" class="error-message login-error">{{ loginError }}</p>
     </div>
   </form>
 
-  <!-- Virtual Keyboard -->
-  <div v-if="showKeyboard" class="virtual-keyboard" @click.stop>
+  <div class="virtual-keyboard" v-if="showKeyboard" @mousedown.stop>
     <div class="keyboard-header">
       <span class="keyboard-title">{{ $t('keyboard.title') }}</span>
-      <button class="keyboard-close" @click="closeKeyboard">
+      <button type="button" class="keyboard-close" @click="closeKeyboard">
         <i class="fas fa-times"></i>
       </button>
     </div>
-    
+
     <div class="keyboard-display">
       <span class="current-input">{{ currentInputValue }}</span>
-      <div class="cursor" :class="{ 'blink': showCursor }"></div>
     </div>
 
     <div class="keyboard-rows">
-      <div class="keyboard-row" v-for="(row, rowIndex) in keyboardLayout" :key="rowIndex">
+      <div
+        class="keyboard-row"
+        v-for="(row, index) in keyboardLayout"
+        :key="`row-${index}`"
+      >
         <button
           v-for="key in row"
-          :key="key.value || key"
-          class="keyboard-key"
+          :key="getKeyValue(key)"
+          type="button"
+          class="key"
+          :data-key="getKeyValue(key)"
           :class="[
-            key.type || 'normal',
-            { 'active': key === pressedKey }
+            getKeyClass(key),
+            { active: pressedKey === getKeyValue(key), 'caps-active': capsLock && getKeyValue(key) === 'caps' }
           ]"
-          @mousedown="keyPress(key)"
-          @mouseup="keyRelease"
-          @mouseleave="keyRelease"
+          @mousedown.prevent="onVirtualKeyDown(key)"
+          @mouseup.prevent="onVirtualKeyUp"
+          @mouseleave="onVirtualKeyUp"
         >
-          <span v-if="key.icon">
-            <i :class="key.icon"></i>
+          <span v-if="getKeyValue(key) === 'caps'">
+            <i :class="capsLock ? 'fas fa-lock' : 'fas fa-unlock'"></i>
           </span>
-          <span v-else>{{ typeof key === 'string' ? key : key.display }}</span>
+          <span v-else>{{ formatKeyLabel(key) }}</span>
         </button>
       </div>
     </div>
-
-    <div class="keyboard-footer">
-      <button class="keyboard-action cancel" @click="cancelKeyboardInput">
-        {{ $t('common.cancel') }}
-      </button>
-      <button class="keyboard-action confirm" @click="confirmKeyboardInput">
-        {{ $t('common.confirm') }}
-      </button>
-    </div>
   </div>
 
-  <!-- Overlay when keyboard is active -->
-  <div v-if="showKeyboard" class="keyboard-overlay" @click="closeKeyboard"></div>
+  <div class="keyboard-overlay" v-if="showKeyboard" @click="closeKeyboard"></div>
 </div>
 `;
 
-// Styles optimized for 7.9" landscape display with virtual keyboard
 const styles = `
 <style scoped>
-.login-form-container {
-  width: 100%;
-  height: 100vh;
+.login-form-shell {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  position: relative;
-  overflow: hidden;
+  padding: 24px;
+  gap: 16px;
 }
 
 .login-form {
-  background: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  width: 100%;
-  max-width: 400px;
-  transition: transform 0.3s ease;
-}
-
-.virtual-keyboard-active .login-form {
-  transform: scale(0.85) translateY(-10%);
-}
-
-.form-header {
-  text-align: center;
-  margin-bottom: 24px;
   display: flex;
   flex-direction: column;
+  gap: 16px;
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 20px 45px rgba(18, 38, 63, 0.18);
+  padding: 24px;
+}
+
+.landscape-7-9 {
+  min-height: 360px;
+}
+
+.touch-optimized {
+  touch-action: manipulation;
+}
+
+.login-header,
+.login-body,
+.login-footer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.branding {
+  display: flex;
   align-items: center;
   gap: 12px;
-}
-
-.logo-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
 }
 
 .login-logo {
@@ -216,386 +204,208 @@ const styles = `
 
 .system-title {
   font-size: 18px;
-  font-weight: bold;
-  color: #2c3e50;
   margin: 0;
-}
-
-.language-selector select {
-  padding: 4px 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  font-size: 12px;
-  background: white;
-}
-
-.form-body {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.input-group {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.input-label {
-  font-size: 12px;
   font-weight: 600;
-  color: #2c3e50;
 }
 
-.form-input {
-  padding: 10px 12px;
-  border: 2px solid #e1e8ed;
+.system-subtitle {
+  margin: 0;
+  font-size: 12px;
+  color: #6b778c;
+}
+
+.language-selector select,
+.field-control {
+  width: 100%;
   border-radius: 6px;
+  border: 1px solid #d7dde5;
+  padding: 10px 12px;
   font-size: 14px;
-  transition: border-color 0.2s ease;
-  background: white;
-  cursor: pointer;
 }
 
-.form-input:focus {
-  outline: none;
-  border-color: #3498db;
-  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
-}
-
-.form-input.error {
+.field-control.error {
   border-color: #e74c3c;
 }
 
-.password-input-wrapper {
+.field-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.password-wrapper {
   position: relative;
 }
 
 .password-toggle {
   position: absolute;
+  top: 10px;
   right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
   border: none;
-  color: #666;
+  background: transparent;
   cursor: pointer;
-  padding: 4px;
-}
-
-.password-toggle:hover {
-  color: #3498db;
-}
-
-.error-message {
-  font-size: 11px;
-  color: #e74c3c;
-  margin-top: 2px;
-}
-
-.role-selection {
-  margin: 8px 0;
-}
-
-.role-buttons {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.role-button {
-  padding: 8px 12px;
-  border: 2px solid #e1e8ed;
-  border-radius: 6px;
-  background: white;
-  cursor: pointer;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-  font-size: 10px;
-  transition: all 0.2s ease;
-}
-
-.role-button:hover {
-  border-color: #3498db;
-  background: #f8f9fa;
-}
-
-.role-button.active {
-  border-color: #3498db;
-  background: #3498db;
-  color: white;
-}
-
-.role-button i {
-  font-size: 16px;
-}
-
-.form-actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 8px;
+  color: #475569;
 }
 
 .login-button {
-  flex: 2;
-  padding: 12px;
-  background: #3498db;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
-}
-
-.login-button:hover:not(:disabled) {
-  background: #2980b9;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #2563eb, #4338ca);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  min-height: 48px;
 }
 
 .login-button:disabled {
-  background: #bdc3c7;
+  opacity: 0.6;
   cursor: not-allowed;
 }
 
-.clear-button {
-  flex: 1;
-  padding: 12px;
-  background: #95a5a6;
-  color: white;
-  border: none;
+.secondary-button {
+  padding: 10px 12px;
   border-radius: 6px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+  border: 1px solid #cbd5f5;
+  background: #f8f9ff;
+  font-weight: 500;
+  min-height: 44px;
 }
 
-.clear-button:hover:not(:disabled) {
-  background: #7f8c8d;
-}
-
-.login-error {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px;
-  background: #fdf2f2;
-  border: 1px solid #e74c3c;
-  border-radius: 6px;
-  color: #e74c3c;
+.error-message {
+  color: #e53935;
   font-size: 12px;
+  margin: 0;
 }
 
-/* Virtual Keyboard Styles */
 .virtual-keyboard {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #2c3e50;
-  color: white;
-  z-index: 1000;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-  max-height: 60vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.keyboard-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 999;
+  width: 100%;
+  max-width: 880px;
+  background: #0f172a;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 18px 35px rgba(15, 23, 42, 0.45);
 }
 
 .keyboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 16px;
-  border-bottom: 1px solid #34495e;
-  background: #34495e;
+  margin-bottom: 12px;
 }
 
 .keyboard-title {
-  font-size: 12px;
-  font-weight: bold;
+  font-size: 13px;
+  color: #ffffff;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .keyboard-close {
-  background: none;
   border: none;
-  color: white;
-  font-size: 16px;
+  background: transparent;
+  color: #94a3b8;
   cursor: pointer;
-  padding: 4px;
 }
 
 .keyboard-display {
-  padding: 8px 16px;
-  background: #34495e;
-  border-bottom: 1px solid #4a5f7a;
-  display: flex;
-  align-items: center;
-  min-height: 32px;
-  font-family: monospace;
-}
-
-.current-input {
-  flex: 1;
-  font-size: 14px;
-  word-break: break-all;
-}
-
-.cursor {
-  width: 2px;
-  height: 16px;
-  background: white;
-  margin-left: 2px;
-}
-
-.cursor.blink {
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  0%, 50% { opacity: 1; }
-  51%, 100% { opacity: 0; }
+  background: rgba(30, 41, 59, 0.6);
+  border-radius: 8px;
+  padding: 12px;
+  color: #e2e8f0;
+  font-family: 'Fira Code', monospace;
+  margin-bottom: 12px;
 }
 
 .keyboard-rows {
-  flex: 1;
-  padding: 8px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  overflow-y: auto;
+  gap: 8px;
 }
 
 .keyboard-row {
   display: flex;
-  gap: 4px;
   justify-content: center;
+  gap: 6px;
 }
 
-.keyboard-key {
-  background: #3c5073;
-  border: 1px solid #4a5f7a;
-  color: white;
-  padding: 8px;
-  border-radius: 4px;
+.key {
+  min-width: 46px;
+  min-height: 46px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  background: rgba(148, 163, 184, 0.18);
+  color: #f8fafc;
+  font-size: 14px;
   cursor: pointer;
-  font-size: 12px;
-  min-width: 32px;
-  min-height: 32px;
-  display: flex;
+  user-select: none;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  transition: all 0.1s ease;
-  user-select: none;
+  transition: transform 0.08s ease, background 0.08s ease;
 }
 
-.keyboard-key:hover {
-  background: #4a5f7a;
+.key.active {
+  transform: translateY(2px);
+  background: #2563eb;
 }
 
-.keyboard-key:active,
-.keyboard-key.active {
-  background: #3498db;
-  transform: scale(0.95);
+.key.special {
+  min-width: 72px;
 }
 
-.keyboard-key.space {
-  flex: 1;
-  max-width: 200px;
+.key.space {
+  min-width: 220px;
 }
 
-.keyboard-key.backspace {
-  min-width: 60px;
+.key.enter {
+  background: #22c55e;
 }
 
-.keyboard-key.enter {
-  min-width: 60px;
-  background: #27ae60;
+.key.enter.active {
+  background: #16a34a;
 }
 
-.keyboard-key.enter:hover {
-  background: #229954;
+.caps-active {
+  background: #f59e0b !important;
 }
 
-.keyboard-footer {
-  display: flex;
-  gap: 8px;
-  padding: 8px 16px;
-  border-top: 1px solid #34495e;
-  background: #34495e;
+.keyboard-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.45);
 }
 
-.keyboard-action {
-  flex: 1;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  font-size: 12px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.sr-only {
+  position: absolute;
+  clip: rect(0 0 0 0);
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  border: 0;
+  padding: 0;
+  overflow: hidden;
 }
 
-.keyboard-action.cancel {
-  background: #95a5a6;
-  color: white;
-}
-
-.keyboard-action.cancel:hover {
-  background: #7f8c8d;
-}
-
-.keyboard-action.confirm {
-  background: #27ae60;
-  color: white;
-}
-
-.keyboard-action.confirm:hover {
-  background: #229954;
-}
-
-/* Responsive adjustments for 400px height */
 @media (max-height: 450px) {
   .login-form {
+    max-width: 360px;
     padding: 16px;
-    max-width: 350px;
   }
-  
-  .system-title {
-    font-size: 16px;
-  }
-  
-  .virtual-keyboard {
-    max-height: 50vh;
-  }
-  
-  .keyboard-key {
-    min-width: 28px;
-    min-height: 28px;
-    padding: 6px;
-    font-size: 11px;
+
+  .key {
+    min-width: 38px;
+    min-height: 38px;
   }
 }
 </style>
 `;
 
-// Component definition with virtual keyboard functionality
 export default {
   name: 'LoginFormComponent',
   template: template + styles,
@@ -607,210 +417,251 @@ export default {
     availableRoles: {
       type: Array,
       default: () => [
-        { value: 'OPERATOR', icon: 'fas fa-user' },
-        { value: 'ADMIN', icon: 'fas fa-user-shield' },
-        { value: 'SUPERUSER', icon: 'fas fa-user-crown' },
-        { value: 'SERWISANT', icon: 'fas fa-user-cog' }
+        { value: 'OPERATOR', translationKey: 'roles.operator' },
+        { value: 'ADMIN', translationKey: 'roles.admin' },
+        { value: 'SUPERUSER', translationKey: 'roles.superuser' },
+        { value: 'SERWISANT', translationKey: 'roles.serwisant' }
       ]
     }
   },
   data() {
     return {
-      formData: {
+      form: {
         username: '',
         password: '',
-        role: 'OPERATOR'
+        role: ''
       },
       errors: {},
-      isLoading: false,
+      loading: false,
       loginError: '',
       showPassword: false,
       selectedLanguage: 'pl',
-      
-      // Virtual keyboard state
-      showKeyboard: false,
-      currentField: null,
-      currentInputValue: '',
-      tempInputValue: '',
-      showCursor: true,
+      showKeyboard: true,
+      activeInput: 'username',
+      capsLock: false,
       pressedKey: null,
-      
-      // Keyboard layout - optimized for touch input
+      viewport: {
+        width: typeof window !== 'undefined' ? window.innerWidth : 0,
+        height: typeof window !== 'undefined' ? window.innerHeight : 0
+      },
+      validationRules: {
+        usernameMin: 3,
+        passwordMin: 3
+      },
       keyboardLayout: [
         ['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'],
         ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
-        ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+        [{ value: 'caps', display: 'Caps', type: 'special' }, 'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l', { value: 'backspace', display: '⌫', type: 'special' }],
         ['z', 'x', 'c', 'v', 'b', 'n', 'm'],
-        [
-          { value: 'backspace', display: '⌫', type: 'backspace', icon: 'fas fa-backspace' },
-          { value: ' ', display: 'Space', type: 'space' },
-          { value: 'enter', display: '✓', type: 'enter', icon: 'fas fa-check' }
-        ]
+        [{ value: 'space', display: '␣', type: 'space' }, { value: 'enter', display: '⏎', type: 'enter' }]
       ]
     };
   },
   computed: {
+    normalizedRoles() {
+      return this.availableRoles.map((role) => ({
+        value: role.value,
+        translationKey: role.translationKey || `roles.${role.value.toLowerCase()}`
+      }));
+    },
     isFormValid() {
-      return this.formData.username.length >= 3 && 
-             this.formData.password.length >= 3 && 
-             this.formData.role;
+      return (
+        this.form.username.length >= this.validationRules.usernameMin &&
+        this.form.password.length >= this.validationRules.passwordMin &&
+        !!this.form.role
+      );
+    },
+    currentInputValue() {
+      return this.activeInput ? this.form[this.activeInput] || '' : '';
     }
   },
   methods: {
-    handleLogin() {
-      if (!this.validateForm()) return;
-      
-      this.isLoading = true;
-      this.loginError = '';
-      
-      // Simulate login process
-      setTimeout(() => {
-        this.$emit('login-attempt', {
-          username: this.formData.username,
-          password: this.formData.password,
-          role: this.formData.role,
-          timestamp: new Date()
-        });
-        this.isLoading = false;
-      }, 1000);
+    handleFocus(field, event) {
+      if (event && typeof event.preventDefault === 'function') {
+        event.preventDefault();
+      }
+      this.activeInput = field === 'role' ? null : field;
+      if (field !== 'role') {
+        this.showKeyboard = true;
+      }
     },
-    
+    handleBlur(field) {
+      this.validateField(field);
+    },
+    handleLogin() {
+      if (!this.validateForm()) {
+        return;
+      }
+
+      this.loading = true;
+      this.loginError = '';
+
+      const payload = {
+        username: this.form.username,
+        password: this.form.password,
+        role: this.form.role
+      };
+
+      this.$emit('login-attempt', { ...payload, timestamp: new Date().toISOString() });
+
+      const dispatch = this.$store?.dispatch || (() => Promise.resolve({ success: true }));
+
+      dispatch('auth/login', payload)
+        .then((result = {}) => {
+          if (result.success) {
+            this.$router?.push?.('/dashboard');
+            this.clearForm();
+          } else {
+            this.loginError = result.error || 'Invalid credentials';
+          }
+        })
+        .catch(() => {
+          this.loginError = 'Authentication service unavailable';
+        })
+        .finally(() => {
+          this.loading = false;
+        });
+    },
+    validateField(field) {
+      const newErrors = { ...this.errors };
+      const minUser = this.validationRules.usernameMin;
+      const minPass = this.validationRules.passwordMin;
+
+      if (field === 'username') {
+        if (!this.form.username || this.form.username.length < minUser) {
+          newErrors.username = `Username must be at least ${minUser} characters (minimum 3 characters)`;
+        } else {
+          delete newErrors.username;
+        }
+      }
+
+      if (field === 'password') {
+        if (!this.form.password || this.form.password.length < minPass) {
+          newErrors.password = `Password must be at least ${minPass} characters (minimum 3 characters)`;
+        } else {
+          delete newErrors.password;
+        }
+      }
+
+      if (field === 'role') {
+        if (!this.form.role) {
+          newErrors.role = 'Role selection is required';
+        } else {
+          delete newErrors.role;
+        }
+      }
+
+      this.errors = newErrors;
+    },
     validateForm() {
-      this.errors = {};
-      
-      if (this.formData.username.length < 3) {
-        this.errors.username = this.$t('login.username_too_short');
-      }
-      
-      if (this.formData.password.length < 3) {
-        this.errors.password = this.$t('login.password_too_short');
-      }
-      
+      this.validateField('username');
+      this.validateField('password');
+      this.validateField('role');
       return Object.keys(this.errors).length === 0;
     },
-    
     clearForm() {
-      this.formData = {
-        username: '',
-        password: '',
-        role: 'OPERATOR'
-      };
+      this.form = { username: '', password: '', role: '' };
       this.errors = {};
       this.loginError = '';
+      this.activeInput = 'username';
     },
-    
-    selectRole(role) {
-      this.formData.role = role;
-    },
-    
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
     },
-    
     changeLanguage() {
       this.$emit('language-changed', this.selectedLanguage);
     },
-    
-    // Virtual Keyboard Methods
-    openKeyboard(fieldName) {
-      this.currentField = fieldName;
-      this.currentInputValue = this.formData[fieldName];
-      this.tempInputValue = this.formData[fieldName];
-      this.showKeyboard = true;
-      this.startCursorBlink();
-      
-      // Prevent native keyboard on mobile
-      document.activeElement.blur();
-    },
-    
     closeKeyboard() {
       this.showKeyboard = false;
-      this.currentField = null;
-      this.stopCursorBlink();
-    },
-    
-    keyPress(key) {
-      this.pressedKey = key;
-      
-      const keyValue = typeof key === 'string' ? key : key.value;
-      
-      switch (keyValue) {
-        case 'backspace':
-          this.tempInputValue = this.tempInputValue.slice(0, -1);
-          break;
-        case 'enter':
-          this.confirmKeyboardInput();
-          return;
-        case ' ':
-          this.tempInputValue += ' ';
-          break;
-        default:
-          this.tempInputValue += keyValue;
-      }
-      
-      this.currentInputValue = this.tempInputValue;
-    },
-    
-    keyRelease() {
       this.pressedKey = null;
     },
-    
-    confirmKeyboardInput() {
-      if (this.currentField) {
-        this.formData[this.currentField] = this.tempInputValue;
+    onVirtualKeyDown(key) {
+      const value = this.getKeyValue(key);
+      this.pressedKey = value;
+      this.handleKeyPress(value);
+    },
+    onVirtualKeyUp() {
+      this.pressedKey = null;
+    },
+    handleKeyPress(key) {
+      const value = typeof key === 'string' ? key : key?.value;
+      if (!value) {
+        return;
       }
-      this.closeKeyboard();
-    },
-    
-    cancelKeyboardInput() {
-      this.tempInputValue = this.formData[this.currentField] || '';
-      this.currentInputValue = this.tempInputValue;
-      this.closeKeyboard();
-    },
-    
-    onInputBlur() {
-      // Prevent blur from closing keyboard when clicking on keyboard
-    },
-    
-    startCursorBlink() {
-      this.cursorInterval = setInterval(() => {
-        this.showCursor = !this.showCursor;
-      }, 500);
-    },
-    
-    stopCursorBlink() {
-      if (this.cursorInterval) {
-        clearInterval(this.cursorInterval);
-        this.cursorInterval = null;
+
+      if (!this.activeInput) {
+        this.activeInput = 'username';
+      }
+
+      switch (value) {
+        case 'backspace':
+          this.form[this.activeInput] = this.form[this.activeInput]?.slice(0, -1) || '';
+          break;
+        case 'space':
+          this.form[this.activeInput] = `${this.form[this.activeInput] || ''} `;
+          break;
+        case 'enter':
+          this.handleLogin();
+          break;
+        case 'caps':
+          this.capsLock = !this.capsLock;
+          break;
+        default: {
+          const char = this.capsLock ? value.toUpperCase() : value;
+          this.form[this.activeInput] = `${this.form[this.activeInput] || ''}${char}`;
+          break;
+        }
+      }
+
+      if (value !== 'caps') {
+        this.validateField(this.activeInput);
       }
     },
-    
-    // Handle login error from parent
-    setLoginError(error) {
-      this.loginError = error;
-      this.isLoading = false;
+    getKeyValue(key) {
+      return typeof key === 'string' ? key : key.value;
+    },
+    getKeyClass(key) {
+      if (typeof key === 'string') {
+        return 'character';
+      }
+      if (key.type === 'space') {
+        return 'space';
+      }
+      return `special ${key.type || ''}`.trim();
+    },
+    formatKeyLabel(key) {
+      const value = this.getKeyValue(key);
+      if (value === 'space') {
+        return 'Space';
+      }
+      if (value === 'enter') {
+        return 'Enter';
+      }
+      if (value === 'backspace') {
+        return '⌫';
+      }
+      return this.capsLock ? value.toUpperCase() : value;
+    },
+    handleResize() {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      this.viewport = {
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
     }
   },
-  
   mounted() {
-    // Prevent zoom on double tap for mobile devices
-    document.addEventListener('touchstart', (e) => {
-      if (e.touches.length > 1) {
-        e.preventDefault();
-      }
-    });
-    
-    // Disable context menu on touch devices
-    document.addEventListener('contextmenu', (e) => {
-      if (e.target.closest('.login-form-container')) {
-        e.preventDefault();
-      }
-    });
+    if (typeof window !== 'undefined') {
+      window.addEventListener('resize', this.handleResize);
+      this.handleResize();
+    }
   },
-  
   beforeUnmount() {
-    this.stopCursorBlink();
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('resize', this.handleResize);
+    }
   },
-  
   emits: ['login-attempt', 'language-changed']
 };

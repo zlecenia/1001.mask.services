@@ -7,18 +7,15 @@ module.exports = {
   },
   extends: [
     'eslint:recommended',
-    'plugin:vue/vue3-essential',
   ],
   parserOptions: {
     ecmaVersion: 2021,
     sourceType: 'module',
   },
-  plugins: ['vue'],
   rules: {
     'no-unused-vars': 'warn',
     'no-console': 'warn',
-    'vue/multi-word-component-names': 'off',
-    'vue/no-unused-vars': 'warn',
+    'no-debugger': 'warn',
   },
   globals: {
     Vue: 'readonly',

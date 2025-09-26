@@ -8,85 +8,74 @@ export default {
   name: 'mainMenu',
   version: 'v1',
   component: Component,
-  
-  /**
-   * Main handler function for the menu module
-   * @param {object} request - Request object with user role and configuration
-   * @returns {object} Response object with menu configuration
-   */
+
   handle(request = {}) {
-    console.log(`Executing ${this.name}@${this.version}`, request);
-    
-    const { userRole = 'OPERATOR', userId = 'unknown' } = request;
-    
-    // Validate user role
-    if (!this.validateRole(userRole)) {
-      return {
-        status: 400,
-        message: `Invalid user role: ${userRole}`,
-        data: {
-          module: this.name,
-          version: this.version,
-          error: 'INVALID_ROLE',
-          validRoles: this.getValidRoles()
+    const { action = 'getMenu', role = 'OPERATOR' } = request;
+
+    switch (action) {
+      case 'getMenu': {
+        if (!this.validateRole(role)) {
+          return {
+            success: false,
+            error: `Invalid role: ${role}`,
+            data: {
+              validRoles: this.getValidRoles()
+            }
+          };
         }
-      };
-    }
-    
-    // Get menu configuration for the role
-    const menuConfig = this.getMenuConfigForRole(userRole);
-    
-    return {
-      status: 200,
-      message: `${this.name}@${this.version} menu configured for role ${userRole}`,
-      data: {
-        module: this.name,
-        version: this.version,
-        timestamp: new Date().toISOString(),
-        userRole,
-        userId,
-        menuItems: menuConfig,
-        itemCount: menuConfig.length,
-        roleCapabilities: this.getRoleCapabilities(userRole)
+
+        const menuItems = this.getMenuConfig(role);
+        return {
+          success: true,
+          data: {
+            menuItems,
+            role,
+            timestamp: new Date().toISOString()
+          }
+        };
       }
-    };
+
+      case 'validateRole':
+        return {
+          success: true,
+          data: {
+            valid: this.validateRole(role),
+            role
+          }
+        };
+
+      case 'navigate': {
+        const target = request.target || '';
+        if (!target) {
+          return {
+            success: false,
+            error: 'Missing navigation target'
+          };
+        }
+
+        if (!this._context?.router?.push) {
+          return {
+            success: false,
+            error: 'Router not available'
+          };
+        }
+
+        this._context.router.push(target);
+        return {
+          success: true,
+          data: { target }
+        };
+      }
+
+      default:
+        return {
+          success: false,
+          error: `Unknown action: ${action}`
+        };
+    }
   },
   
-  /**
-   * Initialize menu module with role-based configuration
-   * @param {object} config - Configuration object
-   */
-  init(config = {}) {
-    console.log(`Initializing ${this.name}@${this.version}`, config);
-    
-    // Set up role-based styling if in browser environment
-    if (typeof window !== 'undefined') {
-      this.applyRoleTheme(config.userRole || 'OPERATOR');
-    }
-    
-    // Initialize menu state
-    this.menuState = {
-      activeItem: null,
-      expandedItems: [],
-      userRole: config.userRole || 'OPERATOR',
-      initialized: true
-    };
-  },
   
-  /**
-   * Cleanup menu resources
-   */
-  cleanup() {
-    console.log(`Cleaning up ${this.name}@${this.version}`);
-    
-    // Clear menu state
-    this.menuState = null;
-    
-    // Remove custom CSS if in browser
-    if (typeof window !== 'undefined') {
-      this.removeRoleTheme();
-    }
-  },
   
   /**
    * Validate user role
@@ -110,34 +99,34 @@ export default {
    * @param {string} role - User role
    * @returns {Array} Menu items for the role
    */
-  getMenuConfigForRole(role) {
-    const menuConfigs = {
+  getMenuConfig(role) {
+    const configs = {
       OPERATOR: [
-        { key: 'tests', icon: 'fas fa-flask', isPrimary: true, count: 2 },
-        { key: 'reports', icon: 'fas fa-file-alt', isPrimary: true, count: 2 }
+        { id: 'tests', icon: 'fas fa-vials', label: 'menu.tests', route: '/tests', order: 1 },
+        { id: 'reports', icon: 'fas fa-chart-line', label: 'menu.reports', route: '/reports', order: 2 }
       ],
       ADMIN: [
-        { key: 'tests', icon: 'fas fa-flask', isPrimary: true, count: 3 },
-        { key: 'reports', icon: 'fas fa-file-alt', isPrimary: true, count: 3 },
-        { key: 'users', icon: 'fas fa-users', isPrimary: true, count: 2 },
-        { key: 'system', icon: 'fas fa-cogs', isPrimary: true, count: 2 }
+        { id: 'tests', icon: 'fas fa-vials', label: 'menu.tests', route: '/tests', order: 1 },
+        { id: 'reports', icon: 'fas fa-chart-line', label: 'menu.reports', route: '/reports', order: 2 },
+        { id: 'users', icon: 'fas fa-users-cog', label: 'menu.users', route: '/admin/users', order: 3 },
+        { id: 'system', icon: 'fas fa-cogs', label: 'menu.system', route: '/admin/system', order: 4 }
       ],
       SUPERUSER: [
-        { key: 'advanced_tests', icon: 'fas fa-microscope', isPrimary: true, count: 3 },
-        { key: 'system_integration', icon: 'fas fa-network-wired', isPrimary: true, count: 3 },
-        { key: 'advanced_reports', icon: 'fas fa-chart-pie', isPrimary: true, count: 3 },
-        { key: 'system_admin', icon: 'fas fa-shield-alt', isPrimary: true, count: 3 }
+        { id: 'integration', icon: 'fas fa-project-diagram', label: 'menu.integration', route: '/integration', order: 1 },
+        { id: 'analytics', icon: 'fas fa-chart-area', label: 'menu.analytics', route: '/analytics', order: 2 },
+        { id: 'advanced-system', icon: 'fas fa-microscope', label: 'menu.advanced-system', route: '/advanced-system', order: 3 },
+        { id: 'audit', icon: 'fas fa-shield-alt', label: 'menu.audit', route: '/audit', order: 4 }
       ],
       SERWISANT: [
-        { key: 'diagnostics', icon: 'fas fa-stethoscope', isPrimary: true, count: 3 },
-        { key: 'maintenance', icon: 'fas fa-wrench', isPrimary: true, count: 3 },
-        { key: 'workshop', icon: 'fas fa-hammer', isPrimary: true, count: 3 },
-        { key: 'technical_docs', icon: 'fas fa-book-open', isPrimary: true, count: 3 },
-        { key: 'quality_control', icon: 'fas fa-check-double', isPrimary: true, count: 3 }
+        { id: 'diagnostics', icon: 'fas fa-stethoscope', label: 'menu.diagnostics', route: '/diagnostics', order: 1 },
+        { id: 'calibration', icon: 'fas fa-drafting-compass', label: 'menu.calibration', route: '/calibration', order: 2 },
+        { id: 'maintenance', icon: 'fas fa-wrench', label: 'menu.maintenance', route: '/maintenance', order: 3 },
+        { id: 'workshop', icon: 'fas fa-hammer', label: 'menu.workshop', route: '/workshop', order: 4 },
+        { id: 'tech-docs', icon: 'fas fa-book-open', label: 'menu.tech-docs', route: '/tech-docs', order: 5 }
       ]
     };
-    
-    return menuConfigs[role] || [];
+
+    return (configs[role] || []).map((item, index) => ({ ...item, order: item.order || index + 1 }));
   },
   
   /**
@@ -227,7 +216,7 @@ export default {
    * @returns {object} Menu statistics
    */
   getMenuStats(role) {
-    const config = this.getMenuConfigForRole(role);
+    const config = this.getMenuConfig(role);
     const capabilities = this.getRoleCapabilities(role);
     
     return {
@@ -238,127 +227,50 @@ export default {
     };
   },
   
-  // Module metadata
-  metadata: {
-    description: 'Główne menu aplikacji z kontrolą dostępu opartą na rolach',
-    supportedRoles: ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'],
-    roleDescriptions: {
-      OPERATOR: '2 opcje menu (testy, raporty)',
-      ADMIN: '4 opcje menu (zarządzanie użytkownikami + podstawowe funkcje)',
-      SUPERUSER: '4 opcje zaawansowane (pełna kontrola systemu)',
-      SERWISANT: '5 opcji technicznych (serwis, diagnostyka, warsztaty)'
-    },
-    features: [
-      'role-based-access-control',
-      'hierarchical-menu-structure',
-      'permission-validation',
-      'theme-customization',
-      'submenu-support'
-    ]
-  },
+
+
 
   /**
-   * Initialize the module
-   * @param {Object} context - Application context
+   * Initialize module with context
+   * @param {object} context - Vue context with store and router
    * @returns {boolean} Success status
    */
-  async init(context) {
-    try {
-      // Validate context
-      if (!context || !context.store || !context.router) {
-        console.error('mainMenu: Invalid context provided');
-        return false;
-      }
-
-      // Store context for later use
-      this._context = context;
-      this.metadata.initialized = true;
-      
-      console.log('✅ mainMenu module initialized successfully');
-      return true;
-    } catch (error) {
-      console.error('❌ mainMenu initialization failed:', error);
+  async init(context = {}) {
+    if (!context || !context.router) {
       return false;
     }
-  },
 
-  /**
-   * Handle module requests
-   * @param {Object} request - Request object with action and data
-   * @returns {Object} Response object
-   */
-  handle(request) {
-    try {
-      if (!request || !request.action) {
-        return {
-          success: false,
-          error: 'Invalid request format'
-        };
-      }
+    this._context = context;
+    this.metadata.initialized = true;
 
-      switch (request.action) {
-        case 'getMenu':
-          const role = request.data?.role;
-          return {
-            success: true,
-            data: {
-              menuItems: this.getMenuConfig(role),
-              role: role
-            }
-          };
-
-        case 'validateRole':
-          return {
-            success: true,
-            data: {
-              valid: this.validateRole(request.data?.role),
-              role: request.data?.role
-            }
-          };
-
-        case 'getCapabilities':
-          return {
-            success: true,
-            data: {
-              capabilities: this.getRoleCapabilities(request.data?.role)
-            }
-          };
-
-        default:
-          return {
-            success: false,
-            error: `Unknown action: ${request.action}`
-          };
-      }
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message
-      };
+    if (context?.router?.beforeEach && !this._navigationGuard) {
+      this._navigationGuard = context.router.beforeEach((to, from, next) => {
+        this.lastRoute = to.fullPath;
+        next();
+      });
     }
+
+    return true;
   },
 
   /**
    * Cleanup module resources
    */
   cleanup() {
-    try {
-      // Clean up any listeners or resources
-      if (this._context) {
-        this._context = null;
-      }
-      this.metadata.initialized = false;
-      console.log('🧹 mainMenu module cleaned up');
-    } catch (error) {
-      console.error('❌ mainMenu cleanup failed:', error);
+    if (this._navigationGuard && this._context?.router?.beforeEach) {
+      this._context.router.beforeEach(this._navigationGuard);
+      this._navigationGuard = null;
     }
+
+    this._context = null;
+    this.metadata.initialized = false;
   },
 
   // Module metadata
   metadata: {
     name: 'mainMenu',
     version: '1.0.0',
-    description: 'Role-based main menu system with hierarchical access control for industrial applications',
+    description: 'role-based main menu system with hierarchical access control for industrial applications',
     author: 'Industrial Systems Team',
     initialized: false,
     dependencies: ['vue'],

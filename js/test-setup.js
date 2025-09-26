@@ -2,7 +2,7 @@
  * Test setup for Vitest
  * Global configuration and utilities for testing
  */
-import { vi } from 'vitest';
+import { vi, beforeEach, afterEach } from 'vitest';
 
 // Mock DOM APIs that might be missing in test environment
 global.ResizeObserver = vi.fn(() => ({

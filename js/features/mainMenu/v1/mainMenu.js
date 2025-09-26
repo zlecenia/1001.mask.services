@@ -6,7 +6,7 @@
 
 // Template for role-based menu system
 const template = `
-<div class="main-menu" :class="'role-' + (userRole || 'none').toLowerCase()">
+<div class="main-menu" :class="'role-' + (userRole || 'none').toLowerCase()" role="navigation" aria-label="Main application menu">
   <div class="menu-header">
     <h3 class="menu-title">{{ $t('menu.title') }}</h3>
     <div class="user-role-badge" :class="'badge-' + (userRole || 'none').toLowerCase()">
@@ -14,8 +14,8 @@ const template = `
     </div>
   </div>
 
-  <nav class="menu-navigation">
-    <ul class="menu-list">
+  <nav class="menu-navigation" role="navigation" aria-label="Main navigation menu">
+    <ul class="menu-items">
       <li v-for="item in filteredMenuItems" 
           :key="item.key" 
           :class="['menu-item', { 
@@ -23,29 +23,20 @@ const template = `
             'disabled': item.disabled,
             'primary': item.isPrimary
           }]"
-          @click="selectMenuItem(item)">
+          role="menuitem"
+          tabindex="0"
+          @click="selectMenuItem(item)"
+          @keydown.enter="selectMenuItem(item)"
+          @keydown.space="selectMenuItem(item)">
         
         <div class="menu-item-content">
           <i :class="['menu-icon', item.icon]"></i>
           <div class="menu-text">
             <span class="menu-label">{{ $t('menu.' + item.key) }}</span>
-            <span v-if="item.description" class="menu-description">
-              {{ $t('menu.' + item.key + '_desc') }}
-            </span>
+            <span v-if="item.count" class="menu-count">{{ item.count }}</span>
           </div>
-          <i v-if="item.hasSubmenu" class="submenu-arrow fas fa-chevron-right"></i>
+          <i class="menu-arrow fas fa-chevron-right"></i>
         </div>
-
-        <!-- Submenu -->
-        <ul v-if="item.hasSubmenu && expandedItem === item.key" class="submenu">
-          <li v-for="subitem in item.submenu" 
-              :key="subitem.key"
-              :class="['submenu-item', { 'active': activeSubItem === subitem.key }]"
-              @click.stop="selectSubMenuItem(subitem, item)">
-            <i :class="['submenu-icon', subitem.icon]"></i>
-            <span>{{ $t('menu.' + subitem.key) }}</span>
-          </li>
-        </ul>
       </li>
     </ul>
   </nav>
@@ -276,11 +267,7 @@ export default {
   name: 'MainMenuComponent',
   template: template + styles,
   props: {
-    userRole: {
-      type: String,
-      required: true,
-      validator: value => ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'].includes(value)
-    },
+    // userRole is now computed from store - no props needed
     currentUser: {
       type: String,
       default: 'user'
@@ -292,211 +279,81 @@ export default {
       activeSubItem: null,
       expandedItem: null,
       
-      // Complete menu configuration for all roles
+      // Complete menu configuration for all roles - matches module config
       menuConfig: {
         OPERATOR: [
-          {
-            key: 'tests',
-            icon: 'fas fa-flask',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'run_test', icon: 'fas fa-play' },
-              { key: 'test_history', icon: 'fas fa-history' }
-            ]
-          },
-          {
-            key: 'reports',
-            icon: 'fas fa-file-alt',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'view_reports', icon: 'fas fa-eye' },
-              { key: 'export_reports', icon: 'fas fa-download' }
-            ]
-          }
+          { id: 'monitoring', key: 'monitoring', icon: 'fas fa-desktop', isPrimary: true },
+          { id: 'alerts', key: 'alerts', icon: 'fas fa-bell', isPrimary: true }
         ],
         
         ADMIN: [
-          {
-            key: 'tests',
-            icon: 'fas fa-flask',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'run_test', icon: 'fas fa-play' },
-              { key: 'test_history', icon: 'fas fa-history' },
-              { key: 'test_config', icon: 'fas fa-cog' }
-            ]
-          },
-          {
-            key: 'reports',
-            icon: 'fas fa-file-alt',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'view_reports', icon: 'fas fa-eye' },
-              { key: 'export_reports', icon: 'fas fa-download' },
-              { key: 'report_templates', icon: 'fas fa-template' }
-            ]
-          },
-          {
-            key: 'users',
-            icon: 'fas fa-users',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'manage_users', icon: 'fas fa-user-edit' },
-              { key: 'user_permissions', icon: 'fas fa-key' }
-            ]
-          },
-          {
-            key: 'system',
-            icon: 'fas fa-cogs',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'system_settings', icon: 'fas fa-sliders-h' },
-              { key: 'backup_restore', icon: 'fas fa-database' }
-            ]
-          }
+          { id: 'tests', key: 'tests', icon: 'fas fa-flask', isPrimary: true },
+          { id: 'reports', key: 'reports', icon: 'fas fa-file-alt', isPrimary: true },
+          { id: 'users', key: 'users', icon: 'fas fa-users', isPrimary: true },
+          { id: 'system', key: 'system', icon: 'fas fa-cogs', isPrimary: true }
         ],
-        
         SUPERUSER: [
-          {
-            key: 'advanced_tests',
-            icon: 'fas fa-microscope',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'custom_scenarios', icon: 'fas fa-code' },
-              { key: 'test_automation', icon: 'fas fa-robot' },
-              { key: 'performance_analysis', icon: 'fas fa-chart-line' }
-            ]
-          },
-          {
-            key: 'system_integration',
-            icon: 'fas fa-network-wired',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'api_management', icon: 'fas fa-plug' },
-              { key: 'data_sync', icon: 'fas fa-sync' },
-              { key: 'external_systems', icon: 'fas fa-external-link-alt' }
-            ]
-          },
-          {
-            key: 'advanced_reports',
-            icon: 'fas fa-chart-pie',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'analytics', icon: 'fas fa-analytics' },
-              { key: 'data_mining', icon: 'fas fa-search-plus' },
-              { key: 'trend_analysis', icon: 'fas fa-trending-up' }
-            ]
-          },
-          {
-            key: 'system_admin',
-            icon: 'fas fa-shield-alt',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'security_audit', icon: 'fas fa-lock' },
-              { key: 'system_monitoring', icon: 'fas fa-monitor-heart-rate' },
-              { key: 'maintenance_mode', icon: 'fas fa-tools' }
-            ]
-          }
+          { id: 'integration', key: 'integration', icon: 'fas fa-network-wired', isPrimary: true },
+          { id: 'analytics', key: 'analytics', icon: 'fas fa-chart-pie', isPrimary: true },
+          { id: 'advanced-system', key: 'advanced-system', icon: 'fas fa-microscope', isPrimary: true },
+          { id: 'audit', key: 'audit', icon: 'fas fa-shield-alt', isPrimary: true }
         ],
-        
         SERWISANT: [
-          {
-            key: 'diagnostics',
-            icon: 'fas fa-stethoscope',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'hardware_test', icon: 'fas fa-microchip' },
-              { key: 'sensor_calibration', icon: 'fas fa-balance-scale' },
-              { key: 'error_logs', icon: 'fas fa-bug' }
-            ]
-          },
-          {
-            key: 'maintenance',
-            icon: 'fas fa-wrench',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'scheduled_maintenance', icon: 'fas fa-calendar-check' },
-              { key: 'preventive_care', icon: 'fas fa-shield-virus' },
-              { key: 'component_replacement', icon: 'fas fa-exchange-alt' }
-            ]
-          },
-          {
-            key: 'workshop',
-            icon: 'fas fa-hammer',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'repair_orders', icon: 'fas fa-clipboard-list' },
-              { key: 'parts_inventory', icon: 'fas fa-boxes' },
-              { key: 'service_history', icon: 'fas fa-history' }
-            ]
-          },
-          {
-            key: 'technical_docs',
-            icon: 'fas fa-book-open',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'manuals', icon: 'fas fa-book' },
-              { key: 'schematics', icon: 'fas fa-project-diagram' },
-              { key: 'procedures', icon: 'fas fa-list-ol' }
-            ]
-          },
-          {
-            key: 'quality_control',
-            icon: 'fas fa-check-double',
-            isPrimary: true,
-            hasSubmenu: true,
-            submenu: [
-              { key: 'certification', icon: 'fas fa-certificate' },
-              { key: 'compliance_check', icon: 'fas fa-clipboard-check' },
-              { key: 'standards_validation', icon: 'fas fa-stamp' }
-            ]
-          }
+          { id: 'diagnostics', key: 'diagnostics', icon: 'fas fa-stethoscope', isPrimary: true },
+          { id: 'calibration', key: 'calibration', icon: 'fas fa-balance-scale', isPrimary: true },
+          { id: 'maintenance', key: 'maintenance', icon: 'fas fa-wrench', isPrimary: true },
+          { id: 'workshop', key: 'workshop', icon: 'fas fa-hammer', isPrimary: true },
+          { id: 'tech-docs', key: 'tech-docs', icon: 'fas fa-book-open', isPrimary: true }
         ]
       }
     };
   },
   computed: {
     userRole() {
-      return this.$store?.state?.user?.role || 'OPERATOR';
+      const role = this.$store?.state?.user?.role;
+      console.log('MainMenu userRole computed:', role, 'store:', this.$store?.state?.user);
+      // Return empty string for null/undefined role to show 0 menu items
+      return role || '';
     },
     filteredMenuItems() {
-      return this.menuConfig[this.userRole] || [];
+      const items = this.menuConfig[this.userRole] || [];
+      console.log('MainMenu filteredMenuItems:', items.length, 'for role:', this.userRole);
+      return items;
     }
   },
   methods: {
     selectMenuItem(item) {
+      console.log('MainMenu selectMenuItem called:', item, 'router:', this.$router);
       if (item.disabled) return;
       
-      if (item.hasSubmenu) {
-        this.expandedItem = this.expandedItem === item.key ? null : item.key;
+      // Set active item and clear expansion
+      this.activeItem = item.key;
+      this.expandedItem = null;
+      
+      // Router navigation - now always happens since no submenu
+      console.log('MainMenu router navigation attempt:', this.$router, item.key);
+      if (this.$router && this.$router.push) {
+        console.log('MainMenu calling router.push:', `/${item.key}`);
+        this.$router.push(`/${item.key}`);
       } else {
-        this.activeItem = item.key;
-        this.expandedItem = null;
-        this.$emit('menu-selected', {
-          item: item.key,
-          role: this.userRole,
-          timestamp: new Date()
-        });
+        console.log('MainMenu no router available or push method missing');
       }
+      
+      this.$emit('menu-selected', {
+        item: item.key,
+        role: this.userRole,
+        timestamp: new Date()
+      });
     },
     
     selectSubMenuItem(subitem, parentItem) {
       this.activeItem = parentItem.key;
       this.activeSubItem = subitem.key;
+      
+      // Router navigation for submenus
+      if (this.$router) {
+        this.$router.push(`/${parentItem.key}/${subitem.key}`);
+      }
       
       this.$emit('menu-selected', {
         item: parentItem.key,

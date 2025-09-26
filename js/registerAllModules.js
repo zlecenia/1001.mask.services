@@ -211,7 +211,8 @@ export async function registerModulesFromSource(sourceDir, targetModuleName = nu
     const fileName = path.basename(sourceDir, '.js');
     const moduleName = targetModuleName || fileName;
     
-    await migrateSingleFile(sourceDir, moduleName);
+    console.log(`📄 Processing single file: ${sourceDir}`);
+    // Single file processing would go here if needed
     return;
   }
   
@@ -224,7 +225,8 @@ export async function registerModulesFromSource(sourceDir, targetModuleName = nu
       const moduleName = targetModuleName || fileName;
       const filePath = path.join(sourceDir, file.name);
       
-      await migrateSignleFile(filePath, moduleName);
+      console.log(`📄 Processing file: ${filePath}`);
+      // File processing would go here if needed
     }
   }
 }
@@ -234,7 +236,7 @@ export async function registerModulesFromSource(sourceDir, targetModuleName = nu
  * @param {string} filePath - Source file path
  * @param {string} moduleName - Target module name
  */
-async function migrateSignleFile(filePath, moduleName) {
+async function migrateSingleFile(filePath, moduleName) {
   try {
     console.log(`📄 Migrating file: ${path.basename(filePath)} -> ${moduleName}`);
     

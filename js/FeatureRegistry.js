@@ -2,6 +2,9 @@
  * FeatureRegistry - Core system for managing versioned modules
  * Handles module registration, loading, and version management
  */
+
+const featureModuleLoaders = import.meta.glob('./features/*/*/index.js');
+
 class FeatureRegistry {
   constructor() {
     this.features = new Map();
@@ -65,21 +68,27 @@ class FeatureRegistry {
     const key = `${name}@${version}`;
     let module = this.features.get(key);
 
-    if (!module) {
-      try {
-        // Dynamic import from features directory
-        const modulePath = `./features/${name}/${version}/index.js`;
-        const imported = await import(modulePath);
-        module = imported.default || imported;
-        
-        // Register the dynamically loaded module
-        this.register(name, version, module);
-      } catch (error) {
-        throw new Error(`Failed to load ${key}: ${error.message}`);
-      }
+    if (module) {
+      return module;
     }
 
-    return module;
+    const modulePath = `./features/${name}/${version}/index.js`;
+    const loader = featureModuleLoaders[modulePath];
+
+    if (!loader) {
+      throw new Error(`Failed to load ${key}: module path ${modulePath} not found`);
+    }
+
+    try {
+      const imported = await loader();
+      module = imported.default || imported;
+
+      // Register the dynamically loaded module
+      this.register(name, version, module);
+      return module;
+    } catch (error) {
+      throw new Error(`Failed to load ${key}: ${error.message}`);
+    }
   }
 
   /**

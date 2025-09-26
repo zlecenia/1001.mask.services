@@ -39,49 +39,7 @@ export default {
     };
   },
   
-  /**
-   * Initialize page template with configuration
-   * @param {object} config - Configuration object
-   */
-  init(config = {}) {
-    console.log(`Initializing ${this.name}@${this.version}`, config);
-    
-    // Set up responsive design for 7.9" landscape display
-    if (typeof window !== 'undefined') {
-      // Add viewport meta tag for proper scaling
-      let viewport = document.querySelector('meta[name="viewport"]');
-      if (!viewport) {
-        viewport = document.createElement('meta');
-        viewport.name = 'viewport';
-        document.head.appendChild(viewport);
-      }
-      viewport.content = 'width=1280, height=400, initial-scale=1.0, user-scalable=no';
-      
-      // Add custom CSS variables for the layout
-      document.documentElement.style.setProperty('--display-width', '1280px');
-      document.documentElement.style.setProperty('--display-height', '400px');
-      document.documentElement.style.setProperty('--header-height', '40px');
-      document.documentElement.style.setProperty('--footer-height', '30px');
-      document.documentElement.style.setProperty('--sidebar-width', '180px');
-    }
-  },
   
-  /**
-   * Cleanup page template resources
-   */
-  cleanup() {
-    console.log(`Cleaning up ${this.name}@${this.version}`);
-    
-    // Clean up any intervals or event listeners
-    if (typeof window !== 'undefined') {
-      // Remove custom CSS variables
-      document.documentElement.style.removeProperty('--display-width');
-      document.documentElement.style.removeProperty('--display-height');
-      document.documentElement.style.removeProperty('--header-height');
-      document.documentElement.style.removeProperty('--footer-height');
-      document.documentElement.style.removeProperty('--sidebar-width');
-    }
-  },
   
   /**
    * Get layout configuration for different screen sizes
@@ -145,59 +103,6 @@ export default {
     }
   },
 
-  /**
-   * Handle module requests
-   * @param {Object} request - Request object with action and data
-   * @returns {Object} Response object
-   */
-  handle(request) {
-    try {
-      if (!request || !request.action) {
-        return {
-          success: false,
-          error: 'Invalid request format'
-        };
-      }
-
-      switch (request.action) {
-        case 'show':
-          return {
-            success: true,
-            data: {
-              title: request.data?.title || 'Default Page',
-              component: this.component
-            }
-          };
-
-        case 'configure':
-          return {
-            success: true,
-            data: {
-              config: this.getLayoutConfig(request.data?.screenInfo)
-            }
-          };
-
-        case 'validate':
-          return {
-            success: true,
-            data: {
-              valid: this.validateMenuItems(request.data?.menuItems || [])
-            }
-          };
-
-        default:
-          return {
-            success: false,
-            error: `Unknown action: ${request.action}`
-          };
-      }
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message
-      };
-    }
-  },
 
   /**
    * Cleanup module resources

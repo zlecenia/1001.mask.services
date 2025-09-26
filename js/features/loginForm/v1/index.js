@@ -15,109 +15,118 @@ export default {
    * @returns {object} Response object
    */
   handle(request = {}) {
-    console.log(`Executing ${this.name}@${this.version}`, request);
-    
-    const config = {
-      showRoleSelection: request.showRoleSelection !== false,
-      availableRoles: request.availableRoles || this.getDefaultRoles(),
-      enableVirtualKeyboard: request.enableVirtualKeyboard !== false,
-      minPasswordLength: request.minPasswordLength || 3,
-      minUsernameLength: request.minUsernameLength || 3,
-      defaultLanguage: request.defaultLanguage || 'pl',
-      touchOptimized: request.touchOptimized !== false
-    };
-    
-    return {
-      status: 200,
-      message: `${this.name}@${this.version} login form configured successfully`,
-      data: {
-        module: this.name,
-        version: this.version,
-        timestamp: new Date().toISOString(),
-        config,
-        features: [
-          'virtual-keyboard',
-          'role-based-login',
-          'touch-optimized',
-          'multi-language',
-          'password-validation'
-        ],
-        optimizedFor: '7.9inch-touch-display'
+    const action = request.action || 'configure';
+
+    switch (action) {
+      case 'authenticate': {
+        const result = this.simulateAuthentication(
+          request.data?.username,
+          request.data?.password,
+          request.data?.role
+        );
+
+        return {
+          success: result.success,
+          data: result.success ? result : { errors: result.errors },
+          timestamp: new Date().toISOString()
+        };
       }
-    };
+
+      case 'validate': {
+        const validation = this.validateCredentials(request.data || {});
+        return {
+          success: validation.valid,
+          data: validation,
+          timestamp: new Date().toISOString()
+        };
+      }
+
+      case 'configure': {
+        const config = {
+          showRoleSelection: request.showRoleSelection !== false,
+          availableRoles: request.availableRoles || this.getDefaultRoles(),
+          enableVirtualKeyboard: request.enableVirtualKeyboard !== false,
+          minPasswordLength: request.minPasswordLength || 3,
+          minUsernameLength: request.minUsernameLength || 3,
+          defaultLanguage: request.defaultLanguage || 'pl',
+          touchOptimized: request.touchOptimized !== false
+        };
+
+        this.currentConfiguration = config;
+
+        return {
+          success: true,
+          data: {
+            module: this.name,
+            version: this.version,
+            timestamp: new Date().toISOString(),
+            config,
+            features: [
+              'virtual-keyboard',
+              'role-based-login',
+              'touch-optimized',
+              'multi-language',
+              'password-validation'
+            ],
+            optimizedFor: '7.9inch-touch-display'
+          }
+        };
+      }
+
+      default:
+        return {
+          success: false,
+          error: `Unknown action: ${action}`,
+          timestamp: new Date().toISOString()
+        };
+    }
   },
   
-  /**
-   * Initialize login form with configuration
-   * @param {object} config - Configuration object
-   */
-  init(config = {}) {
-    console.log(`Initializing ${this.name}@${this.version}`, config);
-    
-    // Set up touch-optimized environment
-    if (typeof window !== 'undefined') {
-      // Disable zoom on double tap
-      this.setupTouchOptimizations();
-      
-      // Set up viewport for 7.9" display
-      this.setupViewport();
-      
-      // Initialize virtual keyboard settings
-      this.initVirtualKeyboard(config);
-    }
-    
-    // Store configuration
-    this.config = {
-      touchOptimized: true,
-      virtualKeyboardEnabled: true,
-      minPasswordLength: 3,
-      minUsernameLength: 3,
-      ...config
-    };
-  },
   
-  /**
-   * Cleanup login form resources
-   */
-  cleanup() {
-    console.log(`Cleaning up ${this.name}@${this.version}`);
-    
-    // Remove touch optimizations
-    if (typeof window !== 'undefined') {
-      this.removeTouchOptimizations();
-    }
-    
-    // Clear configuration
-    this.config = null;
-  },
   
   /**
    * Validate login credentials
    * @param {object} credentials - Login credentials
    * @returns {object} Validation result
    */
-  validateCredentials(credentials) {
-    const { username, password, role } = credentials;
+  validateCredentials(credentials, password, role) {
+    let normalized = credentials;
+
+    if (typeof credentials === 'string') {
+      normalized = {
+        username: credentials,
+        password,
+        role
+      };
+    }
+
+    if (!normalized || typeof normalized !== 'object') {
+      normalized = { username: '', password: '', role: '' };
+    }
+
+    const { username, password: pwd, role: providedRole } = normalized;
     const errors = {};
-    
+    const minUsername = this.config?.authentication?.minUsernameLength ?? 3;
+    const minPassword = this.config?.authentication?.minPasswordLength ?? 3;
+    const allowedRoles = this.getValidRoles();
+
     // Username validation
-    if (!username || username.length < (this.config?.minUsernameLength || 3)) {
-      errors.username = 'Username must be at least 3 characters long';
+    if (!username || username.length < minUsername) {
+      errors.username = `Username must be at least ${minUsername} characters long (minimum 3 characters)`;
     }
-    
+
     // Password validation
-    if (!password || password.length < (this.config?.minPasswordLength || 3)) {
-      errors.password = 'Password must be at least 3 characters long';
+    if (!pwd || pwd.length < minPassword) {
+      errors.password = `Password must be at least ${minPassword} characters long (minimum 3 characters)`;
     }
-    
+
     // Role validation
-    const validRoles = this.getValidRoles();
-    if (!role || !validRoles.includes(role)) {
-      errors.role = `Role must be one of: ${validRoles.join(', ')}`;
+    if (!providedRole || !allowedRoles.includes(providedRole)) {
+      errors.role = `Role must be one of: ${allowedRoles.join(', ')}`;
     }
-    
+
     return {
-      isValid: Object.keys(errors).length === 0,
+      valid: Object.keys(errors).length === 0,
       errors
     };
   },
@@ -128,10 +137,30 @@ export default {
    */
   getDefaultRoles() {
     return [
-      { value: 'OPERATOR', icon: 'fas fa-user', description: 'Basic operations' },
-      { value: 'ADMIN', icon: 'fas fa-user-shield', description: 'Administrative functions' },
-      { value: 'SUPERUSER', icon: 'fas fa-user-crown', description: 'Advanced system control' },
-      { value: 'SERWISANT', icon: 'fas fa-user-cog', description: 'Technical service' }
+      {
+        value: 'OPERATOR',
+        icon: 'fas fa-user',
+        description: 'Basic operations',
+        translationKey: 'roles.operator'
+      },
+      {
+        value: 'ADMIN',
+        icon: 'fas fa-user-shield',
+        description: 'Administrative functions',
+        translationKey: 'roles.admin'
+      },
+      {
+        value: 'SUPERUSER',
+        icon: 'fas fa-user-crown',
+        description: 'Advanced system control',
+        translationKey: 'roles.superuser'
+      },
+      {
+        value: 'SERWISANT',
+        icon: 'fas fa-user-cog',
+        description: 'Technical service',
+        translationKey: 'roles.serwisant'
+      }
     ];
   },
   
@@ -218,8 +247,8 @@ export default {
    */
   async processLogin(loginData) {
     const validation = this.validateCredentials(loginData);
-    
-    if (!validation.isValid) {
+
+    if (!validation.valid) {
       return {
         success: false,
         errors: validation.errors,
@@ -272,8 +301,8 @@ export default {
     };
   },
   
-  // Module metadata
-  metadata: {
+  // Configuration details
+  config: {
     description: 'Formularz logowania z walidacją i wirtualną klawiaturą',
     displayOptimization: '7.9inch-touch-display',
     virtualKeyboard: {
@@ -311,57 +340,13 @@ export default {
       // Store context for later use
       this._context = context;
       this.metadata.initialized = true;
+      this.metadata.lastInitializedAt = new Date().toISOString();
       
       console.log('✅ loginForm module initialized successfully');
       return true;
     } catch (error) {
       console.error('❌ loginForm initialization failed:', error);
       return false;
-    }
-  },
-
-  /**
-   * Handle module requests
-   * @param {Object} request - Request object with action and data
-   * @returns {Object} Response object
-   */
-  handle(request) {
-    try {
-      if (!request || !request.action) {
-        return {
-          success: false,
-          error: 'Invalid request format'
-        };
-      }
-
-      switch (request.action) {
-        case 'authenticate':
-          const { username, password, role } = request.data || {};
-          return this.simulateAuthentication(username, password, role);
-
-        case 'validate':
-          return {
-            success: true,
-            data: this.validateCredentials(request.data)
-          };
-
-        case 'getConfig':
-          return {
-            success: true,
-            data: this.config
-          };
-
-        default:
-          return {
-            success: false,
-            error: `Unknown action: ${request.action}`
-          };
-      }
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message
-      };
     }
   },
 
@@ -379,6 +364,46 @@ export default {
     } catch (error) {
       console.error('❌ loginForm cleanup failed:', error);
     }
+  },
+
+
+  /**
+   * Simulate authentication
+   * @param {string} username - Username
+   * @param {string} password - Password
+   * @param {string} role - User role
+   * @returns {object} Authentication result
+   */
+  simulateAuthentication(username, password, role) {
+    const validation = this.validateCredentials({ username, password, role });
+    
+    if (!validation.valid) {
+      return {
+        success: false,
+        errors: validation.errors
+      };
+    }
+    
+    return {
+      success: true,
+      user: {
+        name: username,
+        role: role,
+        permissions: this.getRolePermissions(role)
+      },
+      token: this.generateSessionToken()
+    };
+  },
+
+  getRolePermissions(role) {
+    const permissions = {
+      OPERATOR: ['tests:view', 'reports:view'],
+      ADMIN: ['tests:view', 'reports:view', 'users:manage', 'system:configure'],
+      SUPERUSER: ['integration:manage', 'analytics:view', 'system:advanced', 'audit:view'],
+      SERWISANT: ['diagnostics:run', 'calibration:perform', 'maintenance:manage', 'workshop:access']
+    };
+
+    return permissions[role] || [];
   },
 
   // Module metadata
