@@ -30,16 +30,18 @@ const template = `
   <div class="page-content">
     <!-- Sidebar Menu (180px width) -->
     <aside class="page-sidebar" v-if="showSidebar">
-      <nav class="sidebar-nav">
-        <ul class="nav-menu">
-          <li v-for="item in menuItems" :key="item.key" 
-              :class="['nav-item', { active: activeItem === item.key }]"
-              @click="selectMenuItem(item)">
-            <i :class="item.icon"></i>
-            <span>{{ $t(item.label) }}</span>
-          </li>
-        </ul>
-      </nav>
+      <slot name="sidebar">
+        <nav class="sidebar-nav">
+          <ul class="nav-menu">
+            <li v-for="item in menuItems" :key="item.key" 
+                :class="['nav-item', { active: activeItem === item.key }]"
+                @click="selectMenuItem(item)">
+              <i :class="item.icon"></i>
+              <span>{{ $t(item.label) }}</span>
+            </li>
+          </ul>
+        </nav>
+      </slot>
     </aside>
 
     <!-- Content Body -->
@@ -61,7 +63,7 @@ const template = `
 
       <!-- Dynamic Content Slot -->
       <div class="content-area page-content">
-        <slot name="content">
+        <slot name="default">
           <div class="placeholder-content">
             <h3>{{ contentTitle }}</h3>
             <p>{{ contentDescription }}</p>
@@ -349,6 +351,10 @@ export default {
   name: 'PageTemplateComponent',
   template: template + styles,
   props: {
+    title: {
+      type: String,
+      default: 'MASKSERVICE C20 1001'
+    },
     showSidebar: {
       type: Boolean,
       default: true
