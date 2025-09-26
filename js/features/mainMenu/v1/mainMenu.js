@@ -6,11 +6,11 @@
 
 // Template for role-based menu system
 const template = `
-<div class="main-menu" :class="'role-' + userRole.toLowerCase()">
+<div class="main-menu" :class="'role-' + (userRole || 'none').toLowerCase()">
   <div class="menu-header">
     <h3 class="menu-title">{{ $t('menu.title') }}</h3>
-    <div class="user-role-badge" :class="'badge-' + userRole.toLowerCase()">
-      {{ $t('roles.' + userRole.toLowerCase()) }}
+    <div class="user-role-badge" :class="'badge-' + (userRole || 'none').toLowerCase()">
+      {{ $t('roles.' + (userRole || 'none').toLowerCase()) }}
     </div>
   </div>
 

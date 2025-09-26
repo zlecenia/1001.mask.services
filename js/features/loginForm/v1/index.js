@@ -7,7 +7,7 @@ import Component from './loginForm.js';
 export default {
   name: 'loginForm',
   version: 'v1',
-  Component,
+  component: Component,
   
   /**
    * Main handler function for the login form module
@@ -293,5 +293,109 @@ export default {
       preventContextMenu: true,
       optimizedForLandscape: true
     }
+  },
+
+  /**
+   * Initialize the module
+   * @param {Object} context - Application context
+   * @returns {boolean} Success status
+   */
+  async init(context) {
+    try {
+      // Validate context
+      if (!context || !context.store || !context.router) {
+        console.error('loginForm: Invalid context provided');
+        return false;
+      }
+
+      // Store context for later use
+      this._context = context;
+      this.metadata.initialized = true;
+      
+      console.log('✅ loginForm module initialized successfully');
+      return true;
+    } catch (error) {
+      console.error('❌ loginForm initialization failed:', error);
+      return false;
+    }
+  },
+
+  /**
+   * Handle module requests
+   * @param {Object} request - Request object with action and data
+   * @returns {Object} Response object
+   */
+  handle(request) {
+    try {
+      if (!request || !request.action) {
+        return {
+          success: false,
+          error: 'Invalid request format'
+        };
+      }
+
+      switch (request.action) {
+        case 'authenticate':
+          const { username, password, role } = request.data || {};
+          return this.simulateAuthentication(username, password, role);
+
+        case 'validate':
+          return {
+            success: true,
+            data: this.validateCredentials(request.data)
+          };
+
+        case 'getConfig':
+          return {
+            success: true,
+            data: this.config
+          };
+
+        default:
+          return {
+            success: false,
+            error: `Unknown action: ${request.action}`
+          };
+      }
+    } catch (error) {
+      return {
+        success: false,
+        error: error.message
+      };
+    }
+  },
+
+  /**
+   * Cleanup module resources
+   */
+  cleanup() {
+    try {
+      // Clean up any listeners or resources
+      if (this._context) {
+        this._context = null;
+      }
+      this.metadata.initialized = false;
+      console.log('🧹 loginForm module cleaned up');
+    } catch (error) {
+      console.error('❌ loginForm cleanup failed:', error);
+    }
+  },
+
+  // Module metadata
+  metadata: {
+    name: 'loginForm',
+    version: '1.0.0',
+    description: 'Login form with virtual keyboard optimized for 7.9" touch displays',
+    author: 'Industrial Systems Team',
+    initialized: false,
+    dependencies: ['vue'],
+    tags: ['authentication', 'virtual-keyboard', '7.9-inch', 'touch-optimized'],
+    features: [
+      'virtual-keyboard',
+      'role-based-authentication',
+      'touch-optimizations',
+      'validation',
+      'landscape-7.9-inch-display'
+    ]
   }
 };

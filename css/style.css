@@ -1,3 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* Font Awesome optimization to reduce glyph warnings */
+.fas, .far, .fal, .fab, .fa {
+  font-display: swap;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 /* ====================
    frontend/css/style.css
    ==================== */
@@ -2174,9 +2184,6 @@ button:active {
 }
 
 /* Font Awesome optimization to reduce glyph warnings */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-/* Font loading optimization */
 .fas, .far, .fal, .fab, .fa {
   font-display: swap;
   -webkit-font-smoothing: antialiased;

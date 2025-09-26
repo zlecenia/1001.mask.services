@@ -5,7 +5,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 
 // Import Feature Registry
 import { FeatureRegistry } from './FeatureRegistry.js';
-import { registerAllModules } from './registerAllModules.js';
+import { registerAllModules } from './registerAllModulesBrowser.js';
 
 // Import locales
 import pl from '../locales/pl.json';

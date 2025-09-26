@@ -39,6 +39,22 @@ global.console = {
   error: vi.fn(),
 };
 
+// Mock Vue i18n functions
+global.$t = vi.fn((key) => key);
+global.$tc = vi.fn((key, count) => `${key}:${count}`);
+global.$te = vi.fn(() => true);
+global.$d = vi.fn((value) => value);
+global.$n = vi.fn((value) => value);
+
+// Global Vue properties mock
+global.VueGlobalProperties = {
+  $t: global.$t,
+  $tc: global.$tc,
+  $te: global.$te,
+  $d: global.$d,
+  $n: global.$n,
+};
+
 // Global test utilities
 global.testUtils = {
   // Create mock module for testing
