@@ -102,12 +102,14 @@ export default {
   getMenuConfig(role) {
     const configs = {
       OPERATOR: [
-        { id: 'tests', icon: 'fas fa-vials', label: 'menu.tests', route: '/tests', order: 1 },
-        { id: 'reports', icon: 'fas fa-chart-line', label: 'menu.reports', route: '/reports', order: 2 }
+        { id: 'monitoring', icon: 'fas fa-desktop', label: 'menu.monitoring', route: '/monitoring', order: 1 },
+        { id: 'alerts', icon: 'fas fa-bell', label: 'menu.alerts', route: '/alerts', order: 2 }
       ],
       ADMIN: [
-        { id: 'users', icon: 'fas fa-users-cog', label: 'menu.users', route: '/admin/users', order: 1 },
-        { id: 'system', icon: 'fas fa-cogs', label: 'menu.system', route: '/admin/system', order: 2 }
+        { id: 'tests', icon: 'fas fa-vials', label: 'menu.tests', route: '/tests', order: 1 },
+        { id: 'reports', icon: 'fas fa-chart-line', label: 'menu.reports', route: '/reports', order: 2 },
+        { id: 'users', icon: 'fas fa-users-cog', label: 'menu.users', route: '/admin/users', order: 3 },
+        { id: 'system', icon: 'fas fa-cogs', label: 'menu.system', route: '/admin/system', order: 4 }
       ],
       SUPERUSER: [
         { id: 'integration', icon: 'fas fa-project-diagram', label: 'menu.integration', route: '/integration', order: 1 },

@@ -188,7 +188,7 @@ describe('LoginForm Module', () => {
     it('should validate role selection', async () => {
       const usernameInput = wrapper.find('input[type="text"]');
       const passwordInput = wrapper.find('input[type="password"]');
-      const roleSelect = wrapper.find('select');
+      const roleSelect = wrapper.find('select.role-select');
       
       await usernameInput.setValue('testuser');
       await passwordInput.setValue('password');
@@ -203,7 +203,7 @@ describe('LoginForm Module', () => {
     it('should pass validation with valid input', async () => {
       const usernameInput = wrapper.find('input[type="text"]');
       const passwordInput = wrapper.find('input[type="password"]');
-      const roleSelect = wrapper.find('select');
+      const roleSelect = wrapper.find('select.role-select');
       
       await usernameInput.setValue('testuser');
       await passwordInput.setValue('password');
@@ -347,7 +347,7 @@ describe('LoginForm Module', () => {
     it('should attempt login with valid credentials', async () => {
       const usernameInput = wrapper.find('input[type="text"]');
       const passwordInput = wrapper.find('input[type="password"]');
-      const roleSelect = wrapper.find('select');
+      const roleSelect = wrapper.find('select.role-select');
       
       await usernameInput.setValue('testuser');
       await passwordInput.setValue('password');
@@ -371,7 +371,7 @@ describe('LoginForm Module', () => {
       
       const usernameInput = wrapper.find('input[type="text"]');
       const passwordInput = wrapper.find('input[type="password"]');
-      const roleSelect = wrapper.find('select');
+      const roleSelect = wrapper.find('select.role-select');
       
       await usernameInput.setValue('testuser');
       await passwordInput.setValue('password');
@@ -387,7 +387,7 @@ describe('LoginForm Module', () => {
     it('should handle successful authentication', async () => {
       const usernameInput = wrapper.find('input[type="text"]');
       const passwordInput = wrapper.find('input[type="password"]');
-      const roleSelect = wrapper.find('select');
+      const roleSelect = wrapper.find('select.role-select');
       
       await usernameInput.setValue('testuser');
       await passwordInput.setValue('password');
@@ -411,7 +411,7 @@ describe('LoginForm Module', () => {
       
       const usernameInput = wrapper.find('input[type="text"]');
       const passwordInput = wrapper.find('input[type="password"]');
-      const roleSelect = wrapper.find('select');
+      const roleSelect = wrapper.find('select.role-select');
       
       await usernameInput.setValue('testuser');
       await passwordInput.setValue('wrongpassword');
@@ -443,7 +443,7 @@ describe('LoginForm Module', () => {
     });
 
     it('should provide all available roles', () => {
-      const roleSelect = wrapper.find('select');
+      const roleSelect = wrapper.find('select.role-select');
       const options = roleSelect.findAll('option');
       
       const roleValues = options.map(option => option.element.value).filter(v => v !== '');
@@ -451,7 +451,7 @@ describe('LoginForm Module', () => {
     });
 
     it('should show role descriptions', () => {
-      const roleSelect = wrapper.find('select');
+      const roleSelect = wrapper.find('select.role-select');
       const options = roleSelect.findAll('option');
       
       const operatorOption = options.find(opt => opt.element.value === 'OPERATOR');
@@ -459,7 +459,7 @@ describe('LoginForm Module', () => {
     });
 
     it('should handle role change', async () => {
-      const roleSelect = wrapper.find('select');
+      const roleSelect = wrapper.find('select.role-select');
       await roleSelect.setValue('ADMIN');
       
       expect(wrapper.vm.form.role).toBe('ADMIN');
