@@ -539,6 +539,7 @@ component-name/
 │   ├── index.js          # Module metadata
 │   ├── componentName.js  # Vue component
 │   ├── config.json       # Configuration
+│   ├── package.json      # Manifest
 │   ├── README.md         # Documentation
 │   ├── TODO.md           # Task list
 │   └── CHANGELOG.md      # Version history

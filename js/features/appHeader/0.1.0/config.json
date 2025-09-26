@@ -106,6 +106,27 @@
   "performance": {
     "statusUpdateInterval": 5000,
     "enableCaching": true,
-    "lazyLoading": false
+    "lazyLoading": false,
+    "memoryManagement": {
+      "autoCleanup": true,
+      "cacheSize": "10MB"
+    }
+  },
+  "security": {
+    "validation": {
+      "sanitizeInputs": true,
+      "validateDeviceInfo": true,
+      "allowedStatuses": ["ONLINE", "OFFLINE", "CONNECTING"]
+    },
+    "protection": {
+      "xssProtection": true,
+      "contentSecurityPolicy": true,
+      "validateLanguageCodes": true
+    },
+    "audit": {
+      "logLanguageChanges": true,
+      "logStatusChanges": true,
+      "retentionDays": 30
+    }
   }
 }
