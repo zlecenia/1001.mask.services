@@ -123,7 +123,7 @@ const template = `
       <div
         class="keyboard-row"
         v-for="(row, index) in keyboardLayout"
-        :key="`row-${index}`"
+        :key="'row-' + index"
       >
         <button
           v-for="key in row"

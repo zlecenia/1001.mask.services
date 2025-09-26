@@ -99,7 +99,7 @@ describe('MainMenu Module', () => {
     it('should return correct menu items for OPERATOR role', () => {
       const menuConfig = mainMenuModule.getMenuConfig('OPERATOR');
       expect(menuConfig).toHaveLength(2);
-      expect(menuConfig.map(item => item.id)).toEqual(['tests', 'reports']);
+      expect(menuConfig.map(item => item.id)).toEqual(['monitoring', 'alerts']);
     });
 
     it('should return correct menu items for ADMIN role', () => {
@@ -199,8 +199,8 @@ describe('MainMenu Module', () => {
       const menuItems = wrapper.findAll('.menu-item');
       const itemTexts = menuItems.map(item => item.text());
       
-      expect(itemTexts).toContain('menu.tests');
-      expect(itemTexts).toContain('menu.reports');
+      expect(itemTexts).toContain('menu.monitoring');
+      expect(itemTexts).toContain('menu.alerts');
     });
 
     it('should handle menu item clicks', async () => {

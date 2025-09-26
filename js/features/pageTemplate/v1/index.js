@@ -15,28 +15,62 @@ export default {
    * @returns {object} Response object
    */
   handle(request = {}) {
-    console.log(`Executing ${this.name}@${this.version}`, request);
+    const { action = 'show', data = {} } = request;
     
-    const config = {
-      showSidebar: request.showSidebar !== false,
-      showPressurePanel: request.showPressurePanel || false,
-      menuItems: request.menuItems || [],
-      currentUser: request.currentUser || 'OPERATOR',
-      deviceId: request.deviceId || 'MASK-001',
-      layout: request.layout || 'landscape'
-    };
-    
-    return {
-      status: 200,
-      message: `${this.name}@${this.version} template configured successfully`,
-      data: {
-        module: this.name,
-        version: this.version,
-        timestamp: new Date().toISOString(),
-        config,
-        optimizedFor: '7.9inch-landscape-400x1280px'
+    switch (action) {
+      case 'show': {
+        const title = data.title || 'Page Template';
+        const config = {
+          showSidebar: data.showSidebar !== false,
+          showPressurePanel: data.showPressurePanel || false,
+          menuItems: data.menuItems || [],
+          currentUser: data.currentUser || 'OPERATOR',
+          deviceId: data.deviceId || 'MASK-001',
+          layout: data.layout || 'landscape'
+        };
+        
+        return {
+          success: true,
+          data: {
+            title,
+            config,
+            module: this.name,
+            version: this.version,
+            timestamp: new Date().toISOString(),
+            optimizedFor: '7.9inch-landscape-400x1280px'
+          }
+        };
       }
-    };
+      
+      case 'configure': {
+        const settings = data.settings || {};
+        return {
+          success: true,
+          data: {
+            settings,
+            applied: true,
+            timestamp: new Date().toISOString()
+          }
+        };
+      }
+      
+      case 'validate': {
+        const isValid = this.validateMenuItems(data.menuItems || []);
+        return {
+          success: true,
+          data: {
+            valid: isValid,
+            menuItemsCount: (data.menuItems || []).length
+          }
+        };
+      }
+      
+      default:
+        return {
+          success: false,
+          error: `Unknown action: ${action}`
+        };
+    }
   },
   
   
