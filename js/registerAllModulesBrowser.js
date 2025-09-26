@@ -67,15 +67,26 @@ function createMockModule(name) {
  */
 async function registerRealModules(registry) {
   const modules = [
+    // Core application modules
     { name: 'pageTemplate', version: '0.1.0' },
     { name: 'mainMenu', version: '0.1.0' },
-    { name: 'loginForm', version: '0.1.0' }
+    { name: 'loginForm', version: '0.1.0' },
+    
+    // UI layout components
+    { name: 'appHeader', version: '0.1.0' },
+    { name: 'appFooter', version: '0.1.0' },
+    
+    // Monitoring components
+    { name: 'pressurePanel', version: '0.1.0' }
   ];
 
   const moduleLoaders = {
     pageTemplate: () => import('./features/pageTemplate/0.1.0/index.js'),
     mainMenu: () => import('./features/mainMenu/0.1.0/index.js'),
-    loginForm: () => import('./features/loginForm/0.1.0/index.js')
+    loginForm: () => import('./features/loginForm/0.1.0/index.js'),
+    appHeader: () => import('./features/appHeader/0.1.0/index.js'),
+    appFooter: () => import('./features/appFooter/0.1.0/index.js'),
+    pressurePanel: () => import('./features/pressurePanel/0.1.0/index.js')
   };
   
   for (const { name, version } of modules) {

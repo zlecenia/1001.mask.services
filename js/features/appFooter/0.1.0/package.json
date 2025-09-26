@@ -1,0 +1,18 @@
+{
+  "name": "appFooter",
+  "version": "0.1.0",
+  "description": "Footer component with system info, timestamps, and 7.9\" display optimization",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run appFooter.test.js"
+  },
+  "dependencies": {},
+  "moduleMetadata": {
+    "displayName": "App Footer",
+    "category": "ui",
+    "roles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+    "rollbackConditions": {
+      "testFailures": ">0"
+    }
+  }
+}

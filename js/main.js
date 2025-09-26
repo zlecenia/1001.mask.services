@@ -38,6 +38,91 @@ window.addEventListener('error', (event) => {
 
 // Create Vue app instance
 const app = createApp({
+  template: `
+    <div class="app-container">
+      <!-- Loading Screen -->
+      <div v-if="appState === 'loading'" class="loading-screen">
+        <img src="/favicon.ico" alt="MASKSERVICE" class="loading-logo">
+        <div class="loading-text">{{ loadingMessage }}</div>
+        <div class="loading-progress">
+          <div class="loading-progress-bar" :style="{ width: loadingProgress + '%' }"></div>
+        </div>
+      </div>
+
+      <!-- Error Screen -->
+      <div v-else-if="appState === 'error'" class="error-screen">
+        <div class="error-icon">
+          <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <div class="error-title">Błąd inicjalizacji</div>
+        <div class="error-message">{{ errorMessage }}</div>
+        <button class="error-retry-btn" @click="retryInitialization">
+          <i class="fas fa-redo"></i> Spróbuj ponownie
+        </button>
+      </div>
+
+      <!-- Main Application -->
+      <div v-else-if="appState === 'ready'" class="main-app">
+        <!-- App Header -->
+        <div class="app-header">
+          <div class="header-logo">
+            <img src="/favicon.ico" alt="MASKSERVICE" class="logo">
+            <span class="app-title">MASKSERVICE C20 1001</span>
+          </div>
+          <div class="header-user" v-if="currentUser">
+            <span class="user-name">{{ currentUser.name }}</span>
+            <span class="user-role">({{ currentUser.role }})</span>
+            <button class="logout-btn" @click="logout">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- App Body -->
+        <div class="app-body">
+          <!-- Main Menu -->
+          <div class="main-menu">
+            <div v-for="menuGroup in menuItems" :key="menuGroup.id" class="menu-group">
+              <div class="menu-group-title">{{ menuGroup.title }}</div>
+              <div class="menu-items">
+                <div 
+                  v-for="item in menuGroup.items" 
+                  :key="item.id"
+                  class="menu-item"
+                  :class="{ active: currentRoute === item.route }"
+                  @click="navigateTo(item.route)"
+                >
+                  <i :class="item.icon" class="menu-item-icon"></i>
+                  <span class="menu-item-text">{{ item.title }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Content Area -->
+          <div class="content-area" id="content-area">
+            <div class="content-placeholder">
+              <h2>Witamy w systemie MASKSERVICE</h2>
+              <p>Wybierz opcję z menu aby rozpocząć pracę.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- App Footer -->
+        <div class="app-footer">
+          <div class="footer-info">
+            <span>MASKSERVICE C20 1001 v3.0</span>
+            <span class="separator">|</span>
+            <span>System zarządzania maskami</span>
+          </div>
+          <div class="footer-status">
+            <span class="status-indicator online"></span>
+            <span>Online</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `,
   data() {
     return {
       // Application state
