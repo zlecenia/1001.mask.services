@@ -48,9 +48,11 @@ const template = `
     <main class="page-body page-main" :style="mainContentStyle">
       <!-- Pressure Panel (when needed) -->
       <div class="pressure-panel" v-if="showPressurePanel">
-        <div class="pressure-item" v-for="sensor in pressureSensors" :key="sensor.type">
+        <div class="pressure-item" v-for="sensor in computedPressureSensors" :key="sensor.type">
           <label class="pressure-label">{{ $t('pressure.' + sensor.type) }}</label>
-          <div class="pressure-value">{{ sensor.value }}</div>
+          <div class="pressure-value" :class="{ 'warning': sensor.isWarning, 'critical': sensor.isCritical }">
+            {{ sensor.value || '--' }}
+          </div>
           <div class="pressure-unit">{{ sensor.unit }}</div>
           <div class="pressure-chart">
             <svg width="40" height="20">
@@ -415,6 +417,42 @@ export default {
     },
     mainContentStyle() {
       return this.showSidebar ? {} : { marginLeft: 0 };
+    },
+    computedPressureSensors() {
+      // Use store data if available, otherwise fallback to default data
+      const storeData = this.$store?.state?.system?.pressureData;
+      
+      if (storeData) {
+        return [
+          {
+            type: 'inlet',
+            value: storeData.inlet,
+            unit: 'bar',
+            chartPoints: '0,15 10,12 20,8 30,10 40,5',
+            isWarning: storeData.inlet > 20,
+            isCritical: storeData.inlet > 30
+          },
+          {
+            type: 'outlet', 
+            value: storeData.outlet,
+            unit: 'bar',
+            chartPoints: '0,10 10,15 20,12 30,8 40,14',
+            isWarning: storeData.outlet > 15,
+            isCritical: storeData.outlet > 25
+          },
+          {
+            type: 'differential',
+            value: storeData.differential,
+            unit: 'bar',
+            chartPoints: '0,5 10,8 20,12 30,15 40,10',
+            isWarning: storeData.differential > 5,
+            isCritical: storeData.differential > 10
+          }
+        ];
+      } else {
+        // Fallback to default data from component state
+        return this.pressureSensors;
+      }
     }
   },
   methods: {
