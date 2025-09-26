@@ -17,8 +17,14 @@ export async function registerAllModules(registry) {
   try {
     console.log('Registering modules in browser environment...');
     
-    // Register built-in mock modules for development
-    await registerMockModules(registry);
+    // Try to register real modules first, fallback to mock if needed
+    try {
+      await registerRealModules(registry);
+      console.log('Real modules registered successfully');
+    } catch (error) {
+      console.warn('Real modules failed, using mock modules:', error);
+      await registerMockModules(registry);
+    }
     
     console.log('Module registration completed');
   } catch (error) {
@@ -53,6 +59,48 @@ function createMockModule(name) {
       ];
     }
   };
+}
+
+/**
+ * Register real .js modules from the features directory
+ * @param {FeatureRegistry} registry - The feature registry instance
+ */
+async function registerRealModules(registry) {
+  const modules = [
+    { name: 'pageTemplate', version: '0.1.0' },
+    { name: 'mainMenu', version: '0.1.0' },
+    { name: 'loginForm', version: '0.1.0' }
+  ];
+
+  const moduleLoaders = {
+    pageTemplate: () => import('./features/pageTemplate/0.1.0/index.js'),
+    mainMenu: () => import('./features/mainMenu/0.1.0/index.js'),
+    loginForm: () => import('./features/loginForm/0.1.0/index.js')
+  };
+  
+  for (const { name, version } of modules) {
+    const loadModule = moduleLoaders[name];
+    if (!loadModule) {
+      console.warn(`No loader defined for ${name}, skipping`);
+      continue;
+    }
+
+    try {
+      console.log(`Loading real ${name} module...`);
+      const moduleExport = await loadModule();
+      const module = moduleExport.default || moduleExport;
+      
+      if (module && typeof module === 'object') {
+        await registry.register(name, version, module);
+        console.log(`✅ Registered real ${name}@${version} module`);
+      } else {
+        throw new Error(`Invalid module export for ${name}`);
+      }
+    } catch (error) {
+      console.warn(`❌ Failed to register real ${name} module:`, error);
+      throw error; // Re-throw to trigger fallback
+    }
+  }
 }
 
 /**

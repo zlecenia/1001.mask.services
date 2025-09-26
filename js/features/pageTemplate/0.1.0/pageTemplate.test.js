@@ -334,10 +334,10 @@ describe('PageTemplate Module', () => {
       const { registry } = await import('../../../FeatureRegistry.js');
       
       // Register the module
-      registry.register('pageTemplate', 'v1', pageTemplateModule);
+      registry.register('pageTemplate', '0.1.0', pageTemplateModule);
       
       // Load the module
-      const loadedModule = await registry.load('pageTemplate', 'v1');
+      const loadedModule = await registry.load('pageTemplate', '0.1.0');
       
       expect(loadedModule).toBeDefined();
       expect(loadedModule.metadata.name).toBe('pageTemplate');

@@ -1,5 +1,5 @@
 /**
- * Page Template Component v1
+ * Page Template Component 0.1.0
  * Bazowy template strony dla systemu MASKSERVICE z układem dla wyświetlacza 7.9 cala (400x1280px landscape)
  */
 
@@ -384,7 +384,7 @@ export default {
       connectionStatus: 'connected',
       deviceStatus: 'Online',
       currentLanguage: 'pl',
-      contentTitle: 'Page Template v1',
+      contentTitle: 'Page Template 0.1.0',
       contentDescription: 'Bazowy template strony dla systemu MASKSERVICE',
       isFullscreen: false,
       currentDateTime: '',

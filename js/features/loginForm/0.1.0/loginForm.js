@@ -1,5 +1,5 @@
 /**
- * Login Form Component v1
+ * Login Form Component 0.1.0
  * Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9"
  */
 

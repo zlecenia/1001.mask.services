@@ -1,12 +1,12 @@
 /**
- * Main Menu Module v1
+ * Main Menu Module 0.1.0
  * Główne menu aplikacji z kontrolą dostępu opartą na rolach
  */
 import Component from './mainMenu.js';
 
 export default {
   name: 'mainMenu',
-  version: 'v1',
+  version: '0.1.0',
   component: Component,
 
   handle(request = {}) {

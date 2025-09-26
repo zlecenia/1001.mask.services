@@ -30,9 +30,9 @@ This is a complete migration and modernization of the `c201001.mask.services` sy
 │   ├── moduleManagerWithPackageJson.js # Automated module generation
 │   ├── test-setup.js          # Testing utilities
 │   └── features/              # All versioned modules
-│       ├── pageTemplate/v1/   # Page layout template
-│       ├── mainMenu/v1/       # Role-based menu system
-│       └── loginForm/v1/      # Login with virtual keyboard
+│       ├── pageTemplate/0.1.0/   # Page layout template
+│       ├── mainMenu/0.1.0/       # Role-based menu system
+│       └── loginForm/0.1.0/      # Login with virtual keyboard
 ├── config/                    # Application configuration
 ├── css/                      # Stylesheets
 ├── docs/                     # Documentation
@@ -91,17 +91,17 @@ The system is specifically optimized for industrial 7.9" LCD displays:
 
 ## 📊 Current Modules
 
-### pageTemplate@v1
+### pageTemplate@0.1.0
 - Base page layout for 7.9" landscape display
 - Header, sidebar, content area, footer structure
 - Touch-friendly responsive design
 
-### mainMenu@v1  
+### mainMenu@0.1.0  
 - Role-based menu system with hierarchical structure
 - Permission validation for all 4 user roles
 - Unique menu items per role (no overlap)
 
-### loginForm@v1
+### loginForm@0.1.0
 - Login form with virtual keyboard for touch displays
 - Role selection and credential validation
 - Prevents native keyboard on mobile devices

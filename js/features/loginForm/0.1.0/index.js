@@ -1,12 +1,12 @@
 /**
- * Login Form Module v1
+ * Login Form Module 0.1.0
  * Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9"
  */
 import Component from './loginForm.js';
 
 export default {
   name: 'loginForm',
-  version: 'v1',
+  version: '0.1.0',
   component: Component,
   
   /**

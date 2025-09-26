@@ -1,0 +1,18 @@
+{
+  "name": "appHeader",
+  "version": "0.1.0",
+  "description": "Header component with device status, language selector, and 7.9\" display optimization",
+  "main": "index.js",
+  "scripts": {
+    "test": "vitest run appHeader.test.js"
+  },
+  "dependencies": {},
+  "moduleMetadata": {
+    "displayName": "App Header",
+    "category": "ui",
+    "roles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+    "rollbackConditions": {
+      "testFailures": ">0"
+    }
+  }
+}

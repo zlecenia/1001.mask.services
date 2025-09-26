@@ -16,7 +16,7 @@ class FeatureRegistry {
   /**
    * Register a module with version and metadata
    * @param {string} name - Module name
-   * @param {string} version - Version string (e.g., 'v1', 'v2')
+   * @param {string} version - Version string (e.g., '0.1.0', 'v2')
    * @param {object} module - Module object
    * @param {object} metadata - Optional metadata from package.json
    */
@@ -53,7 +53,7 @@ class FeatureRegistry {
   /**
    * Load a module by name and version
    * @param {string} name - Module name
-   * @param {string} version - Version ('latest', 'v1', 'v2', etc.)
+   * @param {string} version - Version ('latest', '0.1.0', 'v2', etc.)
    * @returns {Promise<object>} Module object
    */
   async load(name, version = 'latest') {

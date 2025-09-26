@@ -58,7 +58,7 @@ global.VueGlobalProperties = {
 // Global test utilities
 global.testUtils = {
   // Create mock module for testing
-  createMockModule: (name, version = 'v1') => ({
+  createMockModule: (name, version = '0.1.0') => ({
     name,
     version,
     handle: vi.fn(() => ({ status: 200, message: 'Test success' })),

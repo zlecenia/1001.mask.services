@@ -241,7 +241,7 @@ async function migrateSingleFile(filePath, moduleName) {
     console.log(`📄 Migrating file: ${path.basename(filePath)} -> ${moduleName}`);
     
     // Create module structure
-    const version = 'v1';
+    const version = '0.1.0';
     const targetDir = path.join(FEATURES_DIR, moduleName, version);
     fs.mkdirSync(targetDir, { recursive: true });
     
@@ -250,7 +250,7 @@ async function migrateSingleFile(filePath, moduleName) {
     
     // Create index.js wrapper
     const indexContent = `/**
- * ${moduleName} Module v1
+ * ${moduleName} Module 0.1.0
  * Migrated from ${path.basename(filePath)}
  */
 
@@ -260,23 +260,23 @@ ${sourceContent}
 // Export as module
 export default {
   name: '${moduleName}',
-  version: 'v1',
+  version: '0.1.0',
   Component: (typeof ${moduleName}Component !== 'undefined') ? ${moduleName}Component : null,
   
   handle(request = {}) {
     return {
       status: 200,
-      message: \`${moduleName}@v1 executed\`,
-      data: { module: '${moduleName}', version: 'v1', request }
+      message: \`${moduleName}@0.1.0 executed\`,
+      data: { module: '${moduleName}', version: '0.1.0', request }
     };
   },
   
   init(config = {}) {
-    console.log(\`Initializing ${moduleName}@v1\`, config);
+    console.log(\`Initializing ${moduleName}@0.1.0\`, config);
   },
   
   cleanup() {
-    console.log(\`Cleaning up ${moduleName}@v1\`);
+    console.log(\`Cleaning up ${moduleName}@0.1.0\`);
   }
 };`;
     

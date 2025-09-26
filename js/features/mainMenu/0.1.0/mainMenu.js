@@ -1,5 +1,5 @@
 /**
- * Main Menu Component v1
+ * Main Menu Component 0.1.0
  * Główne menu aplikacji z kontrolą dostępu opartą na rolach
  * Roles: OPERATOR (2 opcje), ADMIN (4 opcje), SUPERUSER (4 zaawansowane), SERWISANT (5 technicznych)
  */
