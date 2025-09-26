@@ -333,11 +333,17 @@ describe('AppFooter Module', () => {
 
   // TEST RESPONSYWNOŚCI I STYLISTYKI
   describe('Responsiveness and Styling', () => {
-    it('should apply correct CSS classes for status indication', async () => {
-      await wrapper.setProps({ deviceStatus: 'CONNECTING' });
+    it('should apply correct CSS classes for environment indication', async () => {
+      await wrapper.setProps({ 
+        systemInfo: {
+          version: 'v3.0.0',
+          buildDate: '2024-01-15',
+          environment: 'production'
+        }
+      });
       
-      const statusIndicator = wrapper.find('.footer-status');
-      expect(statusIndicator.classes()).toContain('connecting');
+      const environmentEl = wrapper.find('.environment');
+      expect(environmentEl.classes()).toContain('production');
     });
 
     it('should have proper layout structure', () => {
@@ -347,20 +353,36 @@ describe('AppFooter Module', () => {
       const rightSection = wrapper.find('.footer-right');
       
       expect(footer.exists()).toBe(true);
-      expect(leftSection.exists() || centerSection.exists() || rightSection.exists()).toBe(true);
+      expect(leftSection.exists()).toBe(true);
+      expect(centerSection.exists()).toBe(true);
+      expect(rightSection.exists()).toBe(true);
     });
 
     it('should maintain layout integrity with long text content', async () => {
       await wrapper.setProps({
-        deviceInfo: {
-          name: 'VERY_LONG_DEVICE_NAME_THAT_MIGHT_OVERFLOW',
-          type: 'EXTENDED_TYPE_NAME',
-          url: 'very.long.domain.name.mask.services'
+        currentUser: {
+          name: 'VERY_LONG_USERNAME_THAT_MIGHT_OVERFLOW_THE_LAYOUT',
+          role: 'SUPERUSER'
         }
       });
       
       const footer = wrapper.find('.app-footer');
+      const userNameEl = wrapper.find('.user-name');
       expect(footer.exists()).toBe(true);
+      expect(userNameEl.text()).toBe('VERY_LONG_USERNAME_THAT_MIGHT_OVERFLOW_THE_LAYOUT');
+    });
+
+    it('should clean up time interval on component unmount', () => {
+      const component = wrapper.vm;
+      expect(component.timeInterval).toBeDefined();
+      
+      // Spy on clearInterval
+      const clearIntervalSpy = vi.spyOn(global, 'clearInterval');
+      
+      wrapper.unmount();
+      
+      expect(clearIntervalSpy).toHaveBeenCalled();
+      clearIntervalSpy.mockRestore();
     });
   });
 });

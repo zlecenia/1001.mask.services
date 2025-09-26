@@ -2,19 +2,28 @@
 const template = `
 <footer class="app-footer" :class="deviceClass">
   <div class="footer-left">
-    <span class="system-info">
-      <span class="version">{{ systemInfo.version }}</span>
-      <span class="build-date">{{ formatBuildDate(systemInfo.buildDate) }}</span>
-      <span class="environment" :class="systemInfo.environment">{{ systemInfo.environment }}</span>
-    </span>
+    <div class="footer-copyright">
+      © 2025 MASKTRONIC
+    </div>
+    <div class="footer-device-info">
+      <span class="device-name">{{ deviceInfo.name || 'TEST_DEVICE' }}</span>
+      <span class="device-model">{{ deviceInfo.model || 'C20' }}</span>
+    </div>
   </div>
   
   <div class="footer-center">
-    <span class="current-time">{{ currentTime }}</span>
+    <div class="footer-build-info">
+      <span class="version">{{ buildInfo.version || '3.0.0' }}</span>
+      <span class="build-number">{{ buildInfo.buildNumber || '2024.001' }}</span>
+    </div>
+    <span class="current-time footer-text">{{ currentTime }}</span>
   </div>
   
   <div class="footer-right">
-    <span class="user-info">
+    <div class="footer-status" :class="statusClass">
+      <span class="status-text">{{ deviceStatus || 'ONLINE' }}</span>
+    </div>
+    <span class="user-info footer-info">
       <span class="user-name">{{ currentUser.name }}</span>
       <span class="user-role" :class="currentUser.role.toLowerCase()">{{ currentUser.role }}</span>
     </span>
@@ -220,6 +229,25 @@ export default {
         name: 'Guest',
         role: 'OPERATOR'
       })
+    },
+    deviceInfo: {
+      type: Object,
+      default: () => ({
+        name: 'TEST_DEVICE',
+        model: 'C20'
+      })
+    },
+    buildInfo: {
+      type: Object,
+      default: () => ({
+        version: '3.0.0',
+        buildNumber: '2025.001'
+      })
+    },
+    deviceStatus: {
+      type: String,
+      default: 'ONLINE',
+      validator: (value) => ['ONLINE', 'OFFLINE', 'CONNECTING', 'ERROR'].includes(value)
     }
   },
   
