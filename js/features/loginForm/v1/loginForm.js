@@ -655,13 +655,14 @@ export default {
   },
   mounted() {
     if (typeof window !== 'undefined') {
-      window.addEventListener('resize', this.handleResize);
+      this._resizeHandler = () => this.handleResize();
+      window.addEventListener('resize', this._resizeHandler);
       this.handleResize();
     }
   },
   beforeUnmount() {
     if (typeof window !== 'undefined') {
-      window.removeEventListener('resize', this.handleResize);
+      window.removeEventListener('resize', this._resizeHandler);
     }
   },
   emits: ['login-attempt', 'language-changed']

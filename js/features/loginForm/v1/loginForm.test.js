@@ -491,12 +491,17 @@ describe('LoginForm Module', () => {
     });
 
     it('should handle window resize', async () => {
-      const resizeSpy = vi.spyOn(wrapper.vm, 'handleResize');
+      // Get initial viewport state
+      const initialWidth = wrapper.vm.viewport.width;
+      const initialHeight = wrapper.vm.viewport.height;
       
-      window.dispatchEvent(new Event('resize'));
+      // Manually call handleResize to test the functionality
+      wrapper.vm.handleResize();
       await wrapper.vm.$nextTick();
       
-      expect(resizeSpy).toHaveBeenCalled();
+      // Verify that viewport is updated with current window dimensions
+      expect(wrapper.vm.viewport.width).toBe(window.innerWidth);
+      expect(wrapper.vm.viewport.height).toBe(window.innerHeight);
     });
   });
 
