@@ -1,0 +1,170 @@
+{
+  "timestamp": "2025-09-26T20:06:30.095474",
+  "total_modules": 0,
+  "modules": [
+    {
+      "name": "0.1.0",
+      "version": "unknown",
+      "path": "js/features/appFooter/0.1.0",
+      "files": {
+        "index": true,
+        "component": true,
+        "test": true,
+        "readme": true,
+        "config": true
+      },
+      "lines_of_code": 404,
+      "test_coverage": 90,
+      "dependencies": [
+        "./appFooter.js"
+      ],
+      "exports": [
+        "default"
+      ],
+      "issues": []
+    },
+    {
+      "name": "0.1.0",
+      "version": "unknown",
+      "path": "js/features/appHeader/0.1.0",
+      "files": {
+        "index": true,
+        "component": true,
+        "test": true,
+        "readme": true,
+        "config": true
+      },
+      "lines_of_code": 354,
+      "test_coverage": 90,
+      "dependencies": [
+        "./appHeader.js"
+      ],
+      "exports": [
+        "default"
+      ],
+      "issues": []
+    },
+    {
+      "name": "0.1.0",
+      "version": "unknown",
+      "path": "js/features/auditLogViewer/0.1.0",
+      "files": {
+        "index": true,
+        "component": true,
+        "test": true,
+        "readme": true,
+        "config": true
+      },
+      "lines_of_code": 709,
+      "test_coverage": 90,
+      "dependencies": [
+        "./config.json",
+        "./auditLogViewer.js",
+        "../../../services/securityService.js"
+      ],
+      "exports": [
+        "default"
+      ],
+      "issues": []
+    },
+    {
+      "name": "0.1.0",
+      "version": "unknown",
+      "path": "js/features/loginForm/0.1.0",
+      "files": {
+        "index": true,
+        "component": true,
+        "test": true,
+        "readme": true,
+        "config": true
+      },
+      "lines_of_code": 994,
+      "test_coverage": 90,
+      "dependencies": [
+        "../../../services/securityService.js",
+        "./loginForm.js"
+      ],
+      "exports": [
+        "default"
+      ],
+      "issues": []
+    },
+    {
+      "name": "0.1.0",
+      "version": "unknown",
+      "path": "js/features/mainMenu/0.1.0",
+      "files": {
+        "index": true,
+        "component": true,
+        "test": true,
+        "readme": true,
+        "config": true
+      },
+      "lines_of_code": 614,
+      "test_coverage": 90,
+      "dependencies": [
+        "../../../services/securityService.js",
+        "./mainMenu.js"
+      ],
+      "exports": [
+        "default"
+      ],
+      "issues": []
+    },
+    {
+      "name": "0.1.0",
+      "version": "unknown",
+      "path": "js/features/pageTemplate/0.1.0",
+      "files": {
+        "index": true,
+        "component": true,
+        "test": true,
+        "readme": true,
+        "config": true
+      },
+      "lines_of_code": 696,
+      "test_coverage": 90,
+      "dependencies": [
+        "./pageTemplate.js",
+        "../../../services/securityService.js"
+      ],
+      "exports": [
+        "default"
+      ],
+      "issues": []
+    },
+    {
+      "name": "0.1.0",
+      "version": "unknown",
+      "path": "js/features/pressurePanel/0.1.0",
+      "files": {
+        "index": true,
+        "component": true,
+        "test": true,
+        "readme": true,
+        "config": true
+      },
+      "lines_of_code": 677,
+      "test_coverage": 90,
+      "dependencies": [
+        "../../../services/securityService.js",
+        "../../../services/websocketService.js",
+        "./pressurePanel.js"
+      ],
+      "exports": [
+        "default"
+      ],
+      "issues": []
+    }
+  ],
+  "summary": {
+    "total_modules": 7,
+    "modules_with_tests": 7,
+    "modules_with_docs": 7,
+    "test_coverage_percentage": 100.0,
+    "documentation_percentage": 100.0,
+    "total_lines_of_code": 4448,
+    "average_test_coverage": 90.0,
+    "modules_with_issues": 0
+  }
+}

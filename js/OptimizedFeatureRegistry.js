@@ -131,19 +131,21 @@ export class OptimizedFeatureRegistry extends FeatureRegistry {
     // Load module and render
     const module = await this.load(name);
     if (module && module.render && container) {
-      
-      // Throttle rendering for performance
-      this.performanceService.throttle(`render_${name}`, async () => {
-        try {
-          await module.render(container, props);
-          
-          // Cache the render result
-          this.performanceService.cacheRender(cacheKey, container.innerHTML, props);
-        } catch (error) {
-          console.error(`Render error for ${name}:`, error);
-          container.innerHTML = `<div class="error">Failed to render ${name}</div>`;
-        }
-      });
+      try {
+        console.log(`🎨 Calling render method for ${name}`, { container, props });
+        const result = await module.render(container, props);
+        console.log(`✅ Render completed for ${name}`, result);
+        
+        // Cache the render result
+        this.performanceService.cacheRender(cacheKey, container.innerHTML, props);
+      } catch (error) {
+        console.error(`❌ Render error for ${name}:`, error);
+        console.error(`Error details:`, error.stack);
+        container.innerHTML = `<div class="error">Failed to render ${name}: ${error.message}</div>`;
+        throw error; // Re-throw to see the error in main.js
+      }
+    } else {
+      console.log(`⚠️ Module ${name} has no render method or container is missing`, { module, container });
     }
   }
   
@@ -176,7 +178,7 @@ export class OptimizedFeatureRegistry extends FeatureRegistry {
   getPerformanceMetrics() {
     return {
       ...this.performanceService.getMetrics(),
-      registeredModules: this.modules.size,
+      registeredModules: this.features.size,
       loadingPromises: this.loadingPromises.size,
       criticalComponents: Array.from(this.criticalComponents)
     };

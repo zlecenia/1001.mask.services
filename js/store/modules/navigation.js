@@ -118,12 +118,12 @@ const navigationModule = {
           commit('SET_BREADCRUMBS', breadcrumbs);
         }
         
+        commit('SET_NAVIGATION_LOADING', false);
         return route;
       } catch (error) {
         console.error('Navigation error:', error);
-        throw error;
-      } finally {
         commit('SET_NAVIGATION_LOADING', false);
+        throw error;
       }
     },
     

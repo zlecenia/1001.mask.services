@@ -224,9 +224,9 @@ class SecurityService {
     // Type-specific validation
     switch (type) {
       case 'username':
-        if (!/^[a-zA-Z0-9_-]{3,20}$/.test(validation.sanitized)) {
+        if (!/^[a-zA-Z0-9_-]{3,20}$/.test(validation.sanitized) && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(validation.sanitized)) {
           validation.isValid = false;
-          validation.errors.push('Username must be 3-20 characters, alphanumeric with _ or -');
+          validation.errors.push('Username must be 3-20 characters, alphanumeric with _ or -, or a valid email address');
         }
         break;
         

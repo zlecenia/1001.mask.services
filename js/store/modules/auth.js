@@ -11,7 +11,7 @@ const authModule = {
     isAuthenticated: false,
     currentUser: null,
     sessionToken: null,
-    role: null,
+    role: 'OPERATOR', // Default role for unauthenticated users
     permissions: [],
     sessionTimeout: 1800000, // 30 minutes
     loginAttempts: 0,

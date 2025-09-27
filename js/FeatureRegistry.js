@@ -134,12 +134,26 @@ class FeatureRegistry {
   }
 
   /**
+   * Get the latest version of a module
+   * @param {string} name - Module name
+   * @returns {string} Latest version or '0.1.0' as default
+   */
+  getLatestVersion(name) {
+    const versions = this.versions.get(name);
+    if (!versions || versions.length === 0) {
+      return '0.1.0'; // Default version
+    }
+    
+    // Return the last version in the sorted array (highest version)
+    return versions[versions.length - 1];
+  }
+
+  /**
    * Rollback a module to a previous version
    * @param {string} name - Module name
    * @param {string} toVersion - Target version to rollback to
    */
   rollback(name, toVersion) {
-    const versions = this.getVersions(name);
     if (!versions.includes(toVersion)) {
       throw new Error(`Version ${toVersion} not found for module ${name}`);
     }

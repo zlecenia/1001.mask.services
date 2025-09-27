@@ -152,7 +152,7 @@ class PerformanceService {
         fallback();
       }
       
-      const module = await import(componentPath);
+      const module = await import(/* @vite-ignore */ componentPath);
       const component = module.default || module;
       
       // Cache the loaded component
@@ -305,9 +305,9 @@ class PerformanceService {
   
   async preloadCriticalComponents() {
     const criticalComponents = [
-      './features/pressurePanel/0.1.0/index.js',
-      './features/appHeader/0.1.0/index.js',
-      './features/appFooter/0.1.0/index.js'
+      '../features/pressurePanel/0.1.0/index.js',
+      '../features/appHeader/0.1.0/index.js',
+      '../features/appFooter/0.1.0/index.js'
     ];
     
     for (const path of criticalComponents) {

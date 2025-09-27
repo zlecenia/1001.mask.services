@@ -1,0 +1,288 @@
+{
+  "component": {
+    "name": "systemSettings",
+    "version": "0.1.0",
+    "displayName": "System Settings",
+    "description": "Comprehensive system configuration and settings management component",
+    "category": "system",
+    "tags": ["settings", "configuration", "network", "security", "industrial"],
+    "author": "1001.mask.services Team",
+    "license": "Proprietary",
+    "repository": {
+      "type": "git",
+      "url": "internal"
+    }
+  },
+  "ui": {
+    "displaySettings": {
+      "targetDisplay": "7.9-inch-landscape",
+      "resolution": "1280x400",
+      "orientation": "landscape",
+      "touchOptimized": true,
+      "scalingFactor": 1.0,
+      "minWidth": 1200,
+      "minHeight": 350
+    },
+    "layout": {
+      "containerClass": "system-settings landscape-7-9",
+      "headerHeight": "60px",
+      "tabsHeight": "50px",
+      "contentPadding": "15px",
+      "scrollable": true,
+      "responsive": true
+    },
+    "theme": {
+      "primaryColor": "#2c5aa0",
+      "secondaryColor": "#34495e",
+      "accentColor": "#3498db",
+      "warningColor": "#f39c12",
+      "errorColor": "#e74c3c",
+      "successColor": "#27ae60",
+      "backgroundColor": "#ecf0f1",
+      "textColor": "#2c3e50"
+    },
+    "typography": {
+      "baseFontSize": "14px",
+      "headerFontSize": "18px",
+      "titleFontSize": "16px",
+      "fontFamily": "Arial, sans-serif",
+      "fontWeight": "normal"
+    }
+  },
+  "data": {
+    "defaults": {
+      "networkSettings": {
+        "ipAddress": "192.168.1.10",
+        "port": 8080,
+        "dhcpEnabled": false,
+        "gateway": "192.168.1.1",
+        "dnsServer": "8.8.8.8",
+        "connectionTimeout": 30
+      },
+      "systemConfig": {
+        "updateInterval": 5,
+        "debugMode": false,
+        "logLevel": "INFO",
+        "maxLogFiles": 10,
+        "autoBackup": true,
+        "backupInterval": 24,
+        "dataRetention": 365,
+        "enableMonitoring": true
+      },
+      "deviceSettings": {
+        "deviceName": "MASKTRONIC-001",
+        "location": "Production Floor",
+        "timezone": "Europe/Warsaw",
+        "language": "pl",
+        "units": "metric",
+        "precision": 2
+      },
+      "securitySettings": {
+        "sessionTimeout": 30,
+        "maxLoginAttempts": 3,
+        "passwordExpiry": 90,
+        "lockoutDuration": 15,
+        "enableTwoFactor": false,
+        "encryptionLevel": "AES256",
+        "auditLogging": true,
+        "forcePasswordChange": true,
+        "enableSessionMonitoring": true
+      }
+    },
+    "validation": {
+      "networkSettings": {
+        "ipAddress": {
+          "required": true,
+          "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+          "errorMessage": "Invalid IP address format"
+        },
+        "port": {
+          "required": true,
+          "min": 1,
+          "max": 65535,
+          "errorMessage": "Port must be between 1-65535"
+        },
+        "gateway": {
+          "required": true,
+          "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+          "errorMessage": "Invalid gateway IP address"
+        }
+      },
+      "systemConfig": {
+        "updateInterval": {
+          "required": true,
+          "min": 1,
+          "max": 3600,
+          "errorMessage": "Update interval must be 1-3600 seconds"
+        },
+        "dataRetention": {
+          "required": true,
+          "min": 1,
+          "max": 3650,
+          "errorMessage": "Data retention must be 1-3650 days"
+        }
+      },
+      "securitySettings": {
+        "sessionTimeout": {
+          "required": true,
+          "min": 5,
+          "max": 480,
+          "errorMessage": "Session timeout must be 5-480 minutes"
+        },
+        "maxLoginAttempts": {
+          "required": true,
+          "min": 1,
+          "max": 10,
+          "errorMessage": "Max login attempts must be 1-10"
+        }
+      }
+    }
+  },
+  "security": {
+    "auditEvents": [
+      "system_settings_component_init",
+      "system_settings_component_cleanup",
+      "network_connection_test",
+      "network_test_completed",
+      "network_test_error",
+      "system_settings_save",
+      "system_settings_saved",
+      "system_settings_save_error",
+      "system_settings_reset",
+      "settings_export",
+      "settings_exported",
+      "settings_export_error",
+      "settings_import",
+      "settings_imported",
+      "settings_import_error",
+      "security_report_generated",
+      "audit_logs_cleared"
+    ],
+    "permissions": {
+      "view": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+      "modify": ["ADMIN", "SUPERUSER", "SERWISANT"],
+      "export": ["ADMIN", "SUPERUSER", "SERWISANT"],
+      "import": ["SUPERUSER", "SERWISANT"],
+      "security_report": ["ADMIN", "SUPERUSER", "SERWISANT"],
+      "clear_logs": ["SUPERUSER", "SERWISANT"]
+    },
+    "inputSanitization": {
+      "enabled": true,
+      "fields": ["deviceName", "location", "ipAddress", "gateway", "dnsServer"],
+      "maxLength": 255,
+      "allowedChars": "alphanumeric_dash_dot_space"
+    }
+  },
+  "performance": {
+    "updateFrequency": 1000,
+    "debounceTime": 500,
+    "cacheable": true,
+    "cacheTimeout": 300000,
+    "lazyLoad": false,
+    "preload": false,
+    "memoryThreshold": 50
+  },
+  "accessibility": {
+    "ariaLabels": {
+      "settingsContainer": "System Settings Configuration",
+      "networkTab": "Network Settings Tab",
+      "systemTab": "System Configuration Tab", 
+      "deviceTab": "Device Settings Tab",
+      "securityTab": "Security Settings Tab",
+      "saveButton": "Save Settings",
+      "resetButton": "Reset to Defaults",
+      "exportButton": "Export Settings",
+      "importButton": "Import Settings",
+      "testConnectionButton": "Test Network Connection"
+    },
+    "keyboardNavigation": true,
+    "focusTrapping": true,
+    "screenReaderSupport": true,
+    "highContrast": false,
+    "fontSize": "adjustable"
+  },
+  "i18n": {
+    "defaultLanguage": "pl",
+    "supportedLanguages": ["pl", "en", "de"],
+    "translationKeys": {
+      "settings": {
+        "page_title": "Ustawienia Systemu",
+        "network_category": "Sieć",
+        "system_category": "System", 
+        "device_category": "Urządzenie",
+        "security_category": "Bezpieczeństwo",
+        "save_settings": "Zapisz Ustawienia",
+        "reset_settings": "Przywróć Domyślne",
+        "export_settings": "Eksportuj Ustawienia",
+        "import_settings": "Importuj Ustawienia",
+        "test_connection": "Testuj Połączenie",
+        "connection_success": "Test połączenia zakończony sukcesem!",
+        "connection_failed": "Test połączenia nieudany",
+        "connection_error": "Błąd testu połączenia",
+        "unsaved_changes": "Niezapisane zmiany",
+        "confirm_reset": "Czy na pewno chcesz przywrócić ustawienia domyślne?",
+        "confirm_unsaved": "Masz niezapisane zmiany. Czy na pewno chcesz wyjść?",
+        "confirm_clear_logs": "Czy na pewno chcesz wyczyścić logi audytu?",
+        "validation_failed": "Walidacja nie powiodła się",
+        "save_error": "Błąd zapisywania ustawień",
+        "import_error": "Błąd importu ustawień",
+        "invalid_import_format": "Nieprawidłowy format pliku",
+        "error_invalid_ip": "Nieprawidłowy adres IP",
+        "error_invalid_port": "Nieprawidłowy port (1-65535)",
+        "error_invalid_gateway": "Nieprawidłowy adres bramy",
+        "error_update_interval": "Interwał odświeżania musi być w zakresie 1-3600 sekund",
+        "error_data_retention": "Retencja danych musi być w zakresie 1-3650 dni",
+        "error_session_timeout": "Timeout sesji musi być w zakresie 5-480 minut", 
+        "error_max_attempts": "Maksymalna liczba prób logowania: 1-10",
+        "connection_online": "Połączenie aktywne",
+        "memory_usage": "Pamięć: 73% (580MB/800MB)",
+        "storage_usage": "Dysk: 45% (4.5GB/10GB)"
+      }
+    }
+  },
+  "testing": {
+    "testEnvironment": "jsdom",
+    "coverage": {
+      "target": 90,
+      "functions": 90,
+      "lines": 90,
+      "statements": 90
+    },
+    "mocks": {
+      "securityService": true,
+      "systemManager": true,
+      "i18nService": true
+    },
+    "testData": {
+      "validNetworkSettings": {
+        "ipAddress": "192.168.1.100",
+        "port": 9000,
+        "gateway": "192.168.1.1"
+      },
+      "invalidNetworkSettings": {
+        "ipAddress": "999.999.999.999",
+        "port": 99999,
+        "gateway": "invalid-ip"
+      }
+    }
+  },
+  "deployment": {
+    "environment": "production",
+    "buildTarget": "es2020",
+    "dependencies": {
+      "vue": "^3.0.0",
+      "securityService": "^1.0.0",
+      "i18nService": "^1.0.0"
+    },
+    "bundling": {
+      "minify": true,
+      "sourceMap": false,
+      "treeshaking": true
+    },
+    "optimization": {
+      "componentSplitting": true,
+      "lazyLoading": false,
+      "prefetch": false
+    }
+  }
+}

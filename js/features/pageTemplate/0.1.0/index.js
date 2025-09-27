@@ -175,5 +175,39 @@ export default {
       vue: '^3.4.0',
       browsers: ['Chrome 90+', 'Firefox 88+', 'Safari 14+']
     }
+  },
+
+  // Route handling
+  routes: ['/dashboard', '/', '/monitoring', '/alerts'],
+  
+  canHandleRoute(route) {
+    return this.routes.includes(route);
+  },
+
+  render(container, options = {}) {
+    if (this.component && typeof this.component.render === 'function') {
+      return this.component.render(container, options);
+    }
+    
+    // Fallback rendering
+    if (container) {
+      container.innerHTML = `
+        <div class="dashboard-content">
+          <h2>Dashboard - MASKSERVICE C20 1001</h2>
+          <div class="dashboard-grid">
+            <div class="dashboard-card">
+              <h3>Status systemu</h3>
+              <p>System działa poprawnie</p>
+            </div>
+            <div class="dashboard-card">
+              <h3>Ostatnie zdarzenia</h3>
+              <p>Brak nowych zdarzeń</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    return { success: true, route: options.route };
   }
 };

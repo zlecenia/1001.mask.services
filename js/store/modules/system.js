@@ -246,7 +246,7 @@ const systemModule = {
       commit('UPDATE_DEVICE_INFO', deviceInfo);
     },
     
-    logError({ commit }, error) {
+    logError({ commit, state }, error) {
       commit('ADD_ERROR_LOG', error);
       
       // In debug mode, also log to console

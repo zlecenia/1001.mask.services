@@ -10,7 +10,8 @@ import AuditLogViewer from './auditLogViewer.js';
 // Mock SecurityService
 const mockSecurityService = {
   getAuditLogs: vi.fn(),
-  logAuditEvent: vi.fn(),
+  logSecurityEvent: vi.fn(),
+  auditLog: [],
   sanitizeInput: vi.fn(input => input),
   validateInput: vi.fn(() => true)
 };
@@ -58,9 +59,15 @@ describe('AuditLogViewer Component', () => {
   beforeEach(async () => {
     // Reset mocks
     vi.clearAllMocks();
-    mockSecurityService.getAuditLogs.mockReturnValue(sampleAuditLogs);
     
-    // Mock global dependencies
+    // Configure mock to return sample data
+    mockSecurityService.getAuditLogs.mockReturnValue(sampleAuditLogs);
+    mockSecurityService.auditLog = sampleAuditLogs.map(log => ({
+      ...log,
+      event: log.eventType
+    }));
+    
+    // Mock global dependencies - ensure it returns our mock service
     global.getSecurityService = mockGetSecurityService;
     
     // Mock i18n
@@ -68,6 +75,7 @@ describe('AuditLogViewer Component', () => {
       $t: vi.fn(key => key)
     };
 
+    // Mount component with proper async handling
     wrapper = mount(AuditLogViewer, {
       global: {
         mocks: {
@@ -76,12 +84,18 @@ describe('AuditLogViewer Component', () => {
       }
     });
     
-    // Wait for component to fully initialize and load audit logs
+    // Wait for component initialization and ensure SecurityService is loaded
     await wrapper.vm.$nextTick();
-    if (wrapper.vm.securityService) {
-      await wrapper.vm.refreshLogs();
-      await wrapper.vm.$nextTick();
-    }
+    
+    // Verify SecurityService was initialized
+    expect(wrapper.vm.securityService).toBeTruthy();
+    
+    // Manually call refreshLogs to ensure data is loaded for tests
+    await wrapper.vm.refreshLogs();
+    await wrapper.vm.$nextTick();
+    
+    // Verify audit logs were loaded
+    expect(wrapper.vm.auditLogs).toHaveLength(sampleAuditLogs.length);
   });
 
   afterEach(() => {
@@ -102,7 +116,7 @@ describe('AuditLogViewer Component', () => {
     });
 
     it('should log viewer initialization event', () => {
-      expect(mockSecurityService.logAuditEvent).toHaveBeenCalledWith(
+      expect(mockSecurityService.logSecurityEvent).toHaveBeenCalledWith(
         'AUDIT_LOG_VIEWER_INIT',
         expect.objectContaining({
           timestamp: expect.any(String)
@@ -330,9 +344,9 @@ describe('AuditLogViewer Component', () => {
       expect(mockLink.download).toMatch(/audit-logs-\d{4}-\d{2}-\d{2}\.csv/);
     });
 
-    it('should log export event', () => {
+    it('should log export event', async () => {
       // Clear previous audit event calls from component initialization
-      mockSecurityService.logAuditEvent.mockClear();
+      mockSecurityService.logSecurityEvent.mockClear();
       
       // Mock export functionality
       global.URL.createObjectURL = vi.fn(() => 'mock-url');
@@ -341,9 +355,9 @@ describe('AuditLogViewer Component', () => {
         href: '', download: '', click: vi.fn()
       });
       
-      wrapper.vm.exportLogs();
+      await wrapper.vm.exportLogs();
       
-      expect(mockSecurityService.logAuditEvent).toHaveBeenCalledWith(
+      expect(mockSecurityService.logSecurityEvent).toHaveBeenCalledWith(
         'AUDIT_LOG_EXPORT',
         expect.objectContaining({
           exportedCount: expect.any(Number),
@@ -420,11 +434,11 @@ describe('AuditLogViewer Component', () => {
 
     it('should log refresh events', async () => {
       // Clear previous calls from component initialization
-      mockSecurityService.logAuditEvent.mockClear();
+      mockSecurityService.logSecurityEvent.mockClear();
       
       await wrapper.vm.refreshLogs();
       
-      expect(mockSecurityService.logAuditEvent).toHaveBeenCalledWith(
+      expect(mockSecurityService.logSecurityEvent).toHaveBeenCalledWith(
         'AUDIT_LOG_VIEWER_REFRESH',
         expect.objectContaining({
           totalLogs: expect.any(Number),

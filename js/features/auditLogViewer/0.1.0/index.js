@@ -4,13 +4,23 @@
  */
 
 import AuditLogViewerComponent from './auditLogViewer.js';
-import config from './config.json' assert { type: 'json' };
+
+// Load config dynamically to avoid import assertion issues
+const loadConfig = async () => {
+  try {
+    const response = await fetch(new URL('./config.json', import.meta.url));
+    return await response.json();
+  } catch (error) {
+    console.warn('Failed to load config, using defaults:', error);
+    return {};
+  }
+};
 
 export default {
   name: 'auditLogViewer',
   version: '0.1.0',
   component: AuditLogViewerComponent,
-  config: config,
+  config: {}, // Will be loaded dynamically
   
   // Module metadata for FeatureRegistry
   metadata: {

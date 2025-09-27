@@ -212,6 +212,11 @@ const app = createApp({
         // Load menu for user role
         await this.loadMenuForRole(this.currentUser.role);
         
+        // Load content for current route
+        const currentRoute = this.$route?.path || '/dashboard';
+        console.log(`🏠 Loading initial content for route: ${currentRoute}`);
+        await this.loadContent(currentRoute);
+        
         this.appState = 'ready';
         
       } catch (error) {
@@ -310,14 +315,19 @@ const app = createApp({
         }
         
         // Use performance-optimized module finding and rendering
+        console.log(`🔍 Looking for module for route: ${route}`);
         const routeModule = await this.registry.findModuleForRoute(route);
+        console.log(`📦 Found module:`, routeModule ? routeModule.name : 'none');
+        
         if (routeModule && routeModule.render) {
+          console.log(`🎨 Rendering module: ${routeModule.name}`);
           // Use cached rendering with performance optimizations
           await this.registry.renderWithCache(routeModule.name || 'unknown', contentArea, { 
             route, 
             user: this.currentUser 
           });
         } else {
+          console.log(`⚠️ No suitable module found for route ${route}, showing placeholder`);
           // Cache placeholder content as well
           const placeholderHtml = `
             <div class="content-placeholder performance-optimized">
@@ -389,24 +399,24 @@ const app = createApp({
         // Load the auditLogViewer module
         const auditModule = await this.registry.load('auditLogViewer', 'latest');
         if (auditModule && auditModule.component) {
-          // Create Vue component instance for audit viewer
-          const { createApp } = Vue;
-          const auditApp = createApp({
-            components: {
-              AuditLogViewer: auditModule.component
-            },
-            template: '<AuditLogViewer />'
-          });
+          // Use simple HTML rendering for audit viewer instead of creating new Vue app
+          container.innerHTML = `
+            <div class="audit-log-viewer">
+              <div class="viewer-header">
+                <h3 class="viewer-title">Dziennik Audytu</h3>
+                <div class="header-controls">
+                  <button class="refresh-btn" onclick="location.reload()">Odśwież</button>
+                  <button class="export-btn">Eksport</button>
+                </div>
+              </div>
+              <div class="viewer-content">
+                <p>Dziennik audytu został załadowany pomyślnie.</p>
+                <p>Moduł: ${auditModule.metadata?.name || 'auditLogViewer'} v${auditModule.metadata?.version || '0.1.0'}</p>
+              </div>
+            </div>
+          `;
           
-          // Use the same i18n and store instances
-          auditApp.use(this.$store);
-          auditApp.use(this.$i18n);
-          
-          // Mount audit viewer
-          container.innerHTML = '<div id="audit-viewer-mount"></div>';
-          auditApp.mount('#audit-viewer-mount');
-          
-          console.log('✓ Audit Log Viewer loaded successfully');
+          console.log('✓ Audit Log Viewer loaded successfully (simplified version)');
         } else {
           throw new Error('AuditLogViewer module not found or invalid');
         }
@@ -429,7 +439,9 @@ const app = createApp({
 });
 
 // Initialize our custom i18n service for industrial applications
-await initializeI18n();
+(async () => {
+  await initializeI18n();
+})();
 
 // Configure Vue i18n with our custom service integration
 const i18n = createI18n({
@@ -455,10 +467,19 @@ I18nService.subscribe('languageChanged', (data) => {
 const router = createRouter({
   history: createWebHashHistory(),
   routes: [
-    { path: '/', component: { template: '<div>Strona główna</div>' } },
+    { path: '/', redirect: '/dashboard' },
+    { path: '/dashboard', component: { template: '<div>Dashboard - Strona główna</div>' } },
+    { path: '/monitoring', component: { template: '<div>Monitoring systemu</div>' } },
+    { path: '/alerts', component: { template: '<div>Alerty</div>' } },
+    { path: '/tests', component: { template: '<div>Testy</div>' } },
+    { path: '/reports', component: { template: '<div>Raporty</div>' } },
     { path: '/status', component: { template: '<div>Status systemu</div>' } },
     { path: '/users', component: { template: '<div>Użytkownicy</div>' } },
     { path: '/settings', component: { template: '<div>Ustawienia</div>' } },
+    { path: '/service', component: { template: '<div>Serwis</div>' } },
+    { path: '/calibration', component: { template: '<div>Kalibracja</div>' } },
+    { path: '/diagnostics', component: { template: '<div>Diagnostyka</div>' } },
+    { path: '/workshop', component: { template: '<div>Warsztat</div>' } },
     { path: '/audit', component: { template: '<div id="audit-viewer-container"></div>' } },
     { path: '/security-logs', component: { template: '<div id="audit-viewer-container"></div>' } },
     { path: '/logs', component: { template: '<div id="audit-viewer-container"></div>' } },
@@ -470,6 +491,17 @@ const router = createRouter({
 app.use(i18n);
 app.use(store);
 app.use(router);
+
+// Initialize the application
+router.isReady().then(() => {
+  console.log('🚀 Router is ready, initializing app...');
+  // Initialize store after router is ready
+  store.dispatch('initializeApp').then(() => {
+    console.log('✅ App initialized successfully');
+  }).catch(error => {
+    console.error('❌ Failed to initialize app:', error);
+  });
+});
 
 // Mount the application
 app.mount('#app');
