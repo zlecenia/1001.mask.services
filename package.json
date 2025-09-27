@@ -15,72 +15,70 @@
     "test:watch": "vitest",
     "lint": "eslint js/ --ext .js,.vue",
     "lint:fix": "eslint js/ --ext .js,.vue --fix",
-    
     "module:init": "node tools/init/initComponent.js",
     "module:init-all": "node tools/init/initAll.js",
     "module:list": "node tools/init/listModules.js",
     "module:validate": "node tools/validators/validateModule.js",
     "module:migrate": "node tools/migrate/migrateComponentStructure.js",
-    
+    "component:dev": "node tools/dev/componentDevServer.js",
+    "component:dev:appFooter": "node tools/dev/componentDevServer.js js/features/appFooter/0.1.0 3001",
+    "component:dev:appHeader": "node tools/dev/componentDevServer.js js/features/appHeader/0.1.0 3002",
+    "component:dev:mainMenu": "node tools/dev/componentDevServer.js js/features/mainMenu/0.1.0 3003",
+    "component:dev:loginForm": "node tools/dev/componentDevServer.js js/features/loginForm/0.1.0 3004",
+    "component:dev:pageTemplate": "node tools/dev/componentDevServer.js js/features/pageTemplate/0.1.0 3005",
     "config:generate": "node tools/generators/schemaGenerator.js",
     "config:generate-components": "node tools/generators/componentSchemaGenerator.js",
     "config:validate": "node tools/validators/configValidator.js",
     "config:sync": "node tools/sync/syncConfigs.js",
     "config:watch": "node tools/sync/watchConfigs.js",
     "config:update": "npm run config:generate && npm run config:validate",
-    
     "schema:generate": "node tools/generators/schemaGenerator.js --all",
     "schema:validate": "node tools/validators/schemaValidator.js",
     "schema:from-config": "node tools/generators/schemaGenerator.js --from-config",
-    
     "crud:generate": "node tools/generators/crudGenerator.js --all",
     "crud:validate": "node tools/validators/crudValidator.js",
     "crud:update": "node tools/generators/crudGenerator.js --update",
-    
     "sdk:generate": "node tools/generators/sdkGenerator.js",
     "sdk:js": "node tools/generators/sdkGenerator.js --lang=js",
     "sdk:python": "node tools/generators/sdkGenerator.js --lang=python",
     "sdk:go": "node tools/generators/sdkGenerator.js --lang=go",
-    
     "init": "npm run module:init-all && npm run config:generate",
     "update": "npm run config:update && npm run schema:validate",
     "generate": "npm run schema:generate && npm run crud:generate && npm run sdk:generate",
     "validate-all": "npm run config:validate && npm run schema:validate && npm run crud:validate",
-    
     "pre-commit": "npm run validate-all",
     "post-merge": "npm run config:sync",
-    
     "clean": "node tools/clean.js",
     "backup": "node tools/backup.js",
-    
     "generate:module": "node js/moduleManagerWithPackageJson.js"
   },
   "dependencies": {
     "axios": "^1.6.0",
+    "socket.io-client": "^4.6.0",
     "vue": "^3.4.0",
     "vue-i18n": "^9.8.0",
     "vue-router": "^4.2.0",
-    "vuex": "^4.1.0",
-    "socket.io-client": "^4.6.0"
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.0.0",
     "@vue/test-utils": "^2.4.6",
-    "eslint": "^8.0.0",
-    "happy-dom": "^18.0.1",
-    "http-server": "^14.0.0",
-    "prettier": "^3.1.0",
-    "terser": "^5.0.0",
-    "vite": "^4.5.0",
-    "vitest": "^1.2.0",
     "ajv": "^8.12.0",
+    "chalk": "^5.3.0",
     "chokidar": "^3.5.3",
     "commander": "^11.0.0",
+    "eslint": "^8.0.0",
+    "fs-extra": "^11.1.0",
     "glob": "^10.3.0",
-    "json-schema-to-typescript": "^13.1.0",
-    "chalk": "^5.3.0",
+    "happy-dom": "^18.0.1",
+    "http-server": "^14.0.0",
     "inquirer": "^9.2.0",
-    "fs-extra": "^11.1.0"
+    "json-schema-to-typescript": "^13.1.0",
+    "prettier": "^3.1.0",
+    "puppeteer": "^24.22.3",
+    "terser": "^5.0.0",
+    "vite": "^4.5.0",
+    "vitest": "^1.2.0"
   },
   "engines": {
     "node": ">=16.0.0"
