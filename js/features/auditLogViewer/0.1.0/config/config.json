@@ -10,7 +10,7 @@
   "ui": {
     "display": {
       "width": "100%",
-      "height": "100%", 
+      "height": "100%",
       "responsive": true,
       "touchOptimized": true,
       "landscapeMode": true
@@ -35,14 +35,22 @@
     "refreshInterval": 30000,
     "pageSize": 50,
     "maxDisplayLogs": 10000,
-    "timeRanges": ["1h", "24h", "7d", "30d", "all"],
-    "exportFormats": ["csv"],
+    "timeRanges": [
+      "1h",
+      "24h",
+      "7d",
+      "30d",
+      "all"
+    ],
+    "exportFormats": [
+      "csv"
+    ],
     "autoRefresh": true
   },
   "responsive": {
     "breakpoints": {
       "small": "400px",
-      "medium": "800px", 
+      "medium": "800px",
       "large": "1280px"
     },
     "display79": {
@@ -71,7 +79,11 @@
     "auditLogging": true,
     "dataValidation": true,
     "exportPermissions": true,
-    "allowedRoles": ["ADMIN", "SUPERUSER", "SERWISANT"],
+    "allowedRoles": [
+      "ADMIN",
+      "SUPERUSER",
+      "SERWISANT"
+    ],
     "sensitiveDataMasking": false
   }
 }

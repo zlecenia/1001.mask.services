@@ -1,0 +1,14 @@
+{
+  "deviceStatus": "OFFLINE",
+  "deviceInfo": {
+    "name": "CONNECT",
+    "type": "500",
+    "url": "c201001.mask.services"
+  },
+  "currentLanguage": "pl",
+  "connectionInfo": {
+    "lastPing": null,
+    "latency": null,
+    "quality": "unknown"
+  }
+}

@@ -1,0 +1,495 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "appHeader Configuration Schema",
+  "description": "Auto-generated schema for appHeader configuration",
+  "_generated": "2025-09-27T07:05:06.914Z",
+  "_generator": "componentSchemaGenerator v1.0.0",
+  "_version": "0.1.0",
+  "properties": {
+    "component": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "component",
+            "service",
+            "layout"
+          ],
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "object",
+          "properties": {
+            "height": {
+              "type": "number",
+              "minimum": 0
+            },
+            "position": {
+              "type": "string",
+              "minLength": 1
+            },
+            "background": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "color": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "fontSize": {
+              "type": "string",
+              "minLength": 1
+            },
+            "padding": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "sections": {
+          "type": "object",
+          "properties": {
+            "left": {
+              "type": "object",
+              "properties": {
+                "logo": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "text": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "fontSize": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "fontWeight": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "additionalProperties": true
+            },
+            "center": {
+              "type": "object",
+              "properties": {
+                "deviceStatus": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "showIcon": {
+                      "type": "boolean"
+                    },
+                    "showText": {
+                      "type": "boolean"
+                    },
+                    "defaultStatus": {
+                      "type": "string",
+                      "enum": [
+                        "ONLINE",
+                        "OFFLINE",
+                        "CONNECTING",
+                        "ERROR"
+                      ],
+                      "minLength": 1
+                    },
+                    "statusColors": {
+                      "type": "object",
+                      "properties": {
+                        "ONLINE": {
+                          "type": "string",
+                          "pattern": "^#[0-9a-fA-F]{6}$",
+                          "description": "Hex color code",
+                          "minLength": 1
+                        },
+                        "OFFLINE": {
+                          "type": "string",
+                          "pattern": "^#[0-9a-fA-F]{6}$",
+                          "description": "Hex color code",
+                          "minLength": 1
+                        },
+                        "CONNECTING": {
+                          "type": "string",
+                          "pattern": "^#[0-9a-fA-F]{6}$",
+                          "description": "Hex color code",
+                          "minLength": 1
+                        }
+                      },
+                      "additionalProperties": true
+                    }
+                  },
+                  "additionalProperties": true
+                },
+                "deviceInfo": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "showName": {
+                      "type": "boolean"
+                    },
+                    "showType": {
+                      "type": "boolean"
+                    },
+                    "showUrl": {
+                      "type": "boolean"
+                    },
+                    "format": {
+                      "type": "string",
+                      "format": "uri",
+                      "pattern": "^https?://",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "additionalProperties": true
+            },
+            "right": {
+              "type": "object",
+              "properties": {
+                "languageSelector": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "availableLanguages": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "minItems": 0
+                    },
+                    "defaultLanguage": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "showFlags": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": true
+                },
+                "userActions": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "showUserName": {
+                      "type": "boolean"
+                    },
+                    "showLogout": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "deviceStatus": {
+          "type": "string",
+          "enum": [
+            "ONLINE",
+            "OFFLINE",
+            "CONNECTING",
+            "ERROR"
+          ],
+          "minLength": 1
+        },
+        "deviceInfo": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "url": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "currentLanguage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "connectionInfo": {
+          "type": "object",
+          "properties": {
+            "lastPing": {
+              "type": "null"
+            },
+            "latency": {
+              "type": "null"
+            },
+            "quality": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "languages": {
+      "type": "object",
+      "properties": {
+        "pl": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "flag": {
+              "type": "string",
+              "minLength": 1
+            },
+            "code": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "en": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "flag": {
+              "type": "string",
+              "minLength": 1
+            },
+            "code": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "de": {
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string",
+              "minLength": 1
+            },
+            "flag": {
+              "type": "string",
+              "minLength": 1
+            },
+            "code": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "responsive": {
+      "type": "object",
+      "properties": {
+        "display79": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "maxWidth": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxHeight": {
+              "type": "string",
+              "minLength": 1
+            },
+            "optimizations": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "accessibility": {
+      "type": "object",
+      "properties": {
+        "ariaLabels": {
+          "type": "boolean"
+        },
+        "keyboardNavigation": {
+          "type": "boolean"
+        },
+        "highContrast": {
+          "type": "boolean"
+        },
+        "screenReader": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "statusUpdateInterval": {
+          "type": "number",
+          "minimum": 0
+        },
+        "enableCaching": {
+          "type": "boolean"
+        },
+        "lazyLoading": {
+          "type": "boolean"
+        },
+        "memoryManagement": {
+          "type": "object",
+          "properties": {
+            "autoCleanup": {
+              "type": "boolean"
+            },
+            "cacheSize": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "validation": {
+          "type": "object",
+          "properties": {
+            "sanitizeInputs": {
+              "type": "boolean"
+            },
+            "validateDeviceInfo": {
+              "type": "boolean"
+            },
+            "allowedStatuses": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "protection": {
+          "type": "object",
+          "properties": {
+            "xssProtection": {
+              "type": "boolean"
+            },
+            "contentSecurityPolicy": {
+              "type": "boolean"
+            },
+            "validateLanguageCodes": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "audit": {
+          "type": "object",
+          "properties": {
+            "logLanguageChanges": {
+              "type": "boolean"
+            },
+            "logStatusChanges": {
+              "type": "boolean"
+            },
+            "retentionDays": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "component",
+    "ui",
+    "data",
+    "languages",
+    "responsive",
+    "accessibility",
+    "performance",
+    "security"
+  ],
+  "additionalProperties": false
+}

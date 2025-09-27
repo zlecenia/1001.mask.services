@@ -1,4 +1,6 @@
 import pressurePanelComponent from './pressurePanel.js';
+import config from './config/config.json';
+
 
 export default {
   metadata: {

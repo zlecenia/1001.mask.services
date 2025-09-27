@@ -46,7 +46,11 @@
       "right": {
         "languageSelector": {
           "enabled": true,
-          "availableLanguages": ["pl", "en", "de"],
+          "availableLanguages": [
+            "pl",
+            "en",
+            "de"
+          ],
           "defaultLanguage": "pl",
           "showFlags": true
         },
@@ -79,13 +83,13 @@
       "code": "pl"
     },
     "en": {
-      "name": "English", 
+      "name": "English",
       "flag": "🇬🇧",
       "code": "en"
     },
     "de": {
       "name": "Deutsch",
-      "flag": "🇩🇪", 
+      "flag": "🇩🇪",
       "code": "de"
     }
   },
@@ -94,7 +98,10 @@
       "enabled": true,
       "maxWidth": "1280px",
       "maxHeight": "400px",
-      "optimizations": ["compact-layout", "reduced-padding"]
+      "optimizations": [
+        "compact-layout",
+        "reduced-padding"
+      ]
     }
   },
   "accessibility": {
@@ -116,7 +123,11 @@
     "validation": {
       "sanitizeInputs": true,
       "validateDeviceInfo": true,
-      "allowedStatuses": ["ONLINE", "OFFLINE", "CONNECTING"]
+      "allowedStatuses": [
+        "ONLINE",
+        "OFFLINE",
+        "CONNECTING"
+      ]
     },
     "protection": {
       "xssProtection": true,

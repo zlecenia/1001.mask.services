@@ -1,0 +1,224 @@
+{
+  "name": "@masktronic/service-menu",
+  "version": "0.1.0",
+  "description": "Advanced service management component with diagnostics, calibration, backup and maintenance capabilities",
+  "type": "module",
+  "main": "index.js",
+  "module": "serviceMenu.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./component": {
+      "import": "./serviceMenu.js"
+    },
+    "./config": {
+      "import": "./config.json"
+    }
+  },
+  "files": [
+    "index.js",
+    "serviceMenu.js",
+    "config.json",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "vitest run serviceMenu.test.js",
+    "test:watch": "vitest serviceMenu.test.js",
+    "test:coverage": "vitest run --coverage serviceMenu.test.js",
+    "lint": "eslint *.js",
+    "lint:fix": "eslint *.js --fix",
+    "validate": "node -e \"import('./index.js').then(m => console.log('✅ Module valid'))\"",
+    "build": "echo 'No build step required for Vue.js module'",
+    "dev": "echo 'Use parent application development server'",
+    "diagnostics": "node -e \"import('./index.js').then(m => m.default().handle('getSystemHealth')).then(console.log)\"",
+    "check-sensors": "node -e \"import('./index.js').then(m => m.default().handle('getSensorStatus')).then(console.log)\""
+  },
+  "keywords": [
+    "vue",
+    "service",
+    "diagnostics",
+    "calibration",
+    "backup",
+    "maintenance",
+    "monitoring",
+    "security",
+    "masktronic",
+    "industrial",
+    "lcd-display",
+    "modular"
+  ],
+  "author": {
+    "name": "MASKTRONIC C20 Development Team",
+    "email": "dev@masktronic.com",
+    "url": "https://masktronic.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masktronic/1001.mask.services.git",
+    "directory": "js/features/serviceMenu/0.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/masktronic/1001.mask.services/issues"
+  },
+  "homepage": "https://github.com/masktronic/1001.mask.services/tree/main/js/features/serviceMenu",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0",
+    "vuex": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.0",
+    "vitest": "^1.0.0",
+    "jsdom": "^23.0.0",
+    "eslint": "^8.0.0",
+    "@vue/eslint-config-recommended": "^8.0.0"
+  },
+  "masktronic": {
+    "module": {
+      "name": "serviceMenu",
+      "type": "service",
+      "category": "management",
+      "priority": "high",
+      "migrated": {
+        "from": "ServiceMenuTemplate.js",
+        "date": "2024-12-19",
+        "version": "legacy"
+      },
+      "features": {
+        "systemDiagnostics": true,
+        "sensorCalibration": true,
+        "dataBackup": true,
+        "maintenanceScheduling": true,
+        "systemLogs": true,
+        "advancedSettings": true,
+        "securityIntegration": true,
+        "auditLogging": true,
+        "multiLanguageSupport": true,
+        "roleBasedAccess": true,
+        "rateLimiting": true,
+        "realTimeMonitoring": true,
+        "touchOptimized": true,
+        "lcdOptimized": true
+      },
+      "compatibility": {
+        "vue": "3.x",
+        "browser": "modern",
+        "lcd": "7.9inch-1280x400"
+      },
+      "roles": [
+        "ADMIN",
+        "SUPERUSER", 
+        "SERWISANT"
+      ],
+      "permissions": [
+        "service.diagnostics.run",
+        "service.calibration.run",
+        "service.backup.create",
+        "service.maintenance.view",
+        "service.logs.view",
+        "service.advanced.access",
+        "system.status.view",
+        "sensors.calibrate",
+        "data.export",
+        "maintenance.schedule",
+        "audit.view",
+        "system.config.modify"
+      ],
+      "dependencies": {
+        "internal": [
+          "SecurityService",
+          "Vuex Store"
+        ],
+        "external": [
+          "Vue 3"
+        ]
+      }
+    },
+    "services": {
+      "diagnostics": {
+        "description": "Real-time system diagnostics and monitoring",
+        "executionTime": 3000,
+        "permissions": ["service.diagnostics.run", "system.status.view"],
+        "auditLevel": "INFO"
+      },
+      "calibration": {
+        "description": "Sensor calibration management and automation",
+        "executionTime": 5000,
+        "permissions": ["service.calibration.run", "sensors.calibrate"],
+        "auditLevel": "WARNING"
+      },
+      "backup": {
+        "description": "Data backup and restore operations",
+        "executionTime": 4000,
+        "permissions": ["service.backup.create", "data.export"],
+        "auditLevel": "INFO"
+      },
+      "maintenance": {
+        "description": "Maintenance scheduling and task management",
+        "executionTime": 2000,
+        "permissions": ["service.maintenance.view", "maintenance.schedule"],
+        "auditLevel": "INFO"
+      },
+      "logs": {
+        "description": "System logs viewer and analysis",
+        "executionTime": 1000,
+        "permissions": ["service.logs.view", "audit.view"],
+        "auditLevel": "INFO"
+      },
+      "advanced": {
+        "description": "Advanced system configuration and settings",
+        "executionTime": 1500,
+        "permissions": ["service.advanced.access", "system.config.modify"],
+        "auditLevel": "WARNING"
+      }
+    },
+    "testing": {
+      "framework": "Vitest",
+      "coverage": {
+        "threshold": 80,
+        "include": ["serviceMenu.js", "index.js"],
+        "exclude": ["*.test.js", "config.json"]
+      },
+      "testFiles": [
+        "serviceMenu.test.js"
+      ],
+      "mockDependencies": [
+        "SecurityService",
+        "Vuex Store",
+        "window.ServiceManager"
+      ]
+    },
+    "build": {
+      "target": "esnext",
+      "format": "esm", 
+      "minify": false,
+      "sourcemap": true
+    },
+    "deployment": {
+      "environment": "production",
+      "cdn": false,
+      "bundled": false,
+      "lazy": true
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "Chrome >= 80",
+    "Firefox >= 75",
+    "Safari >= 13",
+    "Edge >= 80"
+  ],
+  "volta": {
+    "node": "18.18.0",
+    "npm": "9.8.1"
+  }
+}

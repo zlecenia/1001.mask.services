@@ -94,7 +94,10 @@
       "enabled": true,
       "maxWidth": "1280px",
       "maxHeight": "400px",
-      "optimizations": ["compact-spacing", "reduced-padding"]
+      "optimizations": [
+        "compact-spacing",
+        "reduced-padding"
+      ]
     }
   },
   "accessibility": {
@@ -117,7 +120,12 @@
     "validation": {
       "sanitizeUserInfo": true,
       "validateDeviceStatus": true,
-      "allowedRoles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"]
+      "allowedRoles": [
+        "OPERATOR",
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ]
     },
     "protection": {
       "xssProtection": true,

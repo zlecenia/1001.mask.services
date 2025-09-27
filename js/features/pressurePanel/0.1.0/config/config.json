@@ -170,7 +170,11 @@
       "enabled": true,
       "maxWidth": "1280px",
       "maxHeight": "400px",
-      "optimizations": ["compact-layout", "small-gauges", "minimal-text"]
+      "optimizations": [
+        "compact-layout",
+        "small-gauges",
+        "minimal-text"
+      ]
     },
     "adaptiveLayout": {
       "enabled": true,
@@ -194,9 +198,18 @@
   "calibration": {
     "enabled": false,
     "coefficients": {
-      "pressure1": { "offset": 0, "scale": 1 },
-      "pressure2": { "offset": 0, "scale": 1 },
-      "pressure3": { "offset": 0, "scale": 1 }
+      "pressure1": {
+        "offset": 0,
+        "scale": 1
+      },
+      "pressure2": {
+        "offset": 0,
+        "scale": 1
+      },
+      "pressure3": {
+        "offset": 0,
+        "scale": 1
+      }
     },
     "lastCalibration": null
   },

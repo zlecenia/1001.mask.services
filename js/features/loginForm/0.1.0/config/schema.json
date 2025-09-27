@@ -1,0 +1,587 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "loginForm Configuration Schema",
+  "description": "Auto-generated schema for loginForm configuration",
+  "_generated": "2025-09-27T07:05:06.925Z",
+  "_generator": "componentSchemaGenerator v1.0.0",
+  "_version": "0.1.0",
+  "properties": {
+    "component": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "object",
+          "properties": {
+            "maxWidth": {
+              "type": "string",
+              "minLength": 1
+            },
+            "background": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "borderRadius": {
+              "type": "string",
+              "minLength": 1
+            },
+            "boxShadow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "padding": {
+              "type": "string",
+              "minLength": 1
+            },
+            "margin": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "form": {
+          "type": "object",
+          "properties": {
+            "fieldSpacing": {
+              "type": "string",
+              "minLength": 1
+            },
+            "labelFontSize": {
+              "type": "string",
+              "minLength": 1
+            },
+            "inputHeight": {
+              "type": "string",
+              "minLength": 1
+            },
+            "inputFontSize": {
+              "type": "string",
+              "minLength": 1
+            },
+            "borderRadius": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "virtualKeyboard": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "layout": {
+              "type": "string",
+              "minLength": 1
+            },
+            "keyHeight": {
+              "type": "string",
+              "minLength": 1
+            },
+            "keySpacing": {
+              "type": "string",
+              "minLength": 1
+            },
+            "backgroundColor": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "keyColor": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "activeKeyColor": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "buttons": {
+          "type": "object",
+          "properties": {
+            "height": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fontSize": {
+              "type": "string",
+              "minLength": 1
+            },
+            "borderRadius": {
+              "type": "string",
+              "minLength": 1
+            },
+            "primaryColor": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "primaryHover": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "secondaryColor": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "secondaryHover": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "authentication": {
+      "type": "object",
+      "properties": {
+        "roles": {
+          "type": "object",
+          "properties": {
+            "OPERATOR": {
+              "type": "object",
+              "properties": {
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 0
+                },
+                "defaultRoute": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "color": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "ADMIN": {
+              "type": "object",
+              "properties": {
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 0
+                },
+                "defaultRoute": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "color": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "SUPERUSER": {
+              "type": "object",
+              "properties": {
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 0
+                },
+                "defaultRoute": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "color": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "SERWISANT": {
+              "type": "object",
+              "properties": {
+                "permissions": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 0
+                },
+                "defaultRoute": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "color": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "validation": {
+          "type": "object",
+          "properties": {
+            "minPasswordLength": {
+              "type": "number",
+              "minimum": 0
+            },
+            "maxAttempts": {
+              "type": "number",
+              "minimum": 0
+            },
+            "lockoutDuration": {
+              "type": "number",
+              "minimum": 0
+            },
+            "sessionTimeout": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "defaultCredentials": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "role": {
+              "type": "string",
+              "enum": [
+                "OPERATOR",
+                "ADMIN",
+                "SUPERUSER",
+                "SERWISANT"
+              ],
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "formState": {
+          "type": "object",
+          "properties": {
+            "username": {
+              "type": "string"
+            },
+            "password": {
+              "type": "string"
+            },
+            "selectedRole": {
+              "type": "string",
+              "enum": [
+                "OPERATOR",
+                "ADMIN",
+                "SUPERUSER",
+                "SERWISANT"
+              ],
+              "minLength": 1
+            },
+            "showVirtualKeyboard": {
+              "type": "boolean"
+            },
+            "activeInput": {
+              "type": "null"
+            },
+            "errors": {
+              "type": "object",
+              "properties": {},
+              "additionalProperties": true
+            },
+            "isSubmitting": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "authState": {
+          "type": "object",
+          "properties": {
+            "isAuthenticated": {
+              "type": "boolean"
+            },
+            "currentUser": {
+              "type": "null"
+            },
+            "loginAttempts": {
+              "type": "number",
+              "minimum": 0
+            },
+            "lastLoginTime": {
+              "type": "null"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "virtualKeyboard": {
+      "type": "object",
+      "properties": {
+        "layouts": {
+          "type": "object",
+          "properties": {
+            "qwerty": {
+              "type": "object",
+              "properties": {
+                "rows": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 0
+                  },
+                  "minItems": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "numeric": {
+              "type": "object",
+              "properties": {
+                "rows": {
+                  "type": "array",
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "minItems": 0
+                  },
+                  "minItems": 0
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "specialKeys": {
+          "type": "object",
+          "properties": {
+            "SPACE": {
+              "type": "string",
+              "minLength": 1
+            },
+            "BACKSPACE": {
+              "type": "string",
+              "minLength": 1
+            },
+            "ENTER": {
+              "type": "string",
+              "minLength": 1
+            },
+            "SHIFT": {
+              "type": "string",
+              "minLength": 1
+            },
+            "CAPS": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "responsive": {
+      "type": "object",
+      "properties": {
+        "display79": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "maxWidth": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxHeight": {
+              "type": "string",
+              "minLength": 1
+            },
+            "optimizations": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "breakpoints": {
+          "type": "object",
+          "properties": {
+            "mobile": {
+              "type": "string",
+              "minLength": 1
+            },
+            "tablet": {
+              "type": "string",
+              "minLength": 1
+            },
+            "desktop": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "accessibility": {
+      "type": "object",
+      "properties": {
+        "ariaLabels": {
+          "type": "boolean"
+        },
+        "keyboardNavigation": {
+          "type": "boolean"
+        },
+        "highContrast": {
+          "type": "boolean"
+        },
+        "screenReader": {
+          "type": "boolean"
+        },
+        "focusManagement": {
+          "type": "boolean"
+        },
+        "announcements": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "enableCaching": {
+          "type": "boolean"
+        },
+        "lazyLoading": {
+          "type": "boolean"
+        },
+        "debounceInput": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "encryptPassword": {
+          "type": "boolean"
+        },
+        "validateInput": {
+          "type": "boolean"
+        },
+        "preventBruteForce": {
+          "type": "boolean"
+        },
+        "auditLogging": {
+          "type": "boolean"
+        },
+        "csrfProtection": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "component",
+    "ui",
+    "authentication",
+    "data",
+    "virtualKeyboard",
+    "responsive",
+    "accessibility",
+    "performance",
+    "security"
+  ],
+  "additionalProperties": false
+}

@@ -31,14 +31,29 @@
       "orientation": "landscape",
       "virtualKeyboard": true,
       "preventNativeKeyboard": true,
-      "touchGestures": ["tap", "touch-and-hold"]
+      "touchGestures": [
+        "tap",
+        "touch-and-hold"
+      ]
     },
     "authentication": {
-      "supportedRoles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+      "supportedRoles": [
+        "OPERATOR",
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ],
       "minPasswordLength": 3,
       "minUsernameLength": 3,
       "roleBasedAccess": true,
       "passwordValidation": true
+    }
+  },
+  "maskservice": {
+    "component": {
+      "name": "loginForm",
+      "version": "0.1.0",
+      "configPath": "./config/"
     }
   }
 }

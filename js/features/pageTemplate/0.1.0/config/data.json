@@ -1,0 +1,14 @@
+{
+  "currentRoute": "/dashboard",
+  "layoutState": {
+    "sidebarCollapsed": false,
+    "pressurePanelVisible": true,
+    "fullscreenMode": false
+  },
+  "contentProps": {},
+  "errorState": {
+    "hasError": false,
+    "errorMessage": null,
+    "errorCode": null
+  }
+}

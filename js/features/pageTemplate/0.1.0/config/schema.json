@@ -1,0 +1,583 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "pageTemplate Configuration Schema",
+  "description": "Auto-generated schema for pageTemplate configuration",
+  "_generated": "2025-09-27T07:05:06.932Z",
+  "_generator": "componentSchemaGenerator v1.0.0",
+  "_version": "0.1.0",
+  "properties": {
+    "component": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "component",
+            "service",
+            "layout"
+          ],
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string",
+              "minLength": 1
+            },
+            "areas": {
+              "type": "object",
+              "properties": {
+                "header": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "sidebar": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "content": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "footer": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "pressurePanel": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "gridTemplate": {
+              "type": "object",
+              "properties": {
+                "rows": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "columns": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "areas": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "minItems": 0
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "contentArea": {
+          "type": "object",
+          "properties": {
+            "background": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "padding": {
+              "type": "string",
+              "minLength": 1
+            },
+            "overflow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minHeight": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "transitions": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "duration": {
+              "type": "string",
+              "minLength": 1
+            },
+            "easing": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "components": {
+      "type": "object",
+      "properties": {
+        "header": {
+          "type": "object",
+          "properties": {
+            "component": {
+              "type": "string",
+              "minLength": 1
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "props": {
+              "type": "object",
+              "properties": {
+                "showDeviceStatus": {
+                  "type": "boolean"
+                },
+                "showLanguageSelector": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "sidebar": {
+          "type": "object",
+          "properties": {
+            "component": {
+              "type": "string",
+              "minLength": 1
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "props": {
+              "type": "object",
+              "properties": {
+                "collapsible": {
+                  "type": "boolean"
+                },
+                "showIcons": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "content": {
+          "type": "object",
+          "properties": {
+            "component": {
+              "type": "string",
+              "minLength": 1
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "props": {
+              "type": "object",
+              "properties": {
+                "routeContent": {
+                  "type": "boolean"
+                },
+                "errorBoundary": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "footer": {
+          "type": "object",
+          "properties": {
+            "component": {
+              "type": "string",
+              "minLength": 1
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "props": {
+              "type": "object",
+              "properties": {
+                "showSystemInfo": {
+                  "type": "boolean"
+                },
+                "showUserInfo": {
+                  "type": "boolean"
+                },
+                "showDeviceStatus": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "pressurePanel": {
+          "type": "object",
+          "properties": {
+            "component": {
+              "type": "string",
+              "minLength": 1
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "props": {
+              "type": "object",
+              "properties": {
+                "realTimeUpdates": {
+                  "type": "boolean"
+                },
+                "showAlerts": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "routing": {
+      "type": "object",
+      "properties": {
+        "defaultRoute": {
+          "type": "string",
+          "minLength": 1
+        },
+        "errorRoute": {
+          "type": "string",
+          "minLength": 1
+        },
+        "loginRoute": {
+          "type": "string",
+          "minLength": 1
+        },
+        "routes": {
+          "type": "object",
+          "properties": {
+            "/": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/dashboard": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/monitoring": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/tests": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/reports": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/users": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/system": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/service": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/calibration": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/diagnostics": {
+              "type": "string",
+              "minLength": 1
+            },
+            "/workshop": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "currentRoute": {
+          "type": "string",
+          "minLength": 1
+        },
+        "layoutState": {
+          "type": "object",
+          "properties": {
+            "sidebarCollapsed": {
+              "type": "boolean"
+            },
+            "pressurePanelVisible": {
+              "type": "boolean"
+            },
+            "fullscreenMode": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        },
+        "contentProps": {
+          "type": "object",
+          "properties": {},
+          "additionalProperties": true
+        },
+        "errorState": {
+          "type": "object",
+          "properties": {
+            "hasError": {
+              "type": "boolean"
+            },
+            "errorMessage": {
+              "type": "null"
+            },
+            "errorCode": {
+              "type": "null"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "responsive": {
+      "type": "object",
+      "properties": {
+        "display79": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "maxWidth": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxHeight": {
+              "type": "string",
+              "minLength": 1
+            },
+            "optimizations": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "breakpoints": {
+          "type": "object",
+          "properties": {
+            "mobile": {
+              "type": "object",
+              "properties": {
+                "maxWidth": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "layout": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "tablet": {
+              "type": "object",
+              "properties": {
+                "maxWidth": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "layout": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "desktop": {
+              "type": "object",
+              "properties": {
+                "minWidth": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "layout": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "adaptiveLayout": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "autoCollapse": {
+              "type": "boolean"
+            },
+            "touchOptimization": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "accessibility": {
+      "type": "object",
+      "properties": {
+        "ariaLabels": {
+          "type": "boolean"
+        },
+        "keyboardNavigation": {
+          "type": "boolean"
+        },
+        "skipLinks": {
+          "type": "boolean"
+        },
+        "landmarks": {
+          "type": "boolean"
+        },
+        "highContrast": {
+          "type": "boolean"
+        },
+        "screenReader": {
+          "type": "boolean"
+        },
+        "focusManagement": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "enableCaching": {
+          "type": "boolean"
+        },
+        "lazyLoading": {
+          "type": "boolean"
+        },
+        "prefetchRoutes": {
+          "type": "boolean"
+        },
+        "componentCaching": {
+          "type": "boolean"
+        },
+        "virtualScrolling": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "validateRoutes": {
+          "type": "boolean"
+        },
+        "requireAuthentication": {
+          "type": "boolean"
+        },
+        "roleBasedAccess": {
+          "type": "boolean"
+        },
+        "auditNavigation": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "errorHandling": {
+      "type": "object",
+      "properties": {
+        "enableErrorBoundary": {
+          "type": "boolean"
+        },
+        "fallbackComponent": {
+          "type": "string",
+          "minLength": 1
+        },
+        "logErrors": {
+          "type": "boolean"
+        },
+        "retryAttempts": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "component",
+    "ui",
+    "components",
+    "routing",
+    "data",
+    "responsive",
+    "accessibility",
+    "performance",
+    "security",
+    "errorHandling"
+  ],
+  "additionalProperties": false
+}

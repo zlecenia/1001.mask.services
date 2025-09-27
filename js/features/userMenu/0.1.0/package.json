@@ -1,0 +1,166 @@
+{
+  "name": "@masktronic/user-menu",
+  "version": "0.1.0",
+  "description": "Dynamic role-based user menu component with security integration and multi-language support",
+  "type": "module",
+  "main": "index.js",
+  "module": "userMenu.js",
+  "exports": {
+    ".": {
+      "import": "./index.js",
+      "require": "./index.js"
+    },
+    "./component": {
+      "import": "./userMenu.js"
+    },
+    "./config": {
+      "import": "./config.json"
+    }
+  },
+  "files": [
+    "index.js",
+    "userMenu.js",
+    "config.json",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "vitest run userMenu.test.js",
+    "test:watch": "vitest userMenu.test.js",
+    "test:coverage": "vitest run --coverage userMenu.test.js",
+    "lint": "eslint *.js",
+    "lint:fix": "eslint *.js --fix",
+    "validate": "node -e \"import('./index.js').then(m => console.log('✅ Module valid'))\"",
+    "build": "echo 'No build step required for Vue.js module'",
+    "dev": "echo 'Use parent application development server'"
+  },
+  "keywords": [
+    "vue",
+    "menu",
+    "navigation",
+    "roles",
+    "security",
+    "authentication",
+    "masktronic",
+    "industrial",
+    "lcd-display",
+    "modular"
+  ],
+  "author": {
+    "name": "MASKTRONIC C20 Development Team",
+    "email": "dev@masktronic.com",
+    "url": "https://masktronic.com"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masktronic/1001.mask.services.git",
+    "directory": "js/features/userMenu/0.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/masktronic/1001.mask.services/issues"
+  },
+  "homepage": "https://github.com/masktronic/1001.mask.services/tree/main/js/features/userMenu",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=8.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0",
+    "vuex": "^4.0.0"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.0",
+    "vitest": "^1.0.0",
+    "jsdom": "^23.0.0",
+    "eslint": "^8.0.0",
+    "@vue/eslint-config-recommended": "^8.0.0"
+  },
+  "masktronic": {
+    "module": {
+      "name": "userMenu",
+      "type": "navigation",
+      "category": "core",
+      "priority": "high",
+      "migrated": {
+        "from": "UserMenuScreen.js",
+        "date": "2024-12-19",
+        "version": "legacy"
+      },
+      "features": {
+        "roleBasedMenus": true,
+        "securityIntegration": true,
+        "multiLanguageSupport": true,
+        "touchOptimized": true,
+        "lcdOptimized": true,
+        "auditLogging": true
+      },
+      "compatibility": {
+        "vue": "3.x",
+        "browser": "modern",
+        "lcd": "7.9inch-1280x400"
+      },
+      "roles": [
+        "OPERATOR",
+        "ADMIN", 
+        "SUPERUSER",
+        "SERWISANT"
+      ],
+      "permissions": [
+        "menu.view",
+        "menu.navigate",
+        "user.logout",
+        "audit.log"
+      ],
+      "dependencies": {
+        "internal": [
+          "SecurityService",
+          "Vuex Store"
+        ],
+        "external": [
+          "Vue 3"
+        ]
+      }
+    },
+    "testing": {
+      "framework": "Vitest",
+      "coverage": {
+        "threshold": 80,
+        "include": ["userMenu.js", "index.js"],
+        "exclude": ["*.test.js", "config.json"]
+      },
+      "testFiles": [
+        "userMenu.test.js"
+      ],
+      "mockDependencies": [
+        "SecurityService",
+        "Vuex Store"
+      ]
+    },
+    "build": {
+      "target": "esnext",
+      "format": "esm", 
+      "minify": false,
+      "sourcemap": true
+    },
+    "deployment": {
+      "environment": "production",
+      "cdn": false,
+      "bundled": false,
+      "lazy": true
+    }
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "Chrome >= 80",
+    "Firefox >= 75",
+    "Safari >= 13",
+    "Edge >= 80"
+  ],
+  "volta": {
+    "node": "18.18.0",
+    "npm": "9.8.1"
+  }
+}

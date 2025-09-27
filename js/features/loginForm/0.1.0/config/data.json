@@ -1,0 +1,17 @@
+{
+  "formState": {
+    "username": "",
+    "password": "",
+    "selectedRole": "OPERATOR",
+    "showVirtualKeyboard": false,
+    "activeInput": null,
+    "errors": {},
+    "isSubmitting": false
+  },
+  "authState": {
+    "isAuthenticated": false,
+    "currentUser": null,
+    "loginAttempts": 0,
+    "lastLoginTime": null
+  }
+}

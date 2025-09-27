@@ -1,0 +1,20 @@
+{
+  "systemInfo": {
+    "version": "v3.0",
+    "buildDate": "2025-01-26",
+    "environment": "development"
+  },
+  "deviceInfo": {
+    "name": "TEST_DEVICE",
+    "model": "C20"
+  },
+  "buildInfo": {
+    "version": "3.0.0",
+    "buildNumber": "2025.001"
+  },
+  "currentUser": {
+    "name": "Guest",
+    "role": "OPERATOR"
+  },
+  "deviceStatus": "ONLINE"
+}

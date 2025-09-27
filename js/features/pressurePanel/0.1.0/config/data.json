@@ -1,0 +1,25 @@
+{
+  "sensorValues": {
+    "pressure1": {
+      "value": 0,
+      "status": "unknown",
+      "lastUpdate": null,
+      "trend": "stable"
+    },
+    "pressure2": {
+      "value": 0,
+      "status": "unknown",
+      "lastUpdate": null,
+      "trend": "stable"
+    },
+    "pressure3": {
+      "value": 0,
+      "status": "unknown",
+      "lastUpdate": null,
+      "trend": "stable"
+    }
+  },
+  "alerts": [],
+  "connectionStatus": "disconnected",
+  "lastDataUpdate": null
+}

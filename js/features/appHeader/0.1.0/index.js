@@ -1,4 +1,6 @@
 import appHeaderComponent from './appHeader.js';
+import config from './config/config.json';
+
 
 export default {
   metadata: {

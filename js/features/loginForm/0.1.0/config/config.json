@@ -43,22 +43,36 @@
   "authentication": {
     "roles": {
       "OPERATOR": {
-        "permissions": ["view_sensors", "view_alerts"],
+        "permissions": [
+          "view_sensors",
+          "view_alerts"
+        ],
         "defaultRoute": "/monitoring",
         "color": "#27ae60"
       },
       "ADMIN": {
-        "permissions": ["manage_tests", "manage_reports", "manage_users"],
+        "permissions": [
+          "manage_tests",
+          "manage_reports",
+          "manage_users"
+        ],
         "defaultRoute": "/dashboard",
         "color": "#f39c12"
       },
       "SUPERUSER": {
-        "permissions": ["full_system_access", "config_edit"],
+        "permissions": [
+          "full_system_access",
+          "config_edit"
+        ],
         "defaultRoute": "/system",
         "color": "#e74c3c"
       },
       "SERWISANT": {
-        "permissions": ["service_mode", "calibration", "diagnostics"],
+        "permissions": [
+          "service_mode",
+          "calibration",
+          "diagnostics"
+        ],
         "defaultRoute": "/service",
         "color": "#3498db"
       }
@@ -96,19 +110,79 @@
     "layouts": {
       "qwerty": {
         "rows": [
-          ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"],
-          ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
-          ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
-          ["z", "x", "c", "v", "b", "n", "m"],
-          ["SPACE", "BACKSPACE", "ENTER"]
+          [
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "0"
+          ],
+          [
+            "q",
+            "w",
+            "e",
+            "r",
+            "t",
+            "y",
+            "u",
+            "i",
+            "o",
+            "p"
+          ],
+          [
+            "a",
+            "s",
+            "d",
+            "f",
+            "g",
+            "h",
+            "j",
+            "k",
+            "l"
+          ],
+          [
+            "z",
+            "x",
+            "c",
+            "v",
+            "b",
+            "n",
+            "m"
+          ],
+          [
+            "SPACE",
+            "BACKSPACE",
+            "ENTER"
+          ]
         ]
       },
       "numeric": {
         "rows": [
-          ["1", "2", "3"],
-          ["4", "5", "6"],
-          ["7", "8", "9"],
-          ["0", "BACKSPACE", "ENTER"]
+          [
+            "1",
+            "2",
+            "3"
+          ],
+          [
+            "4",
+            "5",
+            "6"
+          ],
+          [
+            "7",
+            "8",
+            "9"
+          ],
+          [
+            "0",
+            "BACKSPACE",
+            "ENTER"
+          ]
         ]
       }
     },
@@ -125,7 +199,11 @@
       "enabled": true,
       "maxWidth": "1280px",
       "maxHeight": "400px",
-      "optimizations": ["touch-friendly", "large-buttons", "virtual-keyboard"]
+      "optimizations": [
+        "touch-friendly",
+        "large-buttons",
+        "virtual-keyboard"
+      ]
     },
     "breakpoints": {
       "mobile": "400px",

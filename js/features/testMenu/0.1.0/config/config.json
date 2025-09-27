@@ -1,0 +1,199 @@
+{
+  "metadata": {
+    "name": "testMenu",
+    "version": "0.1.0",
+    "type": "component",
+    "dependencies": [
+      "vue",
+      "vuex"
+    ],
+    "description": "Advanced test menu with wizard, scenarios, history and templates",
+    "author": "MASKTRONIC C20",
+    "created": "2024-01-21"
+  },
+  "ui": {
+    "layout": {
+      "containerMaxWidth": "1000px",
+      "padding": "20px",
+      "borderRadius": "12px",
+      "gridColumns": "repeat(auto-fit, minmax(250px, 1fr))",
+      "cardGap": "20px"
+    },
+    "colors": {
+      "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "cardBackground": "#f8f9fa",
+      "primaryBlue": "#007bff",
+      "primaryGreen": "#28a745",
+      "primaryPurple": "#6f42c1",
+      "primaryOrange": "#fd7e14",
+      "textPrimary": "#333",
+      "textSecondary": "#666"
+    },
+    "animations": {
+      "cardHover": "translateY(-2px)",
+      "transition": "all 0.3s",
+      "spinnerAnimation": "spin 1s linear infinite"
+    }
+  },
+  "testWizard": {
+    "steps": 4,
+    "stepNames": [
+      "device",
+      "test",
+      "parameters",
+      "summary"
+    ],
+    "defaultDuration": 300,
+    "defaultCycles": 1,
+    "defaultTolerance": 5,
+    "maxDuration": 3600,
+    "maxCycles": 50,
+    "maxTolerance": 20
+  },
+  "deviceTypes": [
+    {
+      "id": "RPD",
+      "name": "RPD (Respiratory Protective Device)",
+      "models": [
+        "Model-A",
+        "Model-B"
+      ]
+    },
+    {
+      "id": "SCSR",
+      "name": "SCSR (Self-Contained Self-Rescuer)",
+      "models": [
+        "SCSR-100",
+        "SCSR-200"
+      ]
+    },
+    {
+      "id": "PAPR",
+      "name": "PAPR (Powered Air-Purifying Respirator)",
+      "models": [
+        "PAPR-X1"
+      ]
+    }
+  ],
+  "testTypes": [
+    {
+      "id": "pressure",
+      "name": "Test ciśnienia"
+    },
+    {
+      "id": "durability",
+      "name": "Test trwałości"
+    },
+    {
+      "id": "validation",
+      "name": "Walidacja"
+    },
+    {
+      "id": "performance",
+      "name": "Test wydajności"
+    }
+  ],
+  "testStandards": [
+    {
+      "id": "PN-EN-149",
+      "name": "PN-EN-149"
+    },
+    {
+      "id": "PN-EN-402",
+      "name": "PN-EN-402"
+    },
+    {
+      "id": "PN-EN-136",
+      "name": "PN-EN-136"
+    },
+    {
+      "id": "Internal",
+      "name": "Standard wewnętrzny"
+    }
+  ],
+  "pressureRanges": [
+    {
+      "id": "low",
+      "name": "Niski (0-10 mbar)",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "id": "medium",
+      "name": "Średni (10-50 mbar)",
+      "min": 10,
+      "max": 50
+    },
+    {
+      "id": "high",
+      "name": "Wysoki (50-100 mbar)",
+      "min": 50,
+      "max": 100
+    }
+  ],
+  "exportFormats": [
+    {
+      "id": "json",
+      "label": "JSON",
+      "icon": "📄",
+      "color": "blue",
+      "mimeType": "application/json"
+    },
+    {
+      "id": "xml",
+      "label": "XML",
+      "icon": "📋",
+      "color": "green",
+      "mimeType": "application/xml"
+    },
+    {
+      "id": "csv",
+      "label": "CSV",
+      "icon": "📊",
+      "color": "purple",
+      "mimeType": "text/csv"
+    },
+    {
+      "id": "pdf",
+      "label": "PDF",
+      "icon": "📑",
+      "color": "red",
+      "mimeType": "application/pdf"
+    }
+  ],
+  "api": {
+    "endpoints": {
+      "testWizard": "/api/test-wizard",
+      "customScenarios": "/api/custom-scenarios",
+      "testHistory": "/api/test-history",
+      "testTemplates": "/api/test-templates",
+      "exportData": "/api/export-data"
+    }
+  },
+  "performance": {
+    "maxHistoryItems": 100,
+    "maxTemplateItems": 50,
+    "maxScenarioItems": 20,
+    "cacheDuration": 300000
+  },
+  "security": {
+    "requiredRole": "OPERATOR",
+    "allowedExportFormats": [
+      "json",
+      "csv",
+      "xml"
+    ],
+    "maxExportSize": 10485760,
+    "validationRules": {
+      "testName": "^[a-zA-Z0-9\\s\\-_]{3,50}$",
+      "duration": {
+        "min": 60,
+        "max": 3600
+      },
+      "cycles": {
+        "min": 1,
+        "max": 50
+      }
+    }
+  }
+}

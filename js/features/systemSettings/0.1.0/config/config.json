@@ -5,7 +5,13 @@
     "displayName": "System Settings",
     "description": "Comprehensive system configuration and settings management component",
     "category": "system",
-    "tags": ["settings", "configuration", "network", "security", "industrial"],
+    "tags": [
+      "settings",
+      "configuration",
+      "network",
+      "security",
+      "industrial"
+    ],
     "author": "1001.mask.services Team",
     "license": "Proprietary",
     "repository": {
@@ -19,7 +25,7 @@
       "resolution": "1280x400",
       "orientation": "landscape",
       "touchOptimized": true,
-      "scalingFactor": 1.0,
+      "scalingFactor": 1,
       "minWidth": 1200,
       "minHeight": 350
     },
@@ -159,16 +165,45 @@
       "audit_logs_cleared"
     ],
     "permissions": {
-      "view": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
-      "modify": ["ADMIN", "SUPERUSER", "SERWISANT"],
-      "export": ["ADMIN", "SUPERUSER", "SERWISANT"],
-      "import": ["SUPERUSER", "SERWISANT"],
-      "security_report": ["ADMIN", "SUPERUSER", "SERWISANT"],
-      "clear_logs": ["SUPERUSER", "SERWISANT"]
+      "view": [
+        "OPERATOR",
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ],
+      "modify": [
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ],
+      "export": [
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ],
+      "import": [
+        "SUPERUSER",
+        "SERWISANT"
+      ],
+      "security_report": [
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ],
+      "clear_logs": [
+        "SUPERUSER",
+        "SERWISANT"
+      ]
     },
     "inputSanitization": {
       "enabled": true,
-      "fields": ["deviceName", "location", "ipAddress", "gateway", "dnsServer"],
+      "fields": [
+        "deviceName",
+        "location",
+        "ipAddress",
+        "gateway",
+        "dnsServer"
+      ],
       "maxLength": 255,
       "allowedChars": "alphanumeric_dash_dot_space"
     }
@@ -186,7 +221,7 @@
     "ariaLabels": {
       "settingsContainer": "System Settings Configuration",
       "networkTab": "Network Settings Tab",
-      "systemTab": "System Configuration Tab", 
+      "systemTab": "System Configuration Tab",
       "deviceTab": "Device Settings Tab",
       "securityTab": "Security Settings Tab",
       "saveButton": "Save Settings",
@@ -203,12 +238,16 @@
   },
   "i18n": {
     "defaultLanguage": "pl",
-    "supportedLanguages": ["pl", "en", "de"],
+    "supportedLanguages": [
+      "pl",
+      "en",
+      "de"
+    ],
     "translationKeys": {
       "settings": {
         "page_title": "Ustawienia Systemu",
         "network_category": "Sieć",
-        "system_category": "System", 
+        "system_category": "System",
         "device_category": "Urządzenie",
         "security_category": "Bezpieczeństwo",
         "save_settings": "Zapisz Ustawienia",
@@ -232,7 +271,7 @@
         "error_invalid_gateway": "Nieprawidłowy adres bramy",
         "error_update_interval": "Interwał odświeżania musi być w zakresie 1-3600 sekund",
         "error_data_retention": "Retencja danych musi być w zakresie 1-3650 dni",
-        "error_session_timeout": "Timeout sesji musi być w zakresie 5-480 minut", 
+        "error_session_timeout": "Timeout sesji musi być w zakresie 5-480 minut",
         "error_max_attempts": "Maksymalna liczba prób logowania: 1-10",
         "connection_online": "Połączenie aktywne",
         "memory_usage": "Pamięć: 73% (580MB/800MB)",

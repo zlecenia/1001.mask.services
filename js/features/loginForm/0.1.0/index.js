@@ -1,3 +1,5 @@
+import config from './config/config.json';
+
 /**
  * Login Form Module 0.1.0
  * Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9"

@@ -51,7 +51,7 @@
     "migratedDate": "2024-01-21",
     "features": [
       "test-wizard",
-      "custom-scenarios", 
+      "custom-scenarios",
       "test-history",
       "test-templates",
       "data-export",
@@ -67,5 +67,12 @@
       "SUPERUSER",
       "SERWISANT"
     ]
+  },
+  "maskservice": {
+    "component": {
+      "name": "testMenu",
+      "version": "0.1.0",
+      "configPath": "./config/"
+    }
   }
 }

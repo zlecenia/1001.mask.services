@@ -31,5 +31,12 @@
       "orientation": "landscape",
       "layoutType": "header-sidebar-content-footer"
     }
+  },
+  "maskservice": {
+    "component": {
+      "name": "pageTemplate",
+      "version": "0.1.0",
+      "configPath": "./config/"
+    }
   }
 }

@@ -1,0 +1,559 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "userMenu Configuration Schema",
+  "description": "Auto-generated schema for userMenu configuration",
+  "_generated": "2025-09-27T07:05:06.950Z",
+  "_generator": "componentSchemaGenerator v1.0.0",
+  "_version": "0.1.0",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "minLength": 1
+        },
+        "migrated_from": {
+          "type": "string",
+          "minLength": 1
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "object",
+          "properties": {
+            "maxWidth": {
+              "type": "string",
+              "minLength": 1
+            },
+            "gridColumns": {
+              "type": "string",
+              "minLength": 1
+            },
+            "gridGap": {
+              "type": "string",
+              "minLength": 1
+            },
+            "containerPadding": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "colors": {
+          "type": "object",
+          "properties": {
+            "primary": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "secondary": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "background": {
+              "type": "string",
+              "minLength": 1
+            },
+            "cardBackground": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "shadow": {
+              "type": "string",
+              "minLength": 1
+            },
+            "roleColors": {
+              "type": "object",
+              "properties": {
+                "operator": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "admin": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "superuser": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "serviceuser": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "serwisant": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "animations": {
+          "type": "object",
+          "properties": {
+            "cardHover": {
+              "type": "string",
+              "minLength": 1
+            },
+            "loadingDuration": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transitionDuration": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "roles": {
+      "type": "object",
+      "properties": {
+        "OPERATOR": {
+          "type": "object",
+          "properties": {
+            "menuItems": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "icon": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "labelKey": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptionKey": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "ADMIN": {
+          "type": "object",
+          "properties": {
+            "menuItems": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "icon": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "labelKey": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptionKey": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "SUPERUSER": {
+          "type": "object",
+          "properties": {
+            "menuItems": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "icon": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "labelKey": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptionKey": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "SERWISANT": {
+          "type": "object",
+          "properties": {
+            "menuItems": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "icon": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "labelKey": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "descriptionKey": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "additionalProperties": true
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "navigation": {
+      "type": "object",
+      "properties": {
+        "integration": {
+          "type": "object",
+          "properties": {
+            "menuManager": {
+              "type": "string",
+              "minLength": 1
+            },
+            "authManager": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "events": {
+          "type": "object",
+          "properties": {
+            "navigate": {
+              "type": "string",
+              "minLength": 1
+            },
+            "logout": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "loadingDelay": {
+          "type": "number",
+          "minimum": 0
+        },
+        "refreshDelay": {
+          "type": "number",
+          "minimum": 0
+        },
+        "enableLazyLoading": {
+          "type": "boolean"
+        },
+        "cacheMenuConfig": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "auditMenuSelection": {
+          "type": "boolean"
+        },
+        "auditLogout": {
+          "type": "boolean"
+        },
+        "validateMenuAccess": {
+          "type": "boolean"
+        },
+        "sanitizeMenuIds": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "localization": {
+      "type": "object",
+      "properties": {
+        "supportedLanguages": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "defaultLanguage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fallbackLanguage": {
+          "type": "string",
+          "minLength": 1
+        },
+        "i18nKeys": {
+          "type": "object",
+          "properties": {
+            "welcome": {
+              "type": "object",
+              "properties": {
+                "pl": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "en": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "de": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "logout": {
+              "type": "object",
+              "properties": {
+                "pl": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "en": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "de": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "loading": {
+              "type": "object",
+              "properties": {
+                "pl": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "en": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "de": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "optionsAvailable": {
+              "type": "object",
+              "properties": {
+                "pl": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "en": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "de": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "roles": {
+              "type": "object",
+              "properties": {
+                "OPERATOR": {
+                  "type": "object",
+                  "properties": {
+                    "pl": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "de": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": true
+                },
+                "ADMIN": {
+                  "type": "object",
+                  "properties": {
+                    "pl": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "de": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": true
+                },
+                "SUPERUSER": {
+                  "type": "object",
+                  "properties": {
+                    "pl": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "de": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": true
+                },
+                "SERWISANT": {
+                  "type": "object",
+                  "properties": {
+                    "pl": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "en": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "de": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "additionalProperties": true
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "metadata",
+    "ui",
+    "roles",
+    "navigation",
+    "performance",
+    "security",
+    "localization"
+  ],
+  "additionalProperties": false
+}

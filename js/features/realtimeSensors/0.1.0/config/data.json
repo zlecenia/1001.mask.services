@@ -1,0 +1,46 @@
+{
+  "defaults": {
+    "refreshRate": 500,
+    "alertsEnabled": true,
+    "recordingEnabled": false,
+    "maxHistoryPoints": 500,
+    "sensorCount": 6
+  },
+  "sensors": {
+    "defaultTypes": [
+      "pressure",
+      "flow_rate",
+      "resistance",
+      "leak_rate",
+      "co2_level",
+      "particle_count"
+    ],
+    "statusLevels": [
+      "normal",
+      "warning",
+      "critical"
+    ],
+    "trendTypes": [
+      "stable",
+      "rising",
+      "falling"
+    ],
+    "refreshRates": [
+      100,
+      250,
+      500,
+      1000,
+      2000
+    ]
+  },
+  "validation": {
+    "valueRange": {
+      "min": -1000,
+      "max": 100000
+    },
+    "refreshRateRange": {
+      "min": 100,
+      "max": 10000
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "defaults": {
+    "networkSettings": {
+      "ipAddress": "192.168.1.10",
+      "port": 8080,
+      "dhcpEnabled": false,
+      "gateway": "192.168.1.1",
+      "dnsServer": "8.8.8.8",
+      "connectionTimeout": 30
+    },
+    "systemConfig": {
+      "updateInterval": 5,
+      "debugMode": false,
+      "logLevel": "INFO",
+      "maxLogFiles": 10,
+      "autoBackup": true,
+      "backupInterval": 24,
+      "dataRetention": 365,
+      "enableMonitoring": true
+    },
+    "deviceSettings": {
+      "deviceName": "MASKTRONIC-001",
+      "location": "Production Floor",
+      "timezone": "Europe/Warsaw",
+      "language": "pl",
+      "units": "metric",
+      "precision": 2
+    },
+    "securitySettings": {
+      "sessionTimeout": 30,
+      "maxLoginAttempts": 3,
+      "passwordExpiry": 90,
+      "lockoutDuration": 15,
+      "enableTwoFactor": false,
+      "encryptionLevel": "AES256",
+      "auditLogging": true,
+      "forcePasswordChange": true,
+      "enableSessionMonitoring": true
+    }
+  },
+  "validation": {
+    "networkSettings": {
+      "ipAddress": {
+        "required": true,
+        "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+        "errorMessage": "Invalid IP address format"
+      },
+      "port": {
+        "required": true,
+        "min": 1,
+        "max": 65535,
+        "errorMessage": "Port must be between 1-65535"
+      },
+      "gateway": {
+        "required": true,
+        "pattern": "^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$",
+        "errorMessage": "Invalid gateway IP address"
+      }
+    },
+    "systemConfig": {
+      "updateInterval": {
+        "required": true,
+        "min": 1,
+        "max": 3600,
+        "errorMessage": "Update interval must be 1-3600 seconds"
+      },
+      "dataRetention": {
+        "required": true,
+        "min": 1,
+        "max": 3650,
+        "errorMessage": "Data retention must be 1-3650 days"
+      }
+    },
+    "securitySettings": {
+      "sessionTimeout": {
+        "required": true,
+        "min": 5,
+        "max": 480,
+        "errorMessage": "Session timeout must be 5-480 minutes"
+      },
+      "maxLoginAttempts": {
+        "required": true,
+        "min": 1,
+        "max": 10,
+        "errorMessage": "Max login attempts must be 1-10"
+      }
+    }
+  }
+}

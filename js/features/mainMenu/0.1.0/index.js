@@ -1,3 +1,5 @@
+import config from './config/config.json';
+
 /**
  * Main Menu Module 0.1.0
  * Główne menu aplikacji z kontrolą dostępu opartą na rolach

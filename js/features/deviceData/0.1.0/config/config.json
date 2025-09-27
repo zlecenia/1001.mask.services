@@ -5,7 +5,13 @@
     "description": "Industrial device monitoring and sensor data management component",
     "author": "1001.mask.services Development Team",
     "category": "monitoring",
-    "tags": ["industrial", "device", "sensors", "monitoring", "real-time"],
+    "tags": [
+      "industrial",
+      "device",
+      "sensors",
+      "monitoring",
+      "real-time"
+    ],
     "license": "MIT",
     "dependencies": {
       "vue": "^3.0.0",
@@ -13,11 +19,10 @@
       "i18nService": "^1.0.0"
     }
   },
-  
   "ui": {
     "displayName": {
       "pl": "Dane Urządzenia",
-      "en": "Device Data", 
+      "en": "Device Data",
       "de": "Gerätedaten"
     },
     "description": {
@@ -32,7 +37,6 @@
     "responsive": true,
     "theme": "industrial"
   },
-
   "data": {
     "defaults": {
       "deviceId": "DEVICE_001",
@@ -41,12 +45,36 @@
       "firmwareVersion": "2.1.4",
       "updateFrequency": 2,
       "sensorThresholds": {
-        "temperature": { "min": 18, "max": 25, "unit": "°C" },
-        "humidity": { "min": 40, "max": 70, "unit": "%" },
-        "pressure": { "min": 1000, "max": 1020, "unit": "hPa" },
-        "airQuality": { "min": 70, "max": 100, "unit": "%" },
-        "noise": { "min": 0, "max": 50, "unit": "dB" },
-        "vibration": { "min": 0, "max": 0.1, "unit": "g" }
+        "temperature": {
+          "min": 18,
+          "max": 25,
+          "unit": "°C"
+        },
+        "humidity": {
+          "min": 40,
+          "max": 70,
+          "unit": "%"
+        },
+        "pressure": {
+          "min": 1000,
+          "max": 1020,
+          "unit": "hPa"
+        },
+        "airQuality": {
+          "min": 70,
+          "max": 100,
+          "unit": "%"
+        },
+        "noise": {
+          "min": 0,
+          "max": 50,
+          "unit": "dB"
+        },
+        "vibration": {
+          "min": 0,
+          "max": 0.1,
+          "unit": "g"
+        }
       }
     },
     "validation": {
@@ -68,7 +96,6 @@
       }
     }
   },
-
   "responsive": {
     "breakpoints": {
       "7.9_inch_landscape": {
@@ -96,7 +123,6 @@
       "hapticFeedback": false
     }
   },
-
   "accessibility": {
     "ariaLabels": {
       "pl": {
@@ -108,7 +134,7 @@
       },
       "en": {
         "deviceStatus": "Device status",
-        "sensorGrid": "Sensor grid", 
+        "sensorGrid": "Sensor grid",
         "exportButton": "Export device data",
         "refreshButton": "Refresh data",
         "autoUpdateToggle": "Toggle auto update"
@@ -116,7 +142,7 @@
       "de": {
         "deviceStatus": "Gerätestatus",
         "sensorGrid": "Sensorraster",
-        "exportButton": "Gerätedaten exportieren", 
+        "exportButton": "Gerätedaten exportieren",
         "refreshButton": "Daten aktualisieren",
         "autoUpdateToggle": "Automatische Aktualisierung umschalten"
       }
@@ -126,7 +152,6 @@
     "highContrastMode": true,
     "focusManagement": true
   },
-
   "performance": {
     "lazyLoading": true,
     "virtualScrolling": false,
@@ -146,11 +171,10 @@
       "intervalCleanup": true
     }
   },
-
   "security": {
     "auditEvents": [
       "device_data_component_init",
-      "device_data_component_cleanup", 
+      "device_data_component_cleanup",
       "device_data_refresh",
       "device_data_updated",
       "device_data_error",
@@ -165,27 +189,44 @@
       "device_connection_restored"
     ],
     "permissions": {
-      "view": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
-      "export": ["ADMIN", "SUPERUSER", "SERWISANT"],
-      "modify": ["ADMIN", "SUPERUSER"],
-      "configure": ["SUPERUSER"]
+      "view": [
+        "OPERATOR",
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ],
+      "export": [
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ],
+      "modify": [
+        "ADMIN",
+        "SUPERUSER"
+      ],
+      "configure": [
+        "SUPERUSER"
+      ]
     },
     "inputValidation": true,
     "outputSanitization": true,
     "sessionTracking": true
   },
-
   "i18n": {
     "defaultLanguage": "pl",
-    "supportedLanguages": ["pl", "en", "de"],
+    "supportedLanguages": [
+      "pl",
+      "en",
+      "de"
+    ],
     "fallbackLanguage": "en",
     "keys": [
       "device.page_title",
-      "device.status_title", 
+      "device.status_title",
       "device.device_id",
       "device.status",
       "device.status_online",
-      "device.status_offline", 
+      "device.status_offline",
       "device.status_warning",
       "device.status_error",
       "device.uptime",
@@ -193,7 +234,7 @@
       "device.firmware",
       "device.last_update",
       "device.refresh",
-      "device.auto_update", 
+      "device.auto_update",
       "device.export",
       "device.sensor_data",
       "device.temperature",
@@ -210,7 +251,6 @@
       "common.back"
     ]
   },
-
   "testing": {
     "unitTests": {
       "coverage": 95,
@@ -235,7 +275,6 @@
       ]
     }
   },
-
   "deployment": {
     "environments": {
       "development": {

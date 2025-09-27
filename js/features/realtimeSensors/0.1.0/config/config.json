@@ -6,20 +6,36 @@
     "description": "Advanced real-time industrial sensor monitoring dashboard with data recording, alerts, and export capabilities",
     "author": "1001.mask.services Development Team",
     "category": "monitoring",
-    "tags": ["sensors", "realtime", "monitoring", "industrial", "alerts", "data-export"],
+    "tags": [
+      "sensors",
+      "realtime",
+      "monitoring",
+      "industrial",
+      "alerts",
+      "data-export"
+    ],
     "dependencies": {
       "vue": "^3.0.0",
       "securityService": "^1.0.0",
       "i18nService": "^1.0.0"
     },
-    "permissions": ["sensor_read", "data_export", "system_monitoring"],
-    "roles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"]
+    "permissions": [
+      "sensor_read",
+      "data_export",
+      "system_monitoring"
+    ],
+    "roles": [
+      "OPERATOR",
+      "ADMIN",
+      "SUPERUSER",
+      "SERWISANT"
+    ]
   },
   "ui": {
     "responsive": {
       "breakpoints": {
         "mobile": "480px",
-        "tablet": "768px", 
+        "tablet": "768px",
         "desktop": "1024px",
         "industrial_79": "1280x400"
       },
@@ -54,10 +70,31 @@
       "sensorCount": 6
     },
     "sensors": {
-      "defaultTypes": ["pressure", "flow_rate", "resistance", "leak_rate", "co2_level", "particle_count"],
-      "statusLevels": ["normal", "warning", "critical"],
-      "trendTypes": ["stable", "rising", "falling"],
-      "refreshRates": [100, 250, 500, 1000, 2000]
+      "defaultTypes": [
+        "pressure",
+        "flow_rate",
+        "resistance",
+        "leak_rate",
+        "co2_level",
+        "particle_count"
+      ],
+      "statusLevels": [
+        "normal",
+        "warning",
+        "critical"
+      ],
+      "trendTypes": [
+        "stable",
+        "rising",
+        "falling"
+      ],
+      "refreshRates": [
+        100,
+        250,
+        500,
+        1000,
+        2000
+      ]
     },
     "validation": {
       "valueRange": {
@@ -73,7 +110,7 @@
   "security": {
     "auditEvents": [
       "REALTIME_SENSORS_INIT",
-      "REALTIME_SENSORS_MONITORING_STARTED", 
+      "REALTIME_SENSORS_MONITORING_STARTED",
       "REALTIME_SENSORS_MONITORING_STOPPED",
       "REALTIME_SENSORS_RECORDING_TOGGLED",
       "REALTIME_SENSORS_DATA_EXPORT",
@@ -115,18 +152,22 @@
   },
   "i18n": {
     "defaultLanguage": "pl",
-    "supportedLanguages": ["pl", "en", "de"],
+    "supportedLanguages": [
+      "pl",
+      "en",
+      "de"
+    ],
     "translationKeys": {
       "title": "sensors.realtime_title",
       "controls": "sensors.controls",
-      "status": "sensors.status", 
+      "status": "sensors.status",
       "alerts": "sensors.alerts",
       "export": "sensors.export",
       "recording": "sensors.recording"
     },
     "dateTimeFormat": {
       "pl": "DD.MM.YYYY HH:mm:ss",
-      "en": "MM/DD/YYYY HH:mm:ss", 
+      "en": "MM/DD/YYYY HH:mm:ss",
       "de": "DD.MM.YYYY HH:mm:ss"
     }
   },
@@ -136,7 +177,10 @@
     "e2eTests": false,
     "coverageThreshold": 90,
     "mockData": true,
-    "testEnvironments": ["jsdom", "happy-dom"]
+    "testEnvironments": [
+      "jsdom",
+      "happy-dom"
+    ]
   },
   "deployment": {
     "buildTarget": "es2020",
@@ -147,7 +191,12 @@
       "error": "100KB"
     },
     "compatibility": {
-      "browsers": ["Chrome >= 88", "Firefox >= 78", "Safari >= 14", "Edge >= 88"],
+      "browsers": [
+        "Chrome >= 88",
+        "Firefox >= 78",
+        "Safari >= 14",
+        "Edge >= 88"
+      ],
       "node": ">=16.0.0"
     }
   }

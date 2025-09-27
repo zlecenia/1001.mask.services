@@ -10,9 +10,21 @@
   "moduleMetadata": {
     "displayName": "Pressure Panel",
     "category": "monitoring",
-    "roles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+    "roles": [
+      "OPERATOR",
+      "ADMIN",
+      "SUPERUSER",
+      "SERWISANT"
+    ],
     "rollbackConditions": {
       "testFailures": ">0"
+    }
+  },
+  "maskservice": {
+    "component": {
+      "name": "pressurePanel",
+      "version": "0.1.0",
+      "configPath": "./config/"
     }
   }
 }

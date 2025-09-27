@@ -1,3 +1,5 @@
+import config from './config/config.json';
+
 /**
  * Page Template Module 0.1.0
  * Bazowy template strony dla systemu MASKSERVICE z układem dla wyświetlacza 7.9 cala (400x1280px landscape)

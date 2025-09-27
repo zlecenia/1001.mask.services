@@ -1,0 +1,394 @@
+{
+  "metadata": {
+    "name": "serviceMenu",
+    "version": "0.1.0",
+    "description": "Advanced service menu with diagnostics, calibration, backup management and maintenance tasks",
+    "author": "MASKTRONIC C20 Development Team",
+    "created": "2024-12-19",
+    "migrated_from": "ServiceMenuTemplate.js",
+    "dependencies": ["vue", "SecurityService", "store"]
+  },
+  "ui": {
+    "layout": {
+      "maxWidth": "1400px",
+      "gridColumns": "repeat(auto-fit, minmax(300px, 1fr))",
+      "cardPadding": "24px",
+      "cardBorderRadius": "16px",
+      "gridGap": "20px"
+    },
+    "colors": {
+      "primary": "#667eea",
+      "secondary": "#764ba2",
+      "background": "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+      "cardBackground": "#ffffff",
+      "shadow": "rgba(0,0,0,0.1)",
+      "serviceColors": {
+        "diagnostics": "#007bff",
+        "calibration": "#fd7e14", 
+        "backup": "#28a745",
+        "maintenance": "#6f42c1",
+        "logs": "#20c997",
+        "advanced": "#dc3545"
+      },
+      "statusColors": {
+        "operational": "#28a745",
+        "warning": "#ffc107",
+        "error": "#dc3545",
+        "executing": "#007bff"
+      }
+    },
+    "animations": {
+      "cardHover": "translateY(-4px)",
+      "executionGlow": "executeGlow 1.5s infinite",
+      "spinnerDuration": "1s",
+      "transitionDuration": "0.3s"
+    }
+  },
+  "services": {
+    "diagnostics": {
+      "id": "diagnostics",
+      "iconKey": "diagnosticsIcon",
+      "titleKey": "diagnosticsTitle",
+      "descriptionKey": "diagnosticsDesc",
+      "color": "blue",
+      "executionTime": 3000,
+      "requiredRole": ["ADMIN", "SUPERUSER", "SERWISANT"],
+      "permissions": ["service.diagnostics.run", "system.status.view"],
+      "auditLevel": "INFO"
+    },
+    "calibration": {
+      "id": "calibration", 
+      "iconKey": "calibrationIcon",
+      "titleKey": "calibrationTitle",
+      "descriptionKey": "calibrationDesc",
+      "color": "orange",
+      "executionTime": 5000,
+      "requiredRole": ["SUPERUSER", "SERWISANT"],
+      "permissions": ["service.calibration.run", "sensors.calibrate"],
+      "auditLevel": "WARNING"
+    },
+    "backup": {
+      "id": "backup",
+      "iconKey": "backupIcon", 
+      "titleKey": "backupTitle",
+      "descriptionKey": "backupDesc",
+      "color": "green",
+      "executionTime": 4000,
+      "requiredRole": ["ADMIN", "SUPERUSER", "SERWISANT"],
+      "permissions": ["service.backup.create", "data.export"],
+      "auditLevel": "INFO"
+    },
+    "maintenance": {
+      "id": "maintenance",
+      "iconKey": "maintenanceIcon",
+      "titleKey": "maintenanceTitle", 
+      "descriptionKey": "maintenanceDesc",
+      "color": "purple",
+      "executionTime": 2000,
+      "requiredRole": ["ADMIN", "SUPERUSER", "SERWISANT"],
+      "permissions": ["service.maintenance.view", "maintenance.schedule"],
+      "auditLevel": "INFO"
+    },
+    "logs": {
+      "id": "logs",
+      "iconKey": "logsIcon",
+      "titleKey": "logsTitle",
+      "descriptionKey": "logsDesc", 
+      "color": "teal",
+      "executionTime": 1000,
+      "requiredRole": ["ADMIN", "SUPERUSER", "SERWISANT"],
+      "permissions": ["service.logs.view", "audit.view"],
+      "auditLevel": "INFO"
+    },
+    "advanced": {
+      "id": "advanced",
+      "iconKey": "advancedIcon",
+      "titleKey": "advancedTitle",
+      "descriptionKey": "advancedDesc",
+      "color": "red", 
+      "executionTime": 1500,
+      "requiredRole": ["SUPERUSER", "SERWISANT"],
+      "permissions": ["service.advanced.access", "system.config.modify"],
+      "auditLevel": "WARNING"
+    }
+  },
+  "systemHealth": {
+    "thresholds": {
+      "cpu": {
+        "warning": 70,
+        "critical": 85
+      },
+      "memory": {
+        "warning": 75,
+        "critical": 90
+      },
+      "disk": {
+        "warning": 80,
+        "critical": 95
+      }
+    },
+    "refreshInterval": 5000,
+    "autoRefresh": true
+  },
+  "calibration": {
+    "sensors": [
+      {
+        "name": "Pressure Sensor",
+        "id": "pressure_sensor",
+        "calibrationInterval": 90,
+        "warningDays": 15,
+        "type": "pressure"
+      },
+      {
+        "name": "Flow Sensor", 
+        "id": "flow_sensor",
+        "calibrationInterval": 90,
+        "warningDays": 15,
+        "type": "flow"
+      },
+      {
+        "name": "Temperature Sensor",
+        "id": "temperature_sensor", 
+        "calibrationInterval": 90,
+        "warningDays": 15,
+        "type": "temperature"
+      }
+    ],
+    "autoCalibration": false,
+    "calibrationNotifications": true
+  },
+  "backup": {
+    "autoBackup": true,
+    "backupInterval": 86400000,
+    "retentionDays": 30,
+    "compression": true,
+    "location": "/backup/maskservice/",
+    "includeConfigs": true,
+    "includeLogs": false,
+    "includeUserData": true
+  },
+  "performance": {
+    "executionTimeout": 30000,
+    "maxConcurrentServices": 1,
+    "enableServiceQueue": true,
+    "debounceDelay": 500
+  },
+  "security": {
+    "auditServiceExecution": true,
+    "auditServiceAccess": true,
+    "validateServicePermissions": true,
+    "requireAuthentication": true,
+    "sessionValidation": true,
+    "rateLimiting": {
+      "enabled": true,
+      "maxRequestsPerMinute": 10,
+      "blockDuration": 300000
+    }
+  },
+  "export": {
+    "formats": ["json", "pdf", "csv"],
+    "includeTimestamp": true,
+    "includeUserInfo": true,
+    "includeSystemHealth": true,
+    "compression": false
+  },
+  "localization": {
+    "supportedLanguages": ["pl", "en", "de"],
+    "defaultLanguage": "pl",
+    "fallbackLanguage": "pl",
+    "i18nKeys": {
+      "pageTitle": {
+        "pl": "Menu Serwisowe",
+        "en": "Service Menu", 
+        "de": "Service-Menü"
+      },
+      "backButton": {
+        "pl": "Powrót",
+        "en": "Back",
+        "de": "Zurück"
+      },
+      "exportReport": {
+        "pl": "Raport",
+        "en": "Report",
+        "de": "Bericht"
+      },
+      "executing": {
+        "pl": "Wykonywanie...",
+        "en": "Executing...",
+        "de": "Ausführung..."
+      },
+      "lastAction": {
+        "pl": "Ostatnia akcja",
+        "en": "Last Action",
+        "de": "Letzte Aktion"
+      },
+      "success": {
+        "pl": "Sukces",
+        "en": "Success", 
+        "de": "Erfolg"
+      },
+      "error": {
+        "pl": "Błąd",
+        "en": "Error",
+        "de": "Fehler"
+      },
+      "systemStatus": {
+        "operational": {
+          "pl": "OPERACYJNY",
+          "en": "OPERATIONAL",
+          "de": "BETRIEBSBEREIT"
+        },
+        "warning": {
+          "pl": "OSTRZEŻENIE", 
+          "en": "WARNING",
+          "de": "WARNUNG"
+        },
+        "error": {
+          "pl": "BŁĄD",
+          "en": "ERROR", 
+          "de": "FEHLER"
+        }
+      },
+      "services": {
+        "diagnosticsTitle": {
+          "pl": "Diagnostyka Systemu",
+          "en": "System Diagnostics",
+          "de": "Systemdiagnose"
+        },
+        "diagnosticsDesc": {
+          "pl": "Sprawdź stan systemu i wydajność",
+          "en": "Check system status and performance", 
+          "de": "Systemstatus und Leistung prüfen"
+        },
+        "calibrationTitle": {
+          "pl": "Kalibracja Sensorów",
+          "en": "Sensor Calibration",
+          "de": "Sensorkalibrierung"
+        },
+        "calibrationDesc": {
+          "pl": "Kalibruj i skonfiguruj sensory",
+          "en": "Calibrate and configure sensors",
+          "de": "Sensoren kalibrieren und konfigurieren"
+        },
+        "backupTitle": {
+          "pl": "Kopia Zapasowa", 
+          "en": "Data Backup",
+          "de": "Datensicherung"
+        },
+        "backupDesc": {
+          "pl": "Zarządzaj kopiami zapasowymi danych",
+          "en": "Manage data backups",
+          "de": "Datensicherungen verwalten"
+        },
+        "maintenanceTitle": {
+          "pl": "Konserwacja",
+          "en": "Maintenance",
+          "de": "Wartung"
+        },
+        "maintenanceDesc": {
+          "pl": "Harmonogram i zadania konserwacji",
+          "en": "Maintenance schedule and tasks", 
+          "de": "Wartungsplan und -aufgaben"
+        },
+        "logsTitle": {
+          "pl": "Logi Systemu",
+          "en": "System Logs",
+          "de": "Systemprotokolle"
+        },
+        "logsDesc": {
+          "pl": "Przeglądaj i analizuj logi systemowe",
+          "en": "View and analyze system logs",
+          "de": "Systemprotokolle anzeigen und analysieren"
+        },
+        "advancedTitle": {
+          "pl": "Ustawienia Zaawansowane",
+          "en": "Advanced Settings", 
+          "de": "Erweiterte Einstellungen"
+        },
+        "advancedDesc": {
+          "pl": "Konfiguracja ekspertów systemu",
+          "en": "Expert system configuration",
+          "de": "Experten-Systemkonfiguration"
+        }
+      },
+      "icons": {
+        "diagnosticsIcon": "🔍",
+        "calibrationIcon": "⚙️",
+        "backupIcon": "💾", 
+        "maintenanceIcon": "🔧",
+        "logsIcon": "📋",
+        "advancedIcon": "⚡"
+      },
+      "stats": {
+        "diagnostics": {
+          "pl": "Diagnostyka",
+          "en": "Diagnostics", 
+          "de": "Diagnose"
+        },
+        "calibration": {
+          "pl": "Kalibracja",
+          "en": "Calibration",
+          "de": "Kalibrierung"
+        },
+        "backup": {
+          "pl": "Backup",
+          "en": "Backup",
+          "de": "Sicherung"
+        },
+        "cpu": "CPU",
+        "memory": {
+          "pl": "Pamięć",
+          "en": "Memory",
+          "de": "Speicher"
+        },
+        "disk": {
+          "pl": "Dysk", 
+          "en": "Disk",
+          "de": "Festplatte"
+        },
+        "network": {
+          "pl": "Sieć",
+          "en": "Network",
+          "de": "Netzwerk"
+        },
+        "last": {
+          "pl": "Ostatni",
+          "en": "Last",
+          "de": "Letzte"
+        },
+        "size": {
+          "pl": "Rozmiar",
+          "en": "Size", 
+          "de": "Größe"
+        },
+        "status": {
+          "pl": "Status",
+          "en": "Status",
+          "de": "Status"
+        }
+      },
+      "badges": {
+        "calibrationNeeded": {
+          "pl": "wymagają",
+          "en": "need calibration",
+          "de": "benötigen Kalibrierung"
+        },
+        "scheduled": {
+          "pl": "Zaplanowane",
+          "en": "Scheduled", 
+          "de": "Geplant"
+        },
+        "available": {
+          "pl": "Dostępne",
+          "en": "Available",
+          "de": "Verfügbar"
+        },
+        "expert": {
+          "pl": "Ekspert",
+          "en": "Expert",
+          "de": "Experte"
+        }
+      }
+    }
+  }
+}

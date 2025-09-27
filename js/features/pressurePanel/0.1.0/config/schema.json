@@ -1,0 +1,799 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "pressurePanel Configuration Schema",
+  "description": "Auto-generated schema for pressurePanel configuration",
+  "_generated": "2025-09-27T07:05:06.935Z",
+  "_generator": "componentSchemaGenerator v1.0.0",
+  "_version": "0.1.0",
+  "properties": {
+    "component": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "object",
+          "properties": {
+            "width": {
+              "type": "number",
+              "minimum": 0
+            },
+            "background": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "borderLeft": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fontSize": {
+              "type": "string",
+              "minLength": 1
+            },
+            "padding": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "gauges": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "string",
+              "minLength": 1
+            },
+            "strokeWidth": {
+              "type": "number",
+              "minimum": 0
+            },
+            "backgroundColor": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "textColor": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "spacing": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "alerts": {
+          "type": "object",
+          "properties": {
+            "fontSize": {
+              "type": "string",
+              "minLength": 1
+            },
+            "padding": {
+              "type": "string",
+              "minLength": 1
+            },
+            "borderRadius": {
+              "type": "string",
+              "minLength": 1
+            },
+            "colors": {
+              "type": "object",
+              "properties": {
+                "normal": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "warning": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "critical": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "unknown": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "indicators": {
+          "type": "object",
+          "properties": {
+            "size": {
+              "type": "string",
+              "minLength": 1
+            },
+            "blinkDuration": {
+              "type": "string",
+              "minLength": 1
+            },
+            "spacing": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "sensors": {
+      "type": "object",
+      "properties": {
+        "pressure1": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minValue": {
+              "type": "number",
+              "minimum": 0
+            },
+            "maxValue": {
+              "type": "number",
+              "minimum": 0
+            },
+            "normalRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "warningRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "criticalRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "position": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "pressure2": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minValue": {
+              "type": "number",
+              "minimum": 0
+            },
+            "maxValue": {
+              "type": "number",
+              "minimum": 0
+            },
+            "normalRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "warningRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "criticalRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "position": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "pressure3": {
+          "type": "object",
+          "properties": {
+            "label": {
+              "type": "string",
+              "minLength": 1
+            },
+            "unit": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minValue": {
+              "type": "number",
+              "minimum": 0
+            },
+            "maxValue": {
+              "type": "number",
+              "minimum": 0
+            },
+            "normalRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "warningRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "criticalRange": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "enabled": {
+              "type": "boolean"
+            },
+            "position": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "alerting": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "soundAlerts": {
+          "type": "boolean"
+        },
+        "visualAlerts": {
+          "type": "boolean"
+        },
+        "blinkingAlerts": {
+          "type": "boolean"
+        },
+        "alertLevels": {
+          "type": "object",
+          "properties": {
+            "normal": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "sound": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            },
+            "warning": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "sound": {
+                  "type": "boolean"
+                },
+                "blink": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            },
+            "critical": {
+              "type": "object",
+              "properties": {
+                "color": {
+                  "type": "string",
+                  "pattern": "^#[0-9a-fA-F]{6}$",
+                  "description": "Hex color code",
+                  "minLength": 1
+                },
+                "priority": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "sound": {
+                  "type": "boolean"
+                },
+                "blink": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "acknowledgment": {
+          "type": "object",
+          "properties": {
+            "required": {
+              "type": "boolean"
+            },
+            "timeout": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 300000
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "data": {
+      "type": "object",
+      "properties": {
+        "sensorValues": {
+          "type": "object",
+          "properties": {
+            "pressure1": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "status": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "lastUpdate": {
+                  "type": "null"
+                },
+                "trend": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "pressure2": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "status": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "lastUpdate": {
+                  "type": "null"
+                },
+                "trend": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            },
+            "pressure3": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "status": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "lastUpdate": {
+                  "type": "null"
+                },
+                "trend": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "alerts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "minItems": 0
+        },
+        "connectionStatus": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lastDataUpdate": {
+          "type": "null"
+        }
+      },
+      "additionalProperties": true
+    },
+    "realTime": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "updateInterval": {
+          "type": "number",
+          "minimum": 0
+        },
+        "websocketUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https?://",
+          "minLength": 1
+        },
+        "reconnectAttempts": {
+          "type": "number",
+          "minimum": 0
+        },
+        "reconnectDelay": {
+          "type": "number",
+          "minimum": 0
+        },
+        "dataRetention": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "maxPoints": {
+              "type": "number",
+              "minimum": 0
+            },
+            "timeWindow": {
+              "type": "number",
+              "minimum": 0
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "responsive": {
+      "type": "object",
+      "properties": {
+        "display79": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "maxWidth": {
+              "type": "string",
+              "minLength": 1
+            },
+            "maxHeight": {
+              "type": "string",
+              "minLength": 1
+            },
+            "optimizations": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "minItems": 0
+            }
+          },
+          "additionalProperties": true
+        },
+        "adaptiveLayout": {
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "stackOnSmallScreen": {
+              "type": "boolean"
+            },
+            "hideLabelsOnTinyScreen": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "accessibility": {
+      "type": "object",
+      "properties": {
+        "ariaLabels": {
+          "type": "boolean"
+        },
+        "announceAlerts": {
+          "type": "boolean"
+        },
+        "highContrast": {
+          "type": "boolean"
+        },
+        "screenReader": {
+          "type": "boolean"
+        },
+        "colorBlindFriendly": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "enableCaching": {
+          "type": "boolean"
+        },
+        "lazyLoading": {
+          "type": "boolean"
+        },
+        "throttleUpdates": {
+          "type": "boolean"
+        },
+        "maxUpdateFrequency": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "calibration": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "coefficients": {
+          "type": "object",
+          "properties": {
+            "pressure1": {
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "scale": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "pressure2": {
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "scale": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "pressure3": {
+              "type": "object",
+              "properties": {
+                "offset": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "scale": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "lastCalibration": {
+          "type": "null"
+        }
+      },
+      "additionalProperties": true
+    },
+    "logging": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "logLevel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "logAlerts": {
+          "type": "boolean"
+        },
+        "logValues": {
+          "type": "boolean"
+        },
+        "maxLogSize": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "component",
+    "ui",
+    "sensors",
+    "alerting",
+    "data",
+    "realTime",
+    "responsive",
+    "accessibility",
+    "performance",
+    "calibration",
+    "logging"
+  ],
+  "additionalProperties": false
+}

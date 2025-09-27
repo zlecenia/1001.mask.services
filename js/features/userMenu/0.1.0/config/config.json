@@ -1,0 +1,429 @@
+{
+  "metadata": {
+    "name": "userMenu",
+    "version": "0.1.0",
+    "description": "Dynamic user menu component with role-based access control and navigation",
+    "author": "MASKTRONIC C20 Development Team",
+    "created": "2024-12-19",
+    "migrated_from": "UserMenuScreen.js",
+    "dependencies": [
+      "vue",
+      "SecurityService",
+      "store"
+    ]
+  },
+  "ui": {
+    "layout": {
+      "maxWidth": "1200px",
+      "gridColumns": "repeat(auto-fit, minmax(300px, 1fr))",
+      "gridGap": "20px",
+      "containerPadding": "20px"
+    },
+    "colors": {
+      "primary": "#42b883",
+      "secondary": "#35495e",
+      "background": "linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)",
+      "cardBackground": "#ffffff",
+      "shadow": "rgba(0,0,0,0.1)",
+      "roleColors": {
+        "operator": "#3498db",
+        "admin": "#27ae60",
+        "superuser": "#9b59b6",
+        "serviceuser": "#e67e22",
+        "serwisant": "#e67e22"
+      }
+    },
+    "animations": {
+      "cardHover": "translateY(-2px)",
+      "loadingDuration": "300ms",
+      "transitionDuration": "0.3s"
+    }
+  },
+  "roles": {
+    "OPERATOR": {
+      "menuItems": [
+        {
+          "id": "test_menu",
+          "icon": "🧪",
+          "labelKey": "testMenu",
+          "descriptionKey": "testMenuDesc"
+        },
+        {
+          "id": "device_select",
+          "icon": "🛡️",
+          "labelKey": "deviceSelection",
+          "descriptionKey": "deviceSelectionDesc"
+        },
+        {
+          "id": "user_data",
+          "icon": "👤",
+          "labelKey": "userData",
+          "descriptionKey": "userDataDesc"
+        },
+        {
+          "id": "device_data",
+          "icon": "📊",
+          "labelKey": "deviceData",
+          "descriptionKey": "deviceDataDesc"
+        },
+        {
+          "id": "test_reports",
+          "icon": "📋",
+          "labelKey": "testReports",
+          "descriptionKey": "testReportsDesc"
+        },
+        {
+          "id": "realtime_sensors",
+          "icon": "📡",
+          "labelKey": "realtimeSensors",
+          "descriptionKey": "realtimeSensorsDesc"
+        },
+        {
+          "id": "device_history",
+          "icon": "📈",
+          "labelKey": "deviceHistory",
+          "descriptionKey": "deviceHistoryDesc"
+        }
+      ]
+    },
+    "ADMIN": {
+      "menuItems": [
+        {
+          "id": "test_menu",
+          "icon": "🧪",
+          "labelKey": "testMenu",
+          "descriptionKey": "testMenuAdminDesc"
+        },
+        {
+          "id": "user_data",
+          "icon": "👤",
+          "labelKey": "userData",
+          "descriptionKey": "userDataDesc"
+        },
+        {
+          "id": "users",
+          "icon": "👥",
+          "labelKey": "usersManagement",
+          "descriptionKey": "usersManagementDesc"
+        },
+        {
+          "id": "reports_view",
+          "icon": "📊",
+          "labelKey": "reportsView",
+          "descriptionKey": "reportsViewDesc"
+        },
+        {
+          "id": "reports_batch",
+          "icon": "📋",
+          "labelKey": "batchReports",
+          "descriptionKey": "batchReportsDesc"
+        },
+        {
+          "id": "reports_schedule",
+          "icon": "⏰",
+          "labelKey": "reportsSchedule",
+          "descriptionKey": "reportsScheduleDesc"
+        },
+        {
+          "id": "device_history",
+          "icon": "📈",
+          "labelKey": "deviceHistory",
+          "descriptionKey": "deviceHistoryDesc"
+        },
+        {
+          "id": "workshop",
+          "icon": "🔧",
+          "labelKey": "workshop",
+          "descriptionKey": "workshopDesc"
+        },
+        {
+          "id": "settings_system",
+          "icon": "⚙️",
+          "labelKey": "systemSettings",
+          "descriptionKey": "systemSettingsDesc"
+        }
+      ]
+    },
+    "SUPERUSER": {
+      "menuItems": [
+        {
+          "id": "test_menu",
+          "icon": "🧪",
+          "labelKey": "testMenu",
+          "descriptionKey": "testMenuSuperDesc"
+        },
+        {
+          "id": "user_data",
+          "icon": "👤",
+          "labelKey": "userData",
+          "descriptionKey": "userDataDesc"
+        },
+        {
+          "id": "users",
+          "icon": "👥",
+          "labelKey": "usersManagement",
+          "descriptionKey": "usersManagementSuperDesc"
+        },
+        {
+          "id": "reports_view",
+          "icon": "📊",
+          "labelKey": "reportsView",
+          "descriptionKey": "reportsViewAllDesc"
+        },
+        {
+          "id": "reports_batch",
+          "icon": "📋",
+          "labelKey": "batchReports",
+          "descriptionKey": "batchReportsDesc"
+        },
+        {
+          "id": "reports_schedule",
+          "icon": "⏰",
+          "labelKey": "reportsSchedule",
+          "descriptionKey": "reportsScheduleAdvDesc"
+        },
+        {
+          "id": "device_history",
+          "icon": "📈",
+          "labelKey": "deviceHistory",
+          "descriptionKey": "deviceHistoryFullDesc"
+        },
+        {
+          "id": "workshop",
+          "icon": "🔧",
+          "labelKey": "workshop",
+          "descriptionKey": "workshopManagementDesc"
+        },
+        {
+          "id": "settings_system",
+          "icon": "⚙️",
+          "labelKey": "systemSettings",
+          "descriptionKey": "systemSettingsAdvDesc"
+        },
+        {
+          "id": "settings_integration",
+          "icon": "🔗",
+          "labelKey": "integrations",
+          "descriptionKey": "integrationsDesc"
+        },
+        {
+          "id": "settings_standards",
+          "icon": "📏",
+          "labelKey": "standards",
+          "descriptionKey": "standardsDesc"
+        },
+        {
+          "id": "settings_scenarios",
+          "icon": "🎯",
+          "labelKey": "scenarios",
+          "descriptionKey": "scenariosDesc"
+        },
+        {
+          "id": "service_menu",
+          "icon": "🛠️",
+          "labelKey": "serviceMenu",
+          "descriptionKey": "serviceMenuDesc"
+        },
+        {
+          "id": "advanced_diagnostics",
+          "icon": "🔍",
+          "labelKey": "advancedDiagnostics",
+          "descriptionKey": "advancedDiagnosticsDesc"
+        },
+        {
+          "id": "system_diagnostics",
+          "icon": "💻",
+          "labelKey": "systemDiagnostics",
+          "descriptionKey": "systemDiagnosticsDesc"
+        }
+      ]
+    },
+    "SERWISANT": {
+      "menuItems": [
+        {
+          "id": "test_menu",
+          "icon": "🧪",
+          "labelKey": "testMenu",
+          "descriptionKey": "testMenuServiceDesc"
+        },
+        {
+          "id": "user_data",
+          "icon": "👤",
+          "labelKey": "userData",
+          "descriptionKey": "userDataServiceDesc"
+        },
+        {
+          "id": "device_data",
+          "icon": "📊",
+          "labelKey": "deviceData",
+          "descriptionKey": "deviceDataDesc"
+        },
+        {
+          "id": "test_reports",
+          "icon": "📋",
+          "labelKey": "testReports",
+          "descriptionKey": "testReportsServiceDesc"
+        },
+        {
+          "id": "realtime_sensors",
+          "icon": "📡",
+          "labelKey": "realtimeSensors",
+          "descriptionKey": "realtimeSensorsMonitorDesc"
+        },
+        {
+          "id": "device_history",
+          "icon": "📈",
+          "labelKey": "deviceHistory",
+          "descriptionKey": "deviceHistoryServiceDesc"
+        },
+        {
+          "id": "workshop_parts",
+          "icon": "🔩",
+          "labelKey": "workshopParts",
+          "descriptionKey": "workshopPartsDesc"
+        },
+        {
+          "id": "workshop_maintenance",
+          "icon": "🔧",
+          "labelKey": "maintenance",
+          "descriptionKey": "maintenanceScheduleDesc"
+        },
+        {
+          "id": "workshop_tools",
+          "icon": "🛠️",
+          "labelKey": "tools",
+          "descriptionKey": "serviceToolsDesc"
+        },
+        {
+          "id": "workshop_inventory",
+          "icon": "📦",
+          "labelKey": "inventory",
+          "descriptionKey": "inventoryDesc"
+        },
+        {
+          "id": "service_menu",
+          "icon": "⚙️",
+          "labelKey": "serviceMenu",
+          "descriptionKey": "serviceMenuDesc"
+        },
+        {
+          "id": "settings_system",
+          "icon": "🔧",
+          "labelKey": "systemSettings",
+          "descriptionKey": "systemSettingsServiceDesc"
+        },
+        {
+          "id": "settings_integration",
+          "icon": "🔗",
+          "labelKey": "integrations",
+          "descriptionKey": "integrationsServiceDesc"
+        },
+        {
+          "id": "settings_standards",
+          "icon": "📏",
+          "labelKey": "standards",
+          "descriptionKey": "standardsServiceDesc"
+        },
+        {
+          "id": "settings_scenarios",
+          "icon": "🎯",
+          "labelKey": "scenarios",
+          "descriptionKey": "scenariosServiceDesc"
+        },
+        {
+          "id": "advanced_diagnostics",
+          "icon": "🔍",
+          "labelKey": "advancedDiagnostics",
+          "descriptionKey": "advancedDiagnosticsDesc"
+        },
+        {
+          "id": "system_diagnostics",
+          "icon": "💻",
+          "labelKey": "systemDiagnostics",
+          "descriptionKey": "systemDiagnosticsDesc"
+        },
+        {
+          "id": "calibration_tools",
+          "icon": "⚖️",
+          "labelKey": "calibrationTools",
+          "descriptionKey": "calibrationToolsDesc"
+        }
+      ]
+    }
+  },
+  "navigation": {
+    "integration": {
+      "menuManager": "window.MenuManager",
+      "authManager": "window.AuthManager"
+    },
+    "events": {
+      "navigate": "template-view",
+      "logout": "login-screen"
+    }
+  },
+  "performance": {
+    "loadingDelay": 300,
+    "refreshDelay": 500,
+    "enableLazyLoading": true,
+    "cacheMenuConfig": true
+  },
+  "security": {
+    "auditMenuSelection": true,
+    "auditLogout": true,
+    "validateMenuAccess": true,
+    "sanitizeMenuIds": true
+  },
+  "localization": {
+    "supportedLanguages": [
+      "pl",
+      "en",
+      "de"
+    ],
+    "defaultLanguage": "pl",
+    "fallbackLanguage": "pl",
+    "i18nKeys": {
+      "welcome": {
+        "pl": "Witaj",
+        "en": "Welcome",
+        "de": "Willkommen"
+      },
+      "logout": {
+        "pl": "Wyloguj",
+        "en": "Logout",
+        "de": "Abmelden"
+      },
+      "loading": {
+        "pl": "Ładowanie menu...",
+        "en": "Loading menu...",
+        "de": "Menü wird geladen..."
+      },
+      "optionsAvailable": {
+        "pl": "opcji dostępnych dla roli",
+        "en": "options available for role",
+        "de": "Optionen verfügbar für Rolle"
+      },
+      "roles": {
+        "OPERATOR": {
+          "pl": "Operator",
+          "en": "Operator",
+          "de": "Bediener"
+        },
+        "ADMIN": {
+          "pl": "Administrator",
+          "en": "Administrator",
+          "de": "Administrator"
+        },
+        "SUPERUSER": {
+          "pl": "Superuser",
+          "en": "Superuser",
+          "de": "Superbenutzer"
+        },
+        "SERWISANT": {
+          "pl": "Serwisant",
+          "en": "Service Technician",
+          "de": "Servicetechniker"
+        }
+      }
+    }
+  }
+}

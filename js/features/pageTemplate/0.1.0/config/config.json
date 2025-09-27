@@ -10,7 +10,7 @@
       "type": "grid",
       "areas": {
         "header": "app-header",
-        "sidebar": "main-menu", 
+        "sidebar": "main-menu",
         "content": "content-area",
         "footer": "app-footer",
         "pressurePanel": "pressure-panel"
@@ -47,7 +47,7 @@
       }
     },
     "sidebar": {
-      "component": "mainMenu", 
+      "component": "mainMenu",
       "enabled": true,
       "props": {
         "collapsible": false,
@@ -117,7 +117,11 @@
       "enabled": true,
       "maxWidth": "1280px",
       "maxHeight": "400px",
-      "optimizations": ["fixed-layout", "touch-friendly", "compact-spacing"]
+      "optimizations": [
+        "fixed-layout",
+        "touch-friendly",
+        "compact-spacing"
+      ]
     },
     "breakpoints": {
       "mobile": {
@@ -125,7 +129,7 @@
         "layout": "mobile-stack"
       },
       "tablet": {
-        "maxWidth": "768px", 
+        "maxWidth": "768px",
         "layout": "tablet-responsive"
       },
       "desktop": {

@@ -1,4 +1,6 @@
 import appFooterComponent from './appFooter.js';
+import config from './config/config.json';
+
 
 export default {
   metadata: {

@@ -1,0 +1,444 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "testMenu Configuration Schema",
+  "description": "Auto-generated schema for testMenu configuration",
+  "_generated": "2025-09-27T07:05:06.948Z",
+  "_generator": "componentSchemaGenerator v1.0.0",
+  "_version": "0.1.0",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "component",
+            "service",
+            "layout"
+          ],
+          "minLength": 1
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        },
+        "author": {
+          "type": "string",
+          "minLength": 1
+        },
+        "created": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "object",
+          "properties": {
+            "containerMaxWidth": {
+              "type": "string",
+              "minLength": 1
+            },
+            "padding": {
+              "type": "string",
+              "minLength": 1
+            },
+            "borderRadius": {
+              "type": "string",
+              "minLength": 1
+            },
+            "gridColumns": {
+              "type": "string",
+              "minLength": 1
+            },
+            "cardGap": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "colors": {
+          "type": "object",
+          "properties": {
+            "background": {
+              "type": "string",
+              "minLength": 1
+            },
+            "cardBackground": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "primaryBlue": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "primaryGreen": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "primaryPurple": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "primaryOrange": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$",
+              "description": "Hex color code",
+              "minLength": 1
+            },
+            "textPrimary": {
+              "type": "string",
+              "minLength": 1
+            },
+            "textSecondary": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        },
+        "animations": {
+          "type": "object",
+          "properties": {
+            "cardHover": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transition": {
+              "type": "string",
+              "minLength": 1
+            },
+            "spinnerAnimation": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "testWizard": {
+      "type": "object",
+      "properties": {
+        "steps": {
+          "type": "number",
+          "minimum": 0
+        },
+        "stepNames": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "defaultDuration": {
+          "type": "number",
+          "minimum": 0
+        },
+        "defaultCycles": {
+          "type": "number",
+          "minimum": 0
+        },
+        "defaultTolerance": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxDuration": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxCycles": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxTolerance": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "deviceTypes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "models": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          }
+        },
+        "additionalProperties": true
+      },
+      "minItems": 0
+    },
+    "testTypes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": true
+      },
+      "minItems": 0
+    },
+    "testStandards": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": true
+      },
+      "minItems": 0
+    },
+    "pressureRanges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "min": {
+            "type": "number",
+            "minimum": 0
+          },
+          "max": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": true
+      },
+      "minItems": 0
+    },
+    "exportFormats": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "icon": {
+            "type": "string",
+            "minLength": 1
+          },
+          "color": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mimeType": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": true
+      },
+      "minItems": 0
+    },
+    "api": {
+      "type": "object",
+      "properties": {
+        "endpoints": {
+          "type": "object",
+          "properties": {
+            "testWizard": {
+              "type": "string",
+              "minLength": 1
+            },
+            "customScenarios": {
+              "type": "string",
+              "minLength": 1
+            },
+            "testHistory": {
+              "type": "string",
+              "minLength": 1
+            },
+            "testTemplates": {
+              "type": "string",
+              "minLength": 1
+            },
+            "exportData": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "performance": {
+      "type": "object",
+      "properties": {
+        "maxHistoryItems": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxTemplateItems": {
+          "type": "number",
+          "minimum": 0
+        },
+        "maxScenarioItems": {
+          "type": "number",
+          "minimum": 0
+        },
+        "cacheDuration": {
+          "type": "number",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": true
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "requiredRole": {
+          "type": "string",
+          "enum": [
+            "OPERATOR",
+            "ADMIN",
+            "SUPERUSER",
+            "SERWISANT"
+          ],
+          "minLength": 1
+        },
+        "allowedExportFormats": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 0
+        },
+        "maxExportSize": {
+          "type": "number",
+          "minimum": 1,
+          "maximum": 65535
+        },
+        "validationRules": {
+          "type": "object",
+          "properties": {
+            "testName": {
+              "type": "string",
+              "minLength": 1
+            },
+            "duration": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            },
+            "cycles": {
+              "type": "object",
+              "properties": {
+                "min": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "max": {
+                  "type": "number",
+                  "minimum": 0
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "required": [
+    "metadata",
+    "ui",
+    "testWizard",
+    "api",
+    "performance",
+    "security"
+  ],
+  "additionalProperties": false
+}

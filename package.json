@@ -20,8 +20,10 @@
     "module:init-all": "node tools/init/initAll.js",
     "module:list": "node tools/init/listModules.js",
     "module:validate": "node tools/validators/validateModule.js",
+    "module:migrate": "node tools/migrate/migrateComponentStructure.js",
     
     "config:generate": "node tools/generators/schemaGenerator.js",
+    "config:generate-components": "node tools/generators/componentSchemaGenerator.js",
     "config:validate": "node tools/validators/configValidator.js",
     "config:sync": "node tools/sync/syncConfigs.js",
     "config:watch": "node tools/sync/watchConfigs.js",

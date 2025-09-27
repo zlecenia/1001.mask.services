@@ -26,7 +26,12 @@
       "generator": "manual-creation 0.1.0"
     },
     "roleBasedAccess": {
-      "supportedRoles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+      "supportedRoles": [
+        "OPERATOR",
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ],
       "menuCounts": {
         "OPERATOR": 2,
         "ADMIN": 4,
@@ -35,6 +40,13 @@
       },
       "uniqueFunctions": true,
       "hierarchicalPermissions": true
+    }
+  },
+  "maskservice": {
+    "component": {
+      "name": "mainMenu",
+      "version": "0.1.0",
+      "configPath": "./config/"
     }
   }
 }

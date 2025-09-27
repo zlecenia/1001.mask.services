@@ -1,0 +1,10 @@
+{
+  "currentUser": {
+    "role": "OPERATOR"
+  },
+  "currentRoute": "/dashboard",
+  "menuState": {
+    "collapsed": false,
+    "activeItem": null
+  }
+}

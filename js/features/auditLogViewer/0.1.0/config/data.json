@@ -1,0 +1,16 @@
+{
+  "refreshInterval": 30000,
+  "pageSize": 50,
+  "maxDisplayLogs": 10000,
+  "timeRanges": [
+    "1h",
+    "24h",
+    "7d",
+    "30d",
+    "all"
+  ],
+  "exportFormats": [
+    "csv"
+  ],
+  "autoRefresh": true
+}

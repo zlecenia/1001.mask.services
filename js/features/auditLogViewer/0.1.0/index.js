@@ -1,3 +1,5 @@
+import config from './config/config.json';
+
 /**
  * AuditLogViewer Module Index 0.1.0
  * Entry point for the comprehensive security audit log viewer component
