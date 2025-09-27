@@ -1,0 +1,172 @@
+{
+  "devices": [
+    {
+      "id": 1,
+      "name": "PP-MASK-001",
+      "type": "PP_MASK",
+      "status": "ACTIVE",
+      "lastTest": "2025-09-24T14:30:00Z",
+      "testResult": "PASSED",
+      "testCount": 45,
+      "passRate": 95.6,
+      "operator": "Jan Kowalski",
+      "nextTest": "2025-10-24",
+      "location": "Station A-01",
+      "manufacturer": "MaskTech Inc.",
+      "model": "PP-2000",
+      "serialNumber": "MT2023PP001",
+      "manufactureDate": "2023-01-15",
+      "warrantyExpires": "2025-01-15",
+      "lastCalibration": "2023-08-10T09:00:00Z",
+      "nextCalibration": "2024-02-10T09:00:00Z"
+    },
+    {
+      "id": 2,
+      "name": "NP-MASK-003",
+      "type": "NP_MASK",
+      "status": "MAINTENANCE",
+      "lastTest": "2025-09-22T09:15:00Z",
+      "testResult": "FAILED",
+      "testCount": 32,
+      "passRate": 87.5,
+      "operator": "Anna Nowak",
+      "nextTest": "2025-09-30",
+      "location": "Station B-02",
+      "manufacturer": "NanoProtect",
+      "model": "NP-3000",
+      "serialNumber": "NP2023M003",
+      "manufactureDate": "2023-03-22",
+      "warrantyExpires": "2025-03-22",
+      "lastCalibration": "2023-09-01T10:30:00Z",
+      "nextCalibration": "2024-03-01T10:30:00Z",
+      "maintenanceNotes": "Filter replacement needed. Scheduled for 2025-09-25.",
+      "maintenanceStatus": "PENDING"
+    },
+    {
+      "id": 3,
+      "name": "FFP2-MASK-007",
+      "type": "FFP2_MASK",
+      "status": "ACTIVE",
+      "lastTest": "2025-09-26T11:20:00Z",
+      "testResult": "PASSED",
+      "testCount": 28,
+      "passRate": 96.4,
+      "operator": "Piotr Wiśniewski",
+      "nextTest": "2025-10-10",
+      "location": "Station C-03",
+      "manufacturer": "SafeAir",
+      "model": "FFP2-Pro",
+      "serialNumber": "SA2023F007",
+      "manufactureDate": "2023-02-10",
+      "warrantyExpires": "2025-02-10",
+      "lastCalibration": "2023-08-15T14:20:00Z",
+      "nextCalibration": "2024-02-15T14:20:00Z"
+    }
+  ],
+  "testResults": [
+    {
+      "id": 1,
+      "deviceId": 1,
+      "testDate": "2025-09-24T14:30:00Z",
+      "testType": "ROUTINE",
+      "result": "PASSED",
+      "score": 98.2,
+      "operator": "Jan Kowalski",
+      "notes": "All parameters within normal range.",
+      "parameters": [
+        { "name": "Filtration Efficiency", "value": 99.1, "unit": "%", "status": "PASS" },
+        { "name": "Flow Rate", "value": 95.5, "unit": "L/min", "status": "PASS" },
+        { "name": "Pressure Drop", "value": 2.1, "unit": "mmH2O", "status": "PASS" }
+      ]
+    },
+    {
+      "id": 2,
+      "deviceId": 2,
+      "testDate": "2025-09-22T09:15:00Z",
+      "testType": "ROUTINE",
+      "result": "FAILED",
+      "score": 65.8,
+      "operator": "Anna Nowak",
+      "notes": "Filtration efficiency below threshold. Requires maintenance.",
+      "parameters": [
+        { "name": "Filtration Efficiency", "value": 78.3, "unit": "%", "status": "FAIL" },
+        { "name": "Flow Rate", "value": 92.1, "unit": "L/min", "status": "PASS" },
+        { "name": "Pressure Drop", "value": 3.5, "unit": "mmH2O", "status": "WARNING" }
+      ]
+    },
+    {
+      "id": 3,
+      "deviceId": 3,
+      "testDate": "2025-09-26T11:20:00Z",
+      "testType": "ROUTINE",
+      "result": "PASSED",
+      "score": 97.8,
+      "operator": "Piotr Wiśniewski",
+      "notes": "Excellent performance. No issues detected.",
+      "parameters": [
+        { "name": "Filtration Efficiency", "value": 98.7, "unit": "%", "status": "PASS" },
+        { "name": "Flow Rate", "value": 96.2, "unit": "L/min", "status": "PASS" },
+        { "name": "Pressure Drop", "value": 1.9, "unit": "mmH2O", "status": "PASS" }
+      ]
+    }
+  ],
+  "deviceTypes": [
+    {
+      "id": "PP_MASK",
+      "name": "PP Mask",
+      "description": "Standard Procedure Mask",
+      "manufacturer": "MaskTech Inc.",
+      "model": "PP-2000",
+      "specifications": {
+        "filtrationEfficiency": ">95%",
+        "flowRate": "85-100 L/min",
+        "pressureDrop": "<3.0 mmH2O",
+        "shelfLife": "3 years"
+      }
+    },
+    {
+      "id": "NP_MASK",
+      "name": "NP Mask",
+      "description": "N95 Respirator Mask",
+      "manufacturer": "NanoProtect",
+      "model": "NP-3000",
+      "specifications": {
+        "filtrationEfficiency": "≥95%",
+        "flowRate": "85-100 L/min",
+        "pressureDrop": "<3.5 mmH2O",
+        "shelfLife": "5 years"
+      }
+    },
+    {
+      "id": "FFP2_MASK",
+      "name": "FFP2 Mask",
+      "description": "Filtering Face Piece 2",
+      "manufacturer": "SafeAir",
+      "model": "FFP2-Pro",
+      "specifications": {
+        "filtrationEfficiency": "≥94%",
+        "flowRate": "90-110 L/min",
+        "pressureDrop": "<3.0 mmH2O",
+        "shelfLife": "4 years"
+      }
+    }
+  ],
+  "operators": [
+    { "id": 1, "name": "Jan Kowalski", "email": "jan.kowalski@example.com", "role": "Technician" },
+    { "id": 2, "name": "Anna Nowak", "email": "anna.nowak@example.com", "role": "Senior Technician" },
+    { "id": 3, "name": "Piotr Wiśniewski", "email": "piotr.wisniewski@example.com", "role": "Lab Supervisor" }
+  ],
+  "testTypes": [
+    { "id": "ROUTINE", "name": "Routine Test", "frequency": "Weekly" },
+    { "id": "MAINTENANCE", "name": "Maintenance Test", "frequency": "As needed" },
+    { "id": "RECEIVING", "name": "Receiving Inspection", "frequency": "On receipt" },
+    { "id": "COMPLAINT", "name": "Complaint Investigation", "frequency": "As needed" }
+  ],
+  "locations": [
+    { "id": "STATION_A_01", "name": "Station A-01", "department": "Production Line A" },
+    { "id": "STATION_B_02", "name": "Station B-02", "department": "Production Line B" },
+    { "id": "STATION_C_03", "name": "Station C-03", "department": "Quality Control" },
+    { "id": "STOCKROOM_01", "name": "Stockroom 01", "department": "Warehouse" },
+    { "id": "LAB_01", "name": "Testing Lab 01", "department": "Quality Assurance" }
+  ]
+}

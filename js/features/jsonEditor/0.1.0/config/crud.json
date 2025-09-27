@@ -1,0 +1,206 @@
+{
+  "entity": "jsonEditor",
+  "version": "0.1.0",
+  "operations": {
+    "create": {
+      "enabled": true,
+      "fields": [
+        {
+          "name": "component",
+          "type": "object",
+          "required": true,
+          "fields": [
+            { "name": "name", "type": "string", "required": true, "validation": "^[a-zA-Z][a-zA-Z0-9]*$" },
+            { "name": "version", "type": "string", "required": true, "validation": "^\\d+\\.\\d+\\.\\d+$" },
+            { "name": "title", "type": "string", "required": true, "maxLength": 100 },
+            { "name": "description", "type": "string", "maxLength": 500 },
+            { "name": "category", "type": "select", "options": ["tools", "utility", "editor", "viewer"] }
+          ]
+        },
+        {
+          "name": "settings",
+          "type": "object",
+          "required": true,
+          "fields": [
+            { "name": "defaultSchema", "type": "select", "options": ["app", "menu", "router", "system", "test-scenarios", "workshop"] },
+            { "name": "autoSave", "type": "boolean", "default": false },
+            { "name": "validateOnChange", "type": "boolean", "default": true },
+            { "name": "theme", "type": "select", "options": ["light", "dark"], "default": "light" }
+          ]
+        }
+      ]
+    },
+    "read": {
+      "enabled": true,
+      "fields": "*",
+      "filters": [
+        { "field": "component.name", "operator": "eq", "type": "string" },
+        { "field": "component.category", "operator": "eq", "type": "string" },
+        { "field": "settings.theme", "operator": "eq", "type": "string" }
+      ],
+      "sorting": [
+        { "field": "component.name", "direction": "asc" },
+        { "field": "component.version", "direction": "desc" }
+      ],
+      "pagination": {
+        "enabled": false
+      }
+    },
+    "update": {
+      "enabled": true,
+      "restrictions": {
+        "readOnly": ["component.name", "component.version"],
+        "editable": [
+          "component.title",
+          "component.description", 
+          "settings.defaultSchema",
+          "settings.autoSave",
+          "settings.validateOnChange",
+          "settings.allowedComponents",
+          "settings.theme",
+          "ui.showPreview",
+          "ui.showValidation",
+          "ui.compactMode",
+          "validation.enableSchemaValidation",
+          "validation.strictMode",
+          "features.multiFileEditing",
+          "features.componentSelection",
+          "features.schemaSupport",
+          "features.exportImport",
+          "security.readOnlyMode",
+          "security.maxFileSize",
+          "security.backupOnSave"
+        ]
+      },
+      "validation": {
+        "required": ["component.title", "settings.defaultSchema"],
+        "businessRules": [
+          {
+            "rule": "component.title must be unique",
+            "validation": "unique",
+            "field": "component.title"
+          },
+          {
+            "rule": "maxFileSize must be reasonable",
+            "validation": "range",
+            "field": "security.maxFileSize",
+            "min": 1024,
+            "max": 10485760
+          }
+        ]
+      }
+    },
+    "delete": {
+      "enabled": false,
+      "reason": "Component configurations should not be deleted"
+    }
+  },
+  "relationships": {
+    "schemas": {
+      "type": "one-to-many",
+      "entity": "schema",
+      "foreignKey": "schemaName",
+      "cascade": false
+    },
+    "components": {
+      "type": "many-to-many", 
+      "entity": "component",
+      "through": "allowedComponents",
+      "cascade": false
+    }
+  },
+  "views": {
+    "list": {
+      "fields": ["component.name", "component.title", "component.version", "settings.theme"],
+      "searchable": ["component.name", "component.title"],
+      "sortable": ["component.name", "component.version"]
+    },
+    "detail": {
+      "fields": "*",
+      "tabs": [
+        {
+          "name": "Basic",
+          "fields": ["component", "settings.defaultSchema", "settings.theme"]
+        },
+        {
+          "name": "UI Settings", 
+          "fields": ["ui", "settings.showLineNumbers", "settings.enableSyntaxHighlighting"]
+        },
+        {
+          "name": "Validation",
+          "fields": ["validation", "settings.validateOnChange"]
+        },
+        {
+          "name": "Features",
+          "fields": ["features", "schemas"]
+        },
+        {
+          "name": "Security",
+          "fields": ["security"]
+        }
+      ]
+    },
+    "form": {
+      "layout": "tabs",
+      "validation": "realtime",
+      "sections": [
+        {
+          "title": "Component Information",
+          "fields": ["component.name", "component.version", "component.title", "component.description", "component.category"]
+        },
+        {
+          "title": "Editor Settings",
+          "fields": ["settings.defaultSchema", "settings.autoSave", "settings.validateOnChange", "settings.theme"]
+        },
+        {
+          "title": "UI Configuration",
+          "fields": ["ui.showPreview", "ui.showValidation", "ui.compactMode", "ui.splitView"]
+        }
+      ]
+    }
+  },
+  "permissions": {
+    "roles": {
+      "ADMIN": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": false
+      },
+      "OPERATOR": {
+        "create": false,
+        "read": true,
+        "update": {
+          "allowed": [
+            "settings.theme",
+            "ui.showPreview",
+            "ui.compactMode"
+          ]
+        },
+        "delete": false
+      },
+      "SUPERUSER": {
+        "create": true,
+        "read": true,
+        "update": true,
+        "delete": false
+      },
+      "SERWISANT": {
+        "create": false,
+        "read": true,
+        "update": {
+          "allowed": [
+            "settings.defaultSchema",
+            "validation.enableSchemaValidation"
+          ]
+        },
+        "delete": false
+      }
+    }
+  },
+  "audit": {
+    "enabled": true,
+    "fields": ["component.title", "settings.*", "security.*"],
+    "events": ["create", "update", "schema_change", "component_selection"]
+  }
+}

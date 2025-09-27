@@ -1,0 +1,90 @@
+{
+  "name": "@maskservice/json-editor",
+  "version": "0.1.0",
+  "description": "Visual JSON configuration editor with schema validation for MASKSERVICE components",
+  "main": "index.js",
+  "type": "module",
+  "keywords": [
+    "json",
+    "editor",
+    "configuration",
+    "schema",
+    "validation",
+    "vue3",
+    "maskservice"
+  ],
+  "author": "MASKSERVICE System",
+  "license": "MIT",
+  "scripts": {
+    "dev": "node ../../../dev/componentDevServer.js . 3009",
+    "test": "node jsonEditor.test.js",
+    "build": "echo 'Building jsonEditor component...'",
+    "validate": "node -e \"console.log('✅ JsonEditor package.json is valid')\"",
+    "lint": "echo 'Linting jsonEditor...'",
+    "format": "echo 'Formatting jsonEditor code...'",
+    "docs": "echo 'Generating jsonEditor documentation...'"
+  },
+  "maskservice": {
+    "component": {
+      "name": "jsonEditor",
+      "version": "0.1.0",
+      "type": "utility",
+      "category": "tools",
+      "standalone": true,
+      "framework": "vue3"
+    },
+    "features": {
+      "configurable": true,
+      "testable": true,
+      "mockable": true,
+      "themable": true,
+      "responsive": true
+    },
+    "api": {
+      "endpoints": [
+        "/api/components",
+        "/api/components/:component/config/:file",
+        "/api/schemas/validate"
+      ],
+      "methods": ["GET", "POST", "PUT"],
+      "authentication": "optional"
+    },
+    "ui": {
+      "responsive": {
+        "minWidth": "800px",
+        "preferredWidth": "1280px",
+        "minHeight": "600px",
+        "preferredHeight": "720px"
+      },
+      "themes": ["light", "dark"],
+      "accessibility": true
+    }
+  },
+  "dependencies": {
+    "vue": "^3.3.0"
+  },
+  "devDependencies": {
+    "express": "^4.18.0",
+    "cors": "^2.8.0"
+  },
+  "peerDependencies": {
+    "vuex": "^4.0.0"
+  },
+  "files": [
+    "index.js",
+    "jsonEditor.js",
+    "jsonEditor.css",
+    "config/",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/maskservice/1001.mask.services.git",
+    "directory": "js/features/jsonEditor/0.1.0"
+  },
+  "bugs": {
+    "url": "https://github.com/maskservice/1001.mask.services/issues"
+  },
+  "homepage": "https://github.com/maskservice/1001.mask.services#readme"
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=400">
+    <title>JSON Editor - Standalone</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuex@4/dist/vuex.global.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            width: 1280px;
+            height: 400px;
+            background: #2c3e50;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+        }
+        #app { 
+            width: 100%; 
+            height: 100%;
+        }
+    </style>
+    <link rel="stylesheet" href="./jsonEditor.css">
+</head>
+<body>
+    <div id="app"></div>
+    <script type="module">
+        import JsonEditorModule from './index.js';
+        
+        const { createApp } = Vue;
+        const { createStore } = Vuex;
+        
+        // Create Vuex store
+        const store = createStore({
+            state: {
+                system: {
+                    deviceStatus: 'ONLINE',
+                    language: 'pl'
+                }
+            }
+        });
+        
+        // Initialize component
+        const initResult = await JsonEditorModule.init({ store });
+        
+        if (initResult.success) {
+            console.log('✅ JsonEditor initialized successfully');
+            
+            const app = createApp({
+                components: { 
+                    'json-editor': initResult.component 
+                },
+                template: '<json-editor />',
+                
+                mounted() {
+                    console.log('🛠️ JSON Editor standalone app mounted');
+                    console.log('📝 Component ready for configuration editing');
+                    
+                    // Auto-load demo data after a short delay
+                    setTimeout(() => {
+                        const editorInstance = this.$children?.[0];
+                        if (editorInstance) {
+                            // Pre-select appFooter for demo
+                            editorInstance.selectedComponent = 'appFooter';
+                            editorInstance.selectedConfigFile = 'config.json';
+                            editorInstance.selectedSchema = 'app';
+                            editorInstance.loadSampleData();
+                            
+                            console.log('📂 Demo data loaded (appFooter config)');
+                        }
+                    }, 1000);
+                }
+            });
+            
+            app.use(store);
+            app.mount('#app');
+            
+        } else {
+            console.error('❌ Failed to initialize JsonEditor:', initResult.error);
+            
+            // Fallback: render basic component without full initialization
+            const app = createApp({
+                components: { 
+                    'json-editor': JsonEditorModule.component 
+                },
+                template: '<json-editor />',
+                
+                mounted() {
+                    console.log('⚠️ JSON Editor loaded in fallback mode');
+                }
+            });
+            
+            app.mount('#app');
+        }
+    </script>
+</body>
+</html>

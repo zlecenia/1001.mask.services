@@ -1,10 +1,11 @@
 import config from './config/config.json';
+import MainMenu from './MainMenu.vue';
 
 /**
  * Main Menu Module 0.1.0
  * Główne menu aplikacji z kontrolą dostępu opartą na rolach
  */
-import Component from './mainMenu.js';
+const Component = MainMenu;
 
 export default {
   name: 'mainMenu',

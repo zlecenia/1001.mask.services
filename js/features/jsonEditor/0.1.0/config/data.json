@@ -1,0 +1,45 @@
+{
+  "currentSession": {
+    "selectedComponent": null,
+    "selectedConfigFile": null,
+    "selectedSchema": null,
+    "lastModified": null,
+    "isDirty": false
+  },
+  "recentFiles": [
+    {
+      "component": "appFooter",
+      "file": "config.json",
+      "timestamp": "2025-09-27T08:00:00.000Z"
+    },
+    {
+      "component": "mainMenu", 
+      "file": "config.json",
+      "timestamp": "2025-09-27T07:45:00.000Z"
+    }
+  ],
+  "userPreferences": {
+    "fontSize": 14,
+    "tabSize": 2,
+    "wordWrap": true,
+    "showMinimap": false,
+    "theme": "light"
+  },
+  "statistics": {
+    "filesEdited": 0,
+    "sessionsCount": 0,
+    "lastUsed": null,
+    "totalEditTime": 0
+  },
+  "cache": {
+    "componentList": [],
+    "schemaCache": {},
+    "validationResults": {}
+  },
+  "backup": {
+    "autoBackup": true,
+    "backupInterval": 300000,
+    "maxBackups": 5,
+    "backupLocation": "./backups/"
+  }
+}

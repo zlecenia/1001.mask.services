@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=400">
+    <title>MainMenu - Preview</title>
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- Vuex 4 -->
+    <script src="https://unpkg.com/vuex@4/dist/vuex.global.js"></script>
+    <!-- Vue I18n -->
+    <script src="https://unpkg.com/vue-i18n@9/dist/vue-i18n.global.js"></script>
+    <!-- Font Awesome -->
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f5f5f5;
+            background: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+        }
+        
+        #app {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background: #2c3e50;
+            color: white;
+        }
+        
+        #app-container {
+            display: flex;
+            flex: 1;
+            position: relative;
+        }
+        
+        .role-selector {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 8px 12px;
+            border-radius: 4px;
+            color: white;
+        }
+        
+        .role-selector select {
+            margin-left: 8px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: #f5f5f5;
+        }
+        
+        /* Component-specific styles */
+        .app-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 12px;
+        }
+        
+        .app-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+        }
+        
+        .main-menu {
+            width: 180px;
+            height: 100%;
+            background: #34495e;
+            color: white;
+            padding: 10px;
+        }
+        
+        .main-menu-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .main-menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        .pressure-panel {
+            width: 120px;
+            height: 100%;
+            background: #2c3e50;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .pressure-gauge {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .page-template {
+            display: grid;
+            grid-template-rows: 40px 1fr 30px;
+            grid-template-columns: 180px 1fr 120px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div id="app-container">
+            <main-menu @navigate="handleNavigation" @session-timeout="handleSessionTimeout" />
+            <div class="role-selector">
+                <label>Change Role: </label>
+                <select v-model="currentRole" @change="changeRole">
+                    <option value="OPERATOR">Operator</option>
+                    <option value="ADMIN">Admin</option>
+                    <option value="SUPERUSER">Super User</option>
+                    <option value="SERWISANT">Service</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        const { createApp, ref, computed } = Vue;
+        const { createI18n } = VueI18n;
+        const { createStore } = Vuex;
+        
+        // Import the component
+        import MainMenu from './MainMenu.vue';
+        
+        // Mock translations
+        const messages = {
+            en: {
+                menu: {
+                    title: 'Main Menu',
+                    dashboard: 'Dashboard',
+                    settings: 'Settings',
+                    reports: 'Reports',
+                    admin: 'Administration',
+                    service: 'Service',
+                    available_options: 'Available options'
+                },
+                roles: {
+                    operator: 'Operator',
+                    admin: 'Administrator',
+                    superuser: 'Super User',
+                    serwisant: 'Service Technician',
+                    none: 'None'
+                }
+            },
+            pl: {
+                menu: {
+                    title: 'Menu Główne',
+                    dashboard: 'Pulpit',
+                    settings: 'Ustawienia',
+                    reports: 'Raporty',
+                    admin: 'Administracja',
+                    service: 'Serwis',
+                    available_options: 'Dostępne opcje'
+                },
+                roles: {
+                    operator: 'Operator',
+                    admin: 'Administrator',
+                    superuser: 'Super Użytkownik',
+                    serwisant: 'Serwisant',
+                    none: 'Brak'
+                }
+            }
+        };
+        
+        // Create i18n instance
+        const i18n = createI18n({
+            locale: 'pl',
+            fallbackLocale: 'en',
+            messages,
+            legacy: false
+        });
+        
+        // Create Vuex store
+        const store = createStore({
+            state() {
+                return {
+                    user: {
+                        role: 'OPERATOR',
+                        name: 'Demo User',
+                        permissions: []
+                    }
+                };
+            },
+            mutations: {
+                setUserRole(state, role) {
+                    state.user.role = role;
+                },
+                setUserPermissions(state, permissions) {
+                    state.user.permissions = permissions;
+                }
+            },
+            actions: {
+                updateUserRole({ commit }, role) {
+                    commit('setUserRole', role);
+                },
+                updateUserPermissions({ commit }, permissions) {
+                    commit('setUserPermissions', permissions);
+                },
+                navigate(context, route) {
+                    console.log('Navigation requested:', route);
+                }
+            }
+        });
+        
+        // Create and mount the app
+        const app = createApp({
+            components: {
+                MainMenu
+            },
+            data() {
+                return {
+                    currentRole: 'OPERATOR'
+                };
+            },
+            methods: {
+                changeRole() {
+                    this.$store.dispatch('updateUserRole', this.currentRole);
+                },
+                handleNavigation(route) {
+                    console.log('Navigation in parent:', route);
+                },
+                handleSessionTimeout() {
+                    console.warn('Session timeout detected!');
+                    alert('Your session has timed out. Please log in again.');
+                }
+            }
+        });
+        
+        // Use plugins
+        app.use(store);
+        app.use(i18n);
+        
+        // Mount the app
+        app.mount('#app');
+                roles: {
+                    operator: 'Operator',
+                    admin: 'Administrator',
+                    superuser: 'Super Użytkownik',
+                    serwisant: 'Serwis',
+                    none: 'Brak Roli'
+                }
+            }
+        };
+
+        // Create i18n instance
+        const i18n = createI18n({
+            legacy: false,
+            locale: 'pl',
+            fallbackLocale: 'en',
+            messages
+        });
+        
+        // Mock store
+        const store = createStore({
+            state: {
+                auth: {
+                    isAuthenticated: true,
+                    currentUser: { 
+                        name: 'Test User', 
+                        role: 'OPERATOR',
+                        permissions: ['view_dashboard', 'view_reports']
+                    }
+                },
+                system: {
+                    deviceStatus: 'ONLINE',
+                    language: 'pl'
+                },
+                navigation: {
+            },
+            getters: {
+                availableMenuItems: (state) => {
+                    return state.menuItems.filter(item => {
+                        // Filter by role if specified
+                        if (item.role && item.role !== state.user.role) {
+                            return false;
+                        }
+                        return true;
+                    });
+                },
+                currentUser: (state) => state.user,
+                currentRoute: (state) => state.currentRoute
+            },
+            mutations: {
+                setCurrentRoute(state, route) {
+                    state.currentRoute = route;
+                    state.lastAccessTime = Date.now();
+                },
+                setUserRole(state, role) {
+                    if (state.user) {
+                        state.user.role = role;
+                    }
+                }
+            },
+            actions: {
+                navigate({ commit, state }, route) {
+                    console.log('Navigation requested to:', route);
+                    // In a real app, you would handle actual navigation here
+                    commit('setCurrentRoute', route);
+                    
+                    // Log the navigation
+                    console.log('User navigated to:', route, 
+                              'Role:', state.user.role, 
+                              'Time:', new Date().toLocaleTimeString());
+                },
+                updateUserRole({ commit }, role) {
+                    commit('setUserRole', role);
+                }
+            }
+        });
+        
+        // Load component
+        // Initialize the component directly
+        const Component = MainMenu;
+        
+        // Initialize component
+        if (Component.init) {
+                await Component.init({ 
+                    store,
+                    i18n,
+                    router: {
+                        push: (route) => {
+                            console.log('Router push:', route);
+                            store.dispatch('navigate', route);
+                        }
+                    }
+                });
+            }
+            
+            // Create a root component that renders the mainMenu
+            const App = defineComponent({
+                template: `
+                    <div id="main-menu-container">
+                        <main-menu ref="mainMenu" />
+                    </div>
+                `,
+                components: {
+                    'main-menu': Component.component
+                },
+                provide: {
+                    // Provide any required services here
+                }
+            });
+
+            // Create and configure the app
+            const app = createApp(App);
+            
+            // Use plugins
+            app.use(store);
+            app.use(i18n);
+            
+            // Global error handler
+            app.config.errorHandler = (err, vm, info) => {
+                console.error('Vue error:', err);
+                console.error('Error info:', info);
+            };
+            
+            // Global properties
+            app.config.globalProperties.$t = (key) => {
+                return key.split('.').reduce((o, i) => {
+                    if (o) return o[i];
+                }, i18n.global.messages.value[i18n.global.locale.value]) || key;
+            };
+            
+            // Mount the app
+            app.mount('#app');
+        }).catch(error => {
+            console.error('Failed to load component:', error);
+            document.getElementById('app').innerHTML = 
+                '<div style="color: red; padding: 20px;">Failed to load component: ' + error.message + '</div>';
+        });
+    </script>
+</body>
+</html>

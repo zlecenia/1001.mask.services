@@ -1,0 +1,73 @@
+{
+  "component": {
+    "name": "jsonEditor",
+    "version": "0.1.0",
+    "title": "JSON Configuration Editor",
+    "description": "Visual editor for component configuration files with schema validation",
+    "category": "tools",
+    "type": "utility"
+  },
+  "settings": {
+    "defaultSchema": "app",
+    "autoSave": false,
+    "validateOnChange": true,
+    "allowedComponents": [
+      "appFooter",
+      "appHeader", 
+      "auditLogViewer",
+      "deviceData",
+      "loginForm",
+      "mainMenu",
+      "pageTemplate",
+      "pressurePanel",
+      "realtimeSensors",
+      "reportsViewer",
+      "serviceMenu",
+      "systemSettings",
+      "testMenu",
+      "userMenu"
+    ],
+    "theme": "light",
+    "showLineNumbers": true,
+    "enableSyntaxHighlighting": true
+  },
+  "ui": {
+    "showPreview": true,
+    "showValidation": true,
+    "compactMode": false,
+    "splitView": true,
+    "defaultWidth": "1280px",
+    "defaultHeight": "720px"
+  },
+  "validation": {
+    "enableSchemaValidation": true,
+    "strictMode": false,
+    "showWarnings": true,
+    "validateOnType": false
+  },
+  "features": {
+    "multiFileEditing": true,
+    "componentSelection": true,
+    "schemaSupport": true,
+    "exportImport": true,
+    "undoRedo": false
+  },
+  "schemas": {
+    "supported": [
+      "app",
+      "menu", 
+      "router",
+      "system",
+      "test-scenarios",
+      "workshop"
+    ],
+    "autoDetect": true,
+    "customSchemas": []
+  },
+  "security": {
+    "readOnlyMode": false,
+    "allowedFileTypes": [".json"],
+    "maxFileSize": 1048576,
+    "backupOnSave": true
+  }
+}

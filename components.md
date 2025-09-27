@@ -9,44 +9,100 @@ js/features/[component]/[version]/
 ├── package.json          # Component scripts
 ├── standalone.html       # Standalone preview
 ├── dev-server.js        # Component dev server
-├── vite.config.js       # Build configuration
 ├── config/              # All configs here
 │   ├── config.json      # Source config
 │   ├── data.json        # Runtime values
 │   ├── schema.json      # Validation
 │   └── crud.json        # Edit rules
 └── locales/             # Translations (optional)
-```
 
-## Component Registry
+### Component Locations
+All components in: `js/features/[name]/0.1.0/`
 
-| Component | Type | Purpose | Status | Standalone |
-|-----------|------|---------|--------|-----------|
-| **pageTemplate** | Layout | Main grid container | ✅ Active | ✅ |
-| **appHeader** | Layout | Top bar with status | ✅ Active | ✅ |
-| **mainMenu** | Navigation | Role-based sidebar | ✅ Active | ✅ |
-| **loginForm** | Auth | Login + virtual keyboard | ✅ Active | ✅ |
-| **appFooter** | Layout | System info footer | ✅ Active | ✅ |
-| **pressurePanel** | Monitoring | Pressure gauges | ✅ Active | ✅ |
-| **realtimeSensors** | Monitoring | WebSocket data | ✅ Active | ✅ |
-| **deviceData** | Data | Device management | ⚠️ Beta | ⚠️ |
-| **systemSettings** | Config | Settings UI | ⚠️ Beta | ⚠️ |
-| **auditLogViewer** | Security | Audit logs | ✅ Active | ✅ |
+| Component | Type | Purpose | Health Score | Status | Issues |
+|-----------|------|---------|-------------|--------|--------|
+| **pageTemplate** | Layout | Main grid container | 100/100 🟢 | ✅ Excellent | None |
+| **appHeader** | Layout | Top bar with status | 100/100 🟢 | ✅ Excellent | None |
+| **mainMenu** | Navigation | Role-based sidebar | 100/100 🟢 | ✅ Excellent | None |
+| **loginForm** | Auth | Login + virtual keyboard | 100/100 🟢 | ✅ Excellent | None |
+| **appFooter** | Layout | System info footer | 100/100 🟢 | ✅ Excellent | None |
+| **pressurePanel** | Monitoring | Pressure gauges | 100/100 🟢 | ✅ Excellent | None |
+| **auditLogViewer** | Security | Audit logs | 90/100 🟢 | ✅ Excellent | Missing package.json |
+| **realtimeSensors** | Monitoring | WebSocket data | 80/100 🟢 | ✅ Good | Index.js structure |
+| **systemSettings** | Config | Settings UI | 80/100 🟢 | ✅ Good | Index.js structure |
+| **deviceData** | Data | Device management | 80/100 🟢 | ✅ Good | Index.js structure |
+| **testMenu** | Testing | Test interface | 85/100 🟢 | ✅ Good | Config structure |
+| **reportsViewer** | Reports | Report display | 75/100 🟢 | ✅ Good | Missing tests, config issues |
+| **serviceMenu** | Service | Service interface | 60/100 🟡 | ⚠️ Needs Work | Tests, schema, index.js |
+| **userMenu** | Users | User management | 65/100 🟡 | ⚠️ Needs Work | Tests, index.js, config |
+| **jsonEditor** | Tools | Visual JSON config editor | 100/100 🟢 | ✅ Excellent | None |
 
-## NPM Scripts - Complete Reference
+### Overall Health Summary
+- **🟢 Production Ready**: 13/15 components (86.7%)
+- **📊 Average Score**: 88.5/100
+- **🔧 Common Issues**: Index.js structure (5), Missing tests (3), Config structure (4)
+- **🆕 New Component**: jsonEditor - Visual JSON configuration editor
 
-### Global Commands (root package.json)
+## Component Management & Development
+
+### Essential Commands
 ```bash
-# Component Management
+# Component Analysis & Health Check
+npm run analyze                  # Full component health analysis
+
+# Component Management  
 npm run module:init              # Create new component
 npm run module:init-all          # Initialize all components
 npm run module:migrate           # Migrate to unified structure
 npm run module:list              # List all components
 
-# Standalone Execution
-npm run dev:component [name]     # Run specific component
-npm run dev:appFooter           # Run appFooter standalone
-npm run dev:mainMenu            # Run mainMenu standalone
+# Development Servers (Individual Components)
+npm run component:dev:appFooter     # Port 3001
+npm run component:dev:appHeader     # Port 3002  
+npm run component:dev:mainMenu      # Port 3003
+npm run component:dev:loginForm     # Port 3004
+npm run component:dev:pageTemplate  # Port 3005
+npm run component:dev:jsonEditor    # Port 3009 - JSON Configuration Editor
+
+# Screenshot Generation (Visual Documentation)
+npm run screenshots             # Generate all screenshots automatically
+npm run screenshot              # Interactive single component
+npm run screenshots:update      # Generate + git add
+
+# Configuration Management
+npm run config:generate-components  # Generate schemas for all components
+npm run config:validate            # Validate all configurations
+npm run readme:generate            # Generate README for all components
+```
+
+### Error Detection & Diagnostics
+
+The screenshot generator includes comprehensive error detection:
+
+#### Detected Issues
+- **HTTP Errors**: Server response failures (4xx, 5xx)
+- **Console Errors**: JavaScript runtime errors  
+- **Page Errors**: Unhandled exceptions
+- **Vue Mount Issues**: Component initialization problems
+- **Content Rendering**: Empty or failed component renders
+
+#### Common Problems & Solutions
+
+| Problem | Symptoms | Solution |
+|---------|----------|----------|
+| **Missing Service Import** | `Cannot resolve module` | Check import paths in component files |
+| **Vue Component Errors** | Console: `Component definition` | Fix export default structure |
+| **Config Loading Failed** | `Cannot read properties` | Ensure config.json exists and is valid |
+| **Index.js Structure** | Component not initializing | Add metadata, init, handle methods |
+| **Missing Dependencies** | Module import errors | Add to package.json dependencies |
+
+#### Health Check Results
+Run `npm run analyze` to get detailed component health report:
+- **File Structure Validation**: Required files present
+- **Code Quality Checks**: Proper Vue/JS structure  
+- **Configuration Validation**: Valid JSON and structure
+- **Documentation Status**: README, tests, screenshots
+- **Scoring System**: 0-100 points with recommendations
 npm run playground              # Interactive component selector
 
 # Testing

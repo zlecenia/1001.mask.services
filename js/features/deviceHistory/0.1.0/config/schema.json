@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "DeviceHistory Configuration",
+  "description": "Configuration schema for Device History component",
+  "type": "object",
+  "properties": {
+    "apiEndpoint": {
+      "type": "string",
+      "format": "uri",
+      "description": "Base URL for the device history API",
+      "default": "/api/device-history"
+    },
+    "defaultFilter": {
+      "type": "string",
+      "enum": ["all", "active", "inactive", "maintenance"],
+      "description": "Default filter to apply when loading the component",
+      "default": "all"
+    },
+    "itemsPerPage": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 100,
+      "description": "Number of items to display per page",
+      "default": 10
+    },
+    "refreshInterval": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Data refresh interval in seconds (0 to disable)",
+      "default": 30
+    },
+    "exportFormats": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": ["csv", "pdf", "xlsx"]
+      },
+      "description": "Available export formats",
+      "default": ["csv"]
+    },
+    "columns": {
+      "type": "object",
+      "properties": {
+        "visible": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["name", "type", "status", "lastTest", "testResult", "passRate", "operator"]
+          },
+          "description": "Columns to display in the history table",
+          "default": ["name", "type", "status", "lastTest", "testResult", "passRate", "operator"]
+        },
+        "sortable": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Columns that can be sorted",
+          "default": ["name", "lastTest", "passRate"]
+        }
+      },
+      "required": ["visible"],
+      "additionalProperties": false
+    },
+    "filters": {
+      "type": "object",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether filters are enabled",
+          "default": true
+        },
+        "options": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {"type": "string"},
+              "label": {"type": "string"},
+              "type": {"type": "string", "enum": ["select", "date", "text", "number"]},
+              "options": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "value": {},
+                    "label": {"type": "string"}
+                  },
+                  "required": ["value", "label"]
+                }
+              }
+            },
+            "required": ["id", "label", "type"]
+          },
+          "default": [
+            {
+              "id": "status",
+              "label": "Status",
+              "type": "select",
+              "options": [
+                {"value": "all", "label": "All Statuses"},
+                {"value": "ACTIVE", "label": "Active"},
+                {"value": "MAINTENANCE", "label": "Maintenance"},
+                {"value": "INACTIVE", "label": "Inactive"}
+              ]
+            }
+          ]
+        }
+      },
+      "required": ["enabled"],
+      "additionalProperties": false
+    }
+  },
+  "required": ["apiEndpoint", "defaultFilter", "itemsPerPage"],
+  "additionalProperties": false
+}

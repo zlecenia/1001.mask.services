@@ -1,0 +1,63 @@
+{
+  "$schema": "./schema.json",
+  "apiEndpoint": "/api/v1/device-history",
+  "defaultFilter": "all",
+  "itemsPerPage": 15,
+  "refreshInterval": 30,
+  "exportFormats": ["csv", "pdf"],
+  "columns": {
+    "visible": ["name", "type", "status", "lastTest", "testResult", "passRate", "operator"],
+    "sortable": ["name", "lastTest", "passRate", "testCount"]
+  },
+  "filters": {
+    "enabled": true,
+    "options": [
+      {
+        "id": "status",
+        "label": "Status",
+        "type": "select",
+        "options": [
+          {"value": "all", "label": "All Statuses"},
+          {"value": "ACTIVE", "label": "Active"},
+          {"value": "MAINTENANCE", "label": "Maintenance"},
+          {"value": "INACTIVE", "label": "Inactive"}
+        ]
+      },
+      {
+        "id": "type",
+        "label": "Device Type",
+        "type": "select",
+        "options": [
+          {"value": "all", "label": "All Types"},
+          {"value": "PP_MASK", "label": "PP Mask"},
+          {"value": "NP_MASK", "label": "NP Mask"},
+          {"value": "FFP2_MASK", "label": "FFP2 Mask"}
+        ]
+      },
+      {
+        "id": "dateRange",
+        "label": "Date Range",
+        "type": "date"
+      }
+    ]
+  },
+  "features": {
+    "export": true,
+    "refresh": true,
+    "batchActions": true,
+    "detailedView": true
+  },
+  "ui": {
+    "theme": "default",
+    "density": "comfortable",
+    "showColumnHeaders": true,
+    "showRowNumbers": true,
+    "stickyHeader": true
+  },
+  "notifications": {
+    "enabled": true,
+    "sound": true,
+    "desktop": false,
+    "autoDismiss": 5000
+  }
+}

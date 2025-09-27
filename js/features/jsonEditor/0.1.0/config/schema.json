@@ -1,0 +1,234 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://maskservice.com/schemas/jsonEditor.json",
+  "title": "JSON Editor Component Configuration Schema",
+  "description": "Schema for JSON Editor component configuration",
+  "type": "object",
+  "properties": {
+    "component": {
+      "type": "object",
+      "description": "Component metadata",
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-zA-Z][a-zA-Z0-9]*$",
+          "description": "Component name"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Semantic version"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100,
+          "description": "Display title"
+        },
+        "description": {
+          "type": "string",
+          "maxLength": 500,
+          "description": "Component description"
+        },
+        "category": {
+          "type": "string",
+          "enum": ["tools", "utility", "editor", "viewer"],
+          "description": "Component category"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["utility", "component", "service", "module"],
+          "description": "Component type"
+        }
+      },
+      "required": ["name", "version", "title"],
+      "additionalProperties": false
+    },
+    "settings": {
+      "type": "object",
+      "description": "Editor settings",
+      "properties": {
+        "defaultSchema": {
+          "type": "string",
+          "enum": ["app", "menu", "router", "system", "test-scenarios", "workshop"],
+          "description": "Default schema to use"
+        },
+        "autoSave": {
+          "type": "boolean",
+          "description": "Enable auto-save functionality"
+        },
+        "validateOnChange": {
+          "type": "boolean", 
+          "description": "Validate JSON on every change"
+        },
+        "allowedComponents": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+          },
+          "description": "List of components that can be edited"
+        },
+        "theme": {
+          "type": "string",
+          "enum": ["light", "dark"],
+          "description": "UI theme"
+        },
+        "showLineNumbers": {
+          "type": "boolean",
+          "description": "Show line numbers in JSON preview"
+        },
+        "enableSyntaxHighlighting": {
+          "type": "boolean",
+          "description": "Enable syntax highlighting"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ui": {
+      "type": "object",
+      "description": "UI configuration",
+      "properties": {
+        "showPreview": {
+          "type": "boolean",
+          "description": "Show JSON preview panel"
+        },
+        "showValidation": {
+          "type": "boolean",
+          "description": "Show validation messages"
+        },
+        "compactMode": {
+          "type": "boolean",
+          "description": "Use compact UI layout"
+        },
+        "splitView": {
+          "type": "boolean",
+          "description": "Enable split view editor/preview"
+        },
+        "defaultWidth": {
+          "type": "string",
+          "pattern": "^\\d+px$",
+          "description": "Default editor width"
+        },
+        "defaultHeight": {
+          "type": "string", 
+          "pattern": "^\\d+px$",
+          "description": "Default editor height"
+        }
+      },
+      "additionalProperties": false
+    },
+    "validation": {
+      "type": "object",
+      "description": "Validation settings",
+      "properties": {
+        "enableSchemaValidation": {
+          "type": "boolean",
+          "description": "Enable schema-based validation"
+        },
+        "strictMode": {
+          "type": "boolean",
+          "description": "Use strict validation mode"
+        },
+        "showWarnings": {
+          "type": "boolean",
+          "description": "Show validation warnings"
+        },
+        "validateOnType": {
+          "type": "boolean",
+          "description": "Validate while typing"
+        }
+      },
+      "additionalProperties": false
+    },
+    "features": {
+      "type": "object", 
+      "description": "Feature toggles",
+      "properties": {
+        "multiFileEditing": {
+          "type": "boolean",
+          "description": "Allow editing multiple files"
+        },
+        "componentSelection": {
+          "type": "boolean",
+          "description": "Allow component selection"
+        },
+        "schemaSupport": {
+          "type": "boolean",
+          "description": "Enable schema support"
+        },
+        "exportImport": {
+          "type": "boolean",
+          "description": "Enable export/import functionality"
+        },
+        "undoRedo": {
+          "type": "boolean",
+          "description": "Enable undo/redo functionality"
+        }
+      },
+      "additionalProperties": false
+    },
+    "schemas": {
+      "type": "object",
+      "description": "Schema configuration",
+      "properties": {
+        "supported": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["app", "menu", "router", "system", "test-scenarios", "workshop"]
+          },
+          "description": "List of supported schemas"
+        },
+        "autoDetect": {
+          "type": "boolean",
+          "description": "Automatically detect schema from content"
+        },
+        "customSchemas": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "path": { "type": "string" }
+            },
+            "required": ["name", "path"]
+          },
+          "description": "Custom schema definitions"
+        }
+      },
+      "additionalProperties": false
+    },
+    "security": {
+      "type": "object",
+      "description": "Security settings",
+      "properties": {
+        "readOnlyMode": {
+          "type": "boolean",
+          "description": "Enable read-only mode"
+        },
+        "allowedFileTypes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^\\.[a-zA-Z0-9]+$"
+          },
+          "description": "Allowed file extensions"
+        },
+        "maxFileSize": {
+          "type": "number",
+          "minimum": 1024,
+          "maximum": 10485760,
+          "description": "Maximum file size in bytes"
+        },
+        "backupOnSave": {
+          "type": "boolean",
+          "description": "Create backup before saving"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "required": ["component", "settings"],
+  "additionalProperties": false
+}

@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "vitest run mainMenu.spec.js",
-    "test:watch": "vitest watch mainMenu.spec.js"
+    "test:watch": "vitest watch mainMenu.spec.js",
+    "serve": "node ./dev-server.js"
   },
   "dependencies": {
     "vue": "^3.4.0"

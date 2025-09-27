@@ -71,11 +71,45 @@ function consoleForwardPlugin() {
 }
 
 export default defineConfig({
-  plugins: [vue(), consoleForwardPlugin()],
   resolve: {
     alias: {
       'vue': 'vue/dist/vue.esm-bundler.js',
+      '@': resolve(__dirname, './js')
+    },
+    extensions: ['.js', '.jsx', '.json', '.vue']
+  },
+  plugins: [
+    vue({
+      template: {
+        compilerOptions: {
+          // Enable runtime compilation of templates
+          isCustomElement: tag => tag.includes('-'),
+          whitespace: 'preserve'
+        }
+      }
+    }), 
+    consoleForwardPlugin()
+  ],
+  server: {
+    fs: {
+      // Allow serving files from one level up from the package root
+      allow: ['..']
+    },
+    proxy: {
+      // Proxy API requests if needed
+      '/api': {
+        target: 'http://localhost:3000',
+        changeOrigin: true
+      }
+    }
+  },
+  resolve: {
+    alias: {
+      // Add aliases for commonly used modules
       '@': resolve(__dirname, 'js'),
+      'vue': 'vue/dist/vue.esm-bundler.js',
+      'vue-i18n': 'vue-i18n/dist/vue-i18n.esm-bundler.js',
+      'vuex': 'vuex/dist/vuex.esm-browser.js'
     },
   },
   build: {

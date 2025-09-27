@@ -1,0 +1,237 @@
+{
+  "$schema": "./schema.json",
+  "operations": {
+    "read": {
+      "enabled": true,
+      "roles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+      "filters": {
+        "default": {},
+        "byStatus": {
+          "field": "status",
+          "operator": "=="
+        },
+        "byType": {
+          "field": "type",
+          "operator": "=="
+        },
+        "byDateRange": {
+          "field": "lastTest",
+          "operator": "between"
+        }
+      },
+      "sorting": {
+        "default": {
+          "field": "lastTest",
+          "direction": "desc"
+        },
+        "options": [
+          {"field": "name", "label": "Device Name"},
+          {"field": "lastTest", "label": "Last Test Date"},
+          {"field": "passRate", "label": "Pass Rate"},
+          {"field": "testCount", "label": "Test Count"}
+        ]
+      },
+      "pagination": {
+        "defaultPageSize": 15,
+        "pageSizeOptions": [10, 15, 25, 50, 100]
+      }
+    },
+    "create": {
+      "enabled": true,
+      "roles": ["ADMIN", "SUPERUSER", "SERWISANT"],
+      "validation": {
+        "name": {
+          "required": true,
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 50,
+          "pattern": "^[a-zA-Z0-9-_\\s]+$",
+          "errorMessage": "Device name must be 3-50 alphanumeric characters"
+        },
+        "type": {
+          "required": true,
+          "type": "string",
+          "enum": ["PP_MASK", "NP_MASK", "FFP2_MASK"]
+        },
+        "location": {
+          "required": true,
+          "type": "string"
+        }
+      },
+      "defaultValues": {
+        "status": "ACTIVE",
+        "testCount": 0,
+        "passRate": 0,
+        "lastTest": null,
+        "testResult": "PENDING"
+      }
+    },
+    "update": {
+      "enabled": true,
+      "roles": ["ADMIN", "SUPERUSER", "SERWISANT"],
+      "editableFields": [
+        "name",
+        "type",
+        "location",
+        "status",
+        "notes"
+      ],
+      "validation": {
+        "name": {
+          "required": true,
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 50
+        },
+        "status": {
+          "required": true,
+          "type": "string",
+          "enum": ["ACTIVE", "INACTIVE", "MAINTENANCE", "DECOMMISSIONED"]
+        }
+      }
+    },
+    "delete": {
+      "enabled": true,
+      "roles": ["SUPERUSER"],
+      "softDelete": true,
+      "softDeleteField": "isDeleted"
+    },
+    "export": {
+      "enabled": true,
+      "roles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+      "formats": ["csv", "pdf", "xlsx"],
+      "fields": [
+        "name",
+        "type",
+        "status",
+        "lastTest",
+        "testResult",
+        "passRate",
+        "testCount",
+        "operator",
+        "location"
+      ],
+      "defaultFormat": "csv"
+    }
+  },
+  "auditLogging": {
+    "enabled": true,
+    "logEvents": [
+      "create",
+      "update",
+      "delete",
+      "export",
+      "login",
+      "access_denied"
+    ],
+    "retentionDays": 365
+  },
+  "notifications": {
+    "onCreate": {
+      "enabled": true,
+      "recipients": ["ADMIN", "SERWISANT"],
+      "template": "New device {{name}} has been added to the system."
+    },
+    "onUpdate": {
+      "enabled": true,
+      "recipients": ["ADMIN", "SERWISANT"],
+      "template": "Device {{name}} has been updated. Changes: {{changes}}."
+    },
+    "onDelete": {
+      "enabled": true,
+      "recipients": ["ADMIN", "SUPERUSER"],
+      "template": "Device {{name}} has been {{#if softDelete}}deactivated{{else}}permanently deleted{{/if}}."
+    },
+    "onTestFail": {
+      "enabled": true,
+      "recipients": ["ADMIN", "SERWISANT", "TECHNICIAN"],
+      "template": "Device {{name}} has failed the test. Result: {{testResult}}. Please review."
+    }
+  },
+  "security": {
+    "dataMasking": {
+      "enabled": true,
+      "fields": ["serialNumber", "manufactureDate"],
+      "maskCharacter": "*",
+      "visibleChars": 4,
+      "rolesWithFullAccess": ["ADMIN", "SUPERUSER"]
+    },
+    "rateLimiting": {
+      "enabled": true,
+      "maxRequests": 100,
+      "timeWindow": 900,
+      "strategy": "sliding"
+    },
+    "cors": {
+      "enabled": true,
+      "allowedOrigins": [
+        "https://app.maskservice.com",
+        "https://admin.maskservice.com"
+      ],
+      "allowedMethods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+      "allowedHeaders": ["Content-Type", "Authorization", "X-Requested-With"]
+    },
+    "apiKeys": {
+      "enabled": true,
+      "headerName": "X-API-KEY",
+      "requiredFor": ["create", "update", "delete", "export"]
+    }
+  },
+  "versioning": {
+    "enabled": true,
+    "currentVersion": "1.0.0",
+    "versionHeader": "X-API-Version",
+    "defaultVersion": "1.0.0",
+    "supportedVersions": ["1.0.0"]
+  },
+  "caching": {
+    "enabled": true,
+    "ttl": 300,
+    "strategy": "memory",
+    "invalidateOn": ["create", "update", "delete"]
+  },
+  "validation": {
+    "strictMode": true,
+    "allowUnknownFields": false,
+    "customValidators": [
+      {
+        "name": "validateDeviceType",
+        "description": "Validates that the device type matches the expected format"
+      },
+      {
+        "name": "validateTestResult",
+        "description": "Validates that test results are within expected ranges"
+      }
+    ]
+  },
+  "hooks": {
+    "preCreate": ["validateDeviceData", "checkDuplicateDevice"],
+    "postCreate": ["sendWelcomeEmail", "updateInventory"],
+    "preUpdate": ["validateUpdateData", "checkPermissions"],
+    "postUpdate": ["logDeviceUpdate", "notifyTeam"],
+    "preDelete": ["checkDependencies"],
+    "postDelete": ["cleanupRelatedData", "logDeletion"]
+  },
+  "documentation": {
+    "enabled": true,
+    "endpoint": "/api-docs",
+    "authentication": {
+      "enabled": true,
+      "type": "apiKey",
+      "name": "X-API-KEY",
+      "in": "header"
+    },
+    "contact": {
+      "name": "API Support",
+      "email": "api-support@maskservice.com"
+    },
+    "license": {
+      "name": "Proprietary",
+      "url": "https://maskservice.com/license"
+    },
+    "externalDocs": {
+      "description": "Device Management API Documentation",
+      "url": "https://docs.maskservice.com/api/device-management"
+    }
+  }
+}

@@ -26,11 +26,18 @@
     "component:dev:mainMenu": "node tools/dev/componentDevServer.js js/features/mainMenu/0.1.0 3003",
     "component:dev:loginForm": "node tools/dev/componentDevServer.js js/features/loginForm/0.1.0 3004",
     "component:dev:pageTemplate": "node tools/dev/componentDevServer.js js/features/pageTemplate/0.1.0 3005",
+    "component:dev:pressurePanel": "node tools/dev/componentDevServer.js js/features/pressurePanel/0.1.0 3006",
+    "component:dev:realtimeSensors": "node tools/dev/componentDevServer.js js/features/realtimeSensors/0.1.0 3007",
+    "component:dev:auditLogViewer": "node tools/dev/componentDevServer.js js/features/auditLogViewer/0.1.0 3008",
+    "component:dev:jsonEditor": "node tools/dev/componentDevServer.js js/features/jsonEditor/0.1.0 3009",
+    "playground": "node tools/dev/playgroundServer.js",
     "readme:generate": "node tools/generators/componentReadmeGenerator.js",
     
     "screenshots": "node tools/screenshots/generateScreenshots.js",
     "screenshot": "node tools/screenshots/screenshotComponent.js",
     "screenshots:update": "npm run screenshots && git add js/features/**/*.png js/features/**/README.md",
+    
+    "analyze": "node tools/analysis/componentAnalyzer.js",
     "config:generate": "node tools/generators/schemaGenerator.js",
     "config:generate-components": "node tools/generators/componentSchemaGenerator.js",
     "config:validate": "node tools/validators/configValidator.js",

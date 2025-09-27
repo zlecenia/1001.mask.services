@@ -1,0 +1,32 @@
+{
+  "name": "@maskservice/device-history",
+  "version": "0.1.0",
+  "description": "Advanced device history tracking with search, filters, and analytics",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest",
+    "test:watch": "vitest watch",
+    "serve": "node ./dev-server.js"
+  },
+  "keywords": [
+    "device",
+    "history",
+    "tracking",
+    "analytics",
+    "vue3"
+  ],
+  "author": "MASKSERVICE",
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^3.2.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^4.0.0",
+    "vite": "^4.0.0",
+    "vitest": "^0.25.0"
+  }
+}

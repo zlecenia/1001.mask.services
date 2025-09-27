@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=400">
+    <title>JSON Editor - Przykład Użycia</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuex@4/dist/vuex.global.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .demo-header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .scenario-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+        
+        .tab-button {
+            padding: 10px 20px;
+            border: none;
+            background: #e9ecef;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+        
+        .tab-button.active {
+            background: #007bff;
+            color: white;
+        }
+        
+        .tab-button:hover {
+            background: #007bff;
+            color: white;
+            transform: translateY(-2px);
+        }
+        
+        .scenario-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .scenario-description {
+            background: #f8f9fa;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            margin-bottom: 20px;
+            border-radius: 0 5px 5px 0;
+        }
+        
+        .component-container {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+            border-left: 4px solid #2196f3;
+        }
+        
+        .instructions h4 {
+            margin: 0 0 10px 0;
+            color: #1976d2;
+        }
+        
+        .instructions ol {
+            margin: 0;
+            padding-left: 20px;
+        }
+        
+        .code-example {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+        }
+    </style>
+    <link rel="stylesheet" href="./jsonEditor.css">
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>🛠️ JSON Editor - Przykłady Użycia</h1>
+            <p>Demonstracja edycji plików konfiguracyjnych komponentów MASKSERVICE</p>
+        </div>
+
+        <div class="scenario-tabs">
+            <button class="tab-button active" @click="setScenario('appFooter')">
+                AppFooter Config
+            </button>
+            <button class="tab-button" @click="setScenario('mainMenu')">
+                MainMenu Config
+            </button>
+            <button class="tab-button" @click="setScenario('systemSettings')">
+                System Settings
+            </button>
+            <button class="tab-button" @click="setScenario('custom')">
+                Custom JSON
+            </button>
+        </div>
+
+        <!-- Scenario 1: AppFooter Configuration -->
+        <div v-if="activeScenario === 'appFooter'" class="scenario-content">
+            <div class="scenario-description">
+                <h3>📱 Scenariusz 1: Edycja Konfiguracji AppFooter</h3>
+                <p>Edytuj plik <code>js/features/appFooter/0.1.0/config/config.json</code> - ustawienia stopki aplikacji z informacjami systemowymi.</p>
+            </div>
+            
+            <div class="instructions">
+                <h4>Instrukcje:</h4>
+                <ol>
+                    <li>Wybierz komponent: <strong>appFooter</strong></li>
+                    <li>Wybierz plik: <strong>config.json</strong></li>
+                    <li>Wybierz schema: <strong>App Configuration</strong></li>
+                    <li>Kliknij "Załaduj Przykład" aby wczytać dane</li>
+                    <li>Edytuj wartości klikając na nie w drzewie JSON</li>
+                    <li>Sprawdź preview na prawej stronie</li>
+                    <li>Kliknij "Waliduj" aby sprawdzić poprawność</li>
+                </ol>
+            </div>
+
+            <div class="component-container">
+                <json-editor ref="appFooterEditor" />
+            </div>
+            
+            <div class="code-example">
+                <strong>Przykład konfiguracji AppFooter:</strong><br>
+{<br>
+&nbsp;&nbsp;"component": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"name": "appFooter",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"version": "0.1.0",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"title": "System Footer"<br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;"display": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"showTimestamp": true,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"showSystemInfo": true,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"compactMode": false<br>
+&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <!-- Scenario 2: MainMenu Configuration -->
+        <div v-if="activeScenario === 'mainMenu'" class="scenario-content">
+            <div class="scenario-description">
+                <h3>📋 Scenariusz 2: Edycja Menu Głównego</h3>
+                <p>Edytuj plik <code>js/features/mainMenu/0.1.0/config/config.json</code> - struktura menu dla różnych ról użytkowników.</p>
+            </div>
+
+            <div class="instructions">
+                <h4>Instrukcje:</h4>
+                <ol>
+                    <li>Wybierz komponent: <strong>mainMenu</strong></li>
+                    <li>Wybierz plik: <strong>config.json</strong></li>
+                    <li>Wybierz schema: <strong>Menu Structure</strong></li>
+                    <li>Dodaj nowe pozycje menu klikając "➕ Dodaj element"</li>
+                    <li>Edytuj istniejące pozycje (key, label, icon)</li>
+                    <li>Usuń niepotrzebne pozycje przyciskiem "🗑️"</li>
+                </ol>
+            </div>
+
+            <div class="component-container">
+                <json-editor ref="mainMenuEditor" />
+            </div>
+
+            <div class="code-example">
+                <strong>Przykład struktury menu:</strong><br>
+{<br>
+&nbsp;&nbsp;"OPERATOR": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{ "key": "dashboard", "label": "Dashboard", "icon": "📊" },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{ "key": "sensors", "label": "Sensory", "icon": "🔬" }<br>
+&nbsp;&nbsp;],<br>
+&nbsp;&nbsp;"ADMIN": [<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{ "key": "dashboard", "label": "Dashboard", "icon": "📊" },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{ "key": "users", "label": "Użytkownicy", "icon": "👥" },<br>
+&nbsp;&nbsp;&nbsp;&nbsp;{ "key": "settings", "label": "Ustawienia", "icon": "⚙️" }<br>
+&nbsp;&nbsp;]<br>
+}
+            </div>
+        </div>
+
+        <!-- Scenario 3: System Settings -->
+        <div v-if="activeScenario === 'systemSettings'" class="scenario-content">
+            <div class="scenario-description">
+                <h3>⚙️ Scenariusz 3: Ustawienia Systemowe</h3>
+                <p>Edytuj plik <code>js/features/systemSettings/0.1.0/config/config.json</code> - krytyczne ustawienia systemu z ograniczonymi uprawnieniami.</p>
+            </div>
+
+            <div class="instructions">
+                <h4>Instrukcje:</h4>
+                <ol>
+                    <li>Wybierz komponent: <strong>systemSettings</strong></li>
+                    <li>Wybierz plik: <strong>config.json</strong></li>
+                    <li>Wybierz schema: <strong>System Configuration</strong></li>
+                    <li>Uwaga: niektóre pola są chronione przed edycją</li>
+                    <li>Edytuj tylko dozwolone parametry (timeouty, progi)</li>
+                    <li>Walidacja sprawdzi bezpieczeństwo zmian</li>
+                </ol>
+            </div>
+
+            <div class="component-container">
+                <json-editor ref="systemEditor" />
+            </div>
+
+            <div class="code-example">
+                <strong>Przykład ustawień systemowych:</strong><br>
+{<br>
+&nbsp;&nbsp;"authentication": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"session_timeout": 1800,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"max_login_attempts": 5<br>
+&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;"sensors": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"update_interval": 1000,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"alarm_thresholds": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pressure_high": 6.0,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"pressure_low": 0.5<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;}<br>
+}
+            </div>
+        </div>
+
+        <!-- Scenario 4: Custom JSON -->
+        <div v-if="activeScenario === 'custom'" class="scenario-content">
+            <div class="scenario-description">
+                <h3>🔧 Scenariusz 4: Własny JSON</h3>
+                <p>Edytuj dowolny plik JSON bez predefiniowanego schematu.</p>
+            </div>
+
+            <div class="instructions">
+                <h4>Instrukcje:</h4>
+                <ol>
+                    <li>Wczytaj plik JSON klikając "📂 Załaduj plik"</li>
+                    <li>Lub kliknij "Załaduj Przykład" bez wyboru schematu</li>
+                    <li>Dodawaj, edytuj, usuwaj elementy dowolnie</li>
+                    <li>Eksportuj wyniki klikając "💾 Eksportuj JSON"</li>
+                </ol>
+            </div>
+
+            <div class="component-container">
+                <json-editor ref="customEditor" />
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import JsonEditor from './jsonEditor.js';
+        
+        const { createApp } = Vue;
+        
+        const ExampleApp = {
+            components: {
+                JsonEditor
+            },
+            data() {
+                return {
+                    activeScenario: 'appFooter'
+                };
+            },
+            methods: {
+                setScenario(scenario) {
+                    this.activeScenario = scenario;
+                    
+                    // Auto-configure editor based on scenario
+                    this.$nextTick(() => {
+                        this.configureEditorForScenario(scenario);
+                    });
+                },
+                
+                configureEditorForScenario(scenario) {
+                    let editor = null;
+                    
+                    switch(scenario) {
+                        case 'appFooter':
+                            editor = this.$refs.appFooterEditor;
+                            if (editor) {
+                                editor.selectedComponent = 'appFooter';
+                                editor.selectedConfigFile = 'config.json';
+                                editor.selectedSchema = 'app';
+                                editor.loadSampleData();
+                            }
+                            break;
+                            
+                        case 'mainMenu':
+                            editor = this.$refs.mainMenuEditor;
+                            if (editor) {
+                                editor.selectedComponent = 'mainMenu';
+                                editor.selectedConfigFile = 'config.json';
+                                editor.selectedSchema = 'menu';
+                                editor.loadSampleData();
+                            }
+                            break;
+                            
+                        case 'systemSettings':
+                            editor = this.$refs.systemEditor;
+                            if (editor) {
+                                editor.selectedComponent = 'systemSettings';
+                                editor.selectedConfigFile = 'config.json';
+                                editor.selectedSchema = 'system';
+                                editor.loadSampleData();
+                            }
+                            break;
+                            
+                        case 'custom':
+                            editor = this.$refs.customEditor;
+                            if (editor) {
+                                editor.resetEditor();
+                            }
+                            break;
+                    }
+                }
+            },
+            
+            mounted() {
+                // Configure first scenario
+                this.configureEditorForScenario('appFooter');
+                
+                console.log('🛠️ JSON Editor Example App loaded');
+                console.log('📝 Ready to edit component configurations');
+            }
+        };
+        
+        createApp(ExampleApp).mount('body');
+    </script>
+</body>
+</html>
