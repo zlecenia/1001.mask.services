@@ -399,37 +399,216 @@ Real-time pressure monitoring panel with circular gauges, alerts, and trend indi
 }
 ```
 
-## Configuration System
+## Module-Based Architecture with Config Validation
 
-Each component includes a `config.json` file with:
+The system now uses a comprehensive module-based architecture with automated configuration validation, schema generation, and CRUD management.
+
+### Module Structure
+```
+modules/
+├── [moduleName]/
+│   └── [version]/
+│       ├── config.json          # Source configuration
+│       ├── package.json         # Module metadata
+│       ├── index.js            # Module implementation
+│       ├── [moduleName].vue    # Vue component (if applicable)
+│       ├── [moduleName].test.js # Test suite
+│       ├── README.md           # Documentation
+│       ├── TODO.md             # Task tracking
+│       └── CHANGELOG.md        # Version history
+```
+
+### Configuration System
+```
+configs/
+├── _templates/                 # Configuration templates
+├── _schemas/                   # Global schemas
+├── _generated/                 # Generated configurations
+├── _backups/                   # Automatic backups
+└── [moduleName]_[section]/     # Module configurations
+    ├── data.json              # Configuration data
+    ├── schema.json            # JSON schema (generated/manual)
+    └── crud.json              # CRUD rules (generated/manual)
+```
 
 ### Standard Configuration Sections
 1. **component**: Metadata and identification
 2. **ui**: Visual styling and layout options  
-3. **data**: Default data values and state
-4. **responsive**: Display optimization settings
+3. **api**: API connection settings
+4. **data**: Data management and caching
 5. **accessibility**: ARIA and keyboard navigation
 6. **performance**: Caching and optimization
-7. **security**: Validation and protection settings
 
-### Example Configuration Structure
+### Example Module Configuration
 ```json
 {
   "component": {
     "name": "componentName",
     "displayName": "Human Readable Name",
-    "type": "component-type",
-    "category": "ui-component"
+    "type": "component",
+    "category": "ui-component",
+    "version": "0.1.0",
+    "enabled": true,
+    "dependencies": ["vue"]
   },
   "ui": {
-    "layout": { /* styling options */ },
-    "responsive": { /* breakpoint settings */ }
+    "enabled": true,
+    "theme": "default",
+    "responsive": true,
+    "touchOptimized": true,
+    "accessibility": {
+      "ariaLabels": true,
+      "keyboardNavigation": true,
+      "highContrast": false
+    }
   },
-  "data": { /* default values */ },
-  "accessibility": { /* a11y settings */ },
-  "performance": { /* optimization settings */ }
+  "api": {
+    "baseUrl": "http://localhost:3000/api",
+    "timeout": 30000,
+    "retries": 3,
+    "headers": {
+      "Content-Type": "application/json"
+    }
+  }
 }
 ```
+
+### Development Workflow
+
+#### 1. Module Creation
+```bash
+# Create a new module interactively
+npm run module:init
+
+# Initialize all existing modules
+npm run module:init-all
+
+# List all modules and their status
+npm run module:list
+```
+
+#### 2. Configuration Management
+```bash
+# Generate schemas from data
+npm run schema:generate
+
+# Generate CRUD rules from schemas
+npm run crud:generate
+
+# Validate all configurations
+npm run validate-all
+
+# Update configurations after changes
+npm run update
+```
+
+#### 3. Development Workflow
+```bash
+# Watch for configuration changes
+npm run config:watch
+
+# Sync module configs to centralized configs
+npm run config:sync
+
+# Clean generated files
+npm run clean
+
+# Create backup
+npm run backup
+```
+
+#### 4. Manual Configuration Editing
+To mark configurations as manually edited and preserve changes:
+
+```json
+{
+  "_manual": true,
+  "_modified": "2025-01-26T10:00:00Z",
+  "_comment": "Manually adjusted validation rules",
+  "type": "object",
+  "properties": {
+    // your manual changes...
+  }
+}
+```
+
+### Schema Validation
+Each configuration section automatically generates:
+
+- **JSON Schema**: Validates data structure and types
+- **CRUD Rules**: Defines field editability and UI hints
+- **Validation**: Runtime validation with detailed error reporting
+
+### SDK Generation
+Generate SDKs for different programming languages:
+
+```bash
+# JavaScript SDK
+npm run sdk:js
+
+# Python SDK  
+npm run sdk:python
+
+# Go SDK
+npm run sdk:go
+
+# All SDKs
+npm run sdk:generate
+```
+
+### Development Tools
+
+The system includes a comprehensive set of development tools:
+
+#### Generators
+- **schemaGenerator.js**: Generates JSON schemas from config data with type inference
+- **crudGenerator.js**: Creates CRUD rules with field types, validation, and UI hints
+- **sdkGenerator.js**: Generates SDKs for JavaScript, Python, and Go
+
+#### Validators
+- **configValidator.js**: Validates configurations against schemas
+- **schemaValidator.js**: Validates JSON schema structure and best practices
+- **crudValidator.js**: Validates CRUD rules for consistency and correctness
+
+#### Initialization Tools
+- **initComponent.js**: Interactive component creation wizard
+- **initAll.js**: Batch initialization of all modules
+- **listModules.js**: Module inventory and status reporting
+
+#### Synchronization Tools
+- **syncConfigs.js**: Synchronizes module configs with centralized configs
+- **watchConfigs.js**: Watches for file changes and auto-regenerates
+
+#### Utility Tools
+- **clean.js**: Cleanup tool for generated files and backups
+- **backup.js**: Backup and restore system for configurations
+
+### Best Practices
+
+1. **Always validate** configurations before committing:
+   ```bash
+   npm run validate-all
+   ```
+
+2. **Use manual markers** for custom edits:
+   ```json
+   { "_manual": true, "_comment": "Custom validation rules" }
+   ```
+
+3. **Keep backups** before major changes:
+   ```bash
+   npm run backup
+   ```
+
+4. **Watch during development**:
+   ```bash
+   npm run config:watch
+   ```
+
+5. **Generate SDKs** for external integrations:
+   ```bash
+   npm run sdk:generate
+   ```
 
 ## Testing Strategy
 
