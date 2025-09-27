@@ -1,125 +1,250 @@
-# LoginForm Module v0.1.0
+![loginForm Screenshot](./loginForm.png)
 
-## Overview
-The LoginForm module provides a Vue 3 component for user authentication with validation and virtual keyboard support, optimized for 7.9" touchscreen displays. It handles user login, role assignment, and security validation.
+# Login Form
 
-## Features
-- **User Authentication**: Secure login with username/password validation
-- **Virtual Keyboard**: Touch-friendly on-screen keyboard for 7.9" displays
-- **Role-Based Login**: Support for multiple user roles (OPERATOR, SUPERVISOR, ADMINISTRATOR)
-- **Input Validation**: Real-time validation with error messaging
-- **Security Features**: Password masking, attempt limiting, session management
-- **Responsive Design**: Optimized for industrial touchscreen interfaces
-- **Accessibility**: Screen reader support and keyboard navigation
-- **Multi-language Support**: Localized interface and error messages
+Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9 cala
 
-## Component Structure
-```
-<form class="login-form">
-  <div class="login-header">
-    <h2 class="login-title">System Login</h2>
-  </div>
-  <div class="login-fields">
-    <div class="field-group">
-      <input class="username-input" type="text" />
-      <label class="field-label">Username</label>
-    </div>
-    <div class="field-group">
-      <input class="password-input" type="password" />
-      <label class="field-label">Password</label>
-    </div>
-    <div class="role-selector">
-      <select class="role-select">
-        <option value="OPERATOR">Operator</option>
-        <option value="SUPERVISOR">Supervisor</option>
-        <option value="ADMINISTRATOR">Administrator</option>
-      </select>
-    </div>
-  </div>
-  <div class="login-actions">
-    <button class="login-button">Login</button>
-    <button class="clear-button">Clear</button>
-  </div>
-  <div class="virtual-keyboard" v-if="showKeyboard">
-    <!-- Virtual keyboard layout -->
-  </div>
-</form>
+## 📋 Component Information
+
+- **Name**: `loginForm`
+- **Version**: `0.1.0`
+- **Type**: `authentication`
+- **Category**: `ui-component`
+- **Status**: 🟢 **Complete**
+
+## 🚀 Quick Start
+
+### Development Server
+Run this component in isolation for development and testing:
+
+```bash
+# Start dev server for this component
+npm run component:dev:loginForm
+
+# Or manually with custom port
+node tools/dev/componentDevServer.js js/features/loginForm/0.1.0 3001
 ```
 
-## Props
-- `showVirtualKeyboard`: Boolean to enable/disable virtual keyboard
-- `allowedRoles`: Array of permitted user roles
-- `maxAttempts`: Number of allowed login attempts before lockout
-- `sessionTimeout`: Session timeout duration in minutes
+**Available URLs:**
+- 🏠 Component: http://localhost:3001
+- 🎮 Demo: http://localhost:3001/demo  
+- ⚙️ Admin: http://localhost:3001/admin
+- 📊 API: http://localhost:3001/api/info
 
-## Authentication Flow
-1. User enters credentials and selects role
-2. Real-time validation of input fields
-3. Form submission triggers authentication
-4. Backend validation (simulated in this version)
-5. Success: User session created and redirect
-6. Failure: Error message displayed, attempt counted
-
-## Role System
-- **OPERATOR**: Basic system operations and monitoring
-- **SUPERVISOR**: OPERATOR permissions + advanced operations and oversight
-- **ADMINISTRATOR**: Full system access, configuration, and user management
-
-## CSS Classes
-- `.login-form`: Main form container
-- `.login-header`: Header section with title
-- `.login-fields`: Input fields container
-- `.field-group`: Individual field wrapper
-- `.username-input`, `.password-input`: Input field styling
-- `.role-selector`: Role selection dropdown
-- `.login-actions`: Button container
-- `.virtual-keyboard`: On-screen keyboard
-- `.error-message`: Validation error styling
-
-## Usage
+### Integration Usage
 ```javascript
-const component = await registry.load('loginForm', '0.1.0');
-const authResult = await component.handle({
-  action: 'authenticate',
-  data: {
-    username: 'operator1',
-    password: 'password123',
-    role: 'OPERATOR'
-  }
-});
+import loginForm from './js/features/loginForm/0.1.0/index.js';
 
-await component.render({
-  showVirtualKeyboard: true,
-  allowedRoles: ['OPERATOR', 'SUPERVISOR'],
-  maxAttempts: 3,
-  sessionTimeout: 30
+// Initialize component
+const result = await loginForm.init(context);
+
+// Use component
+if (loginForm.component) {
+  // Vue component available
+  const VueComponent = loginForm.component;
+}
+
+// Handle actions
+const response = loginForm.handle({
+  action: 'render',
+  data: { /* your data */ }
 });
 ```
 
-## Security Features
-- Password field masking
-- Input sanitization and validation
-- Attempt limiting with lockout
-- Session timeout management
-- Secure credential handling
-- CSRF protection ready
+## 📁 Project Structure
 
-## Testing
-- 43 comprehensive unit tests covering all functionality
-- Authentication flow tests
-- Input validation tests
-- Virtual keyboard interaction tests
-- Security and edge case tests
-- Accessibility tests
+```
+loginForm/
+├── 0.1.0/
+│   ├── index.js                 # Main module export
+│   ├── loginForm.js              # Vue component ✅
+│   ├── loginForm.test.js         # Component tests ✅
+│   ├── package.json            # Module metadata
+│   ├── config/                 # Configuration directory
+│   │   ├── config.json         # Main configuration
+│   │   ├── data.json           # Runtime data
+│   │   ├── schema.json         # Validation schema  
+│   │   └── crud.json           # Edit rules
+│   ├── CHANGELOG.md            # Version history
+│   ├── TODO.md                 # Development tasks
+│   └── README.md               # This file
+```
 
-## Dependencies
-- Vue 3.x
-- Vuex (for state management)
-- Vue-i18n (for internationalization)
-- Crypto-js (for password hashing)
+## ⚙️ Configuration
 
-## Browser Compatibility
-- Chrome 80+
-- Firefox 75+
-- Safari 13+
-- Edge 80+
+### Main Config (`config/config.json`)
+Configuration sections:
+
+#### `component`
+Component metadata and identification
+- Key properties: `name`, `displayName`, `type`, ...
+
+#### `ui`
+User interface settings and styling
+- Key properties: `layout`, `form`, `virtualKeyboard`, ...
+
+#### `authentication`
+Authentication configuration
+- Key properties: `roles`, `validation`, `defaultCredentials`
+
+#### `data`
+Default runtime data values
+- Key properties: `formState`, `authState`
+
+#### `virtualKeyboard`
+VirtualKeyboard configuration
+- Key properties: `layouts`, `specialKeys`
+
+#### `responsive`
+Responsive configuration
+- Key properties: `display79`, `breakpoints`
+
+#### `accessibility`
+Accessibility configuration
+- Key properties: `ariaLabels`, `keyboardNavigation`, `highContrast`, ...
+
+#### `performance`
+Performance and optimization settings
+- Key properties: `enableCaching`, `lazyLoading`, `debounceInput`
+
+#### `security`
+Security and validation rules
+- Key properties: `encryptPassword`, `validateInput`, `preventBruteForce`, ...
+
+
+
+### Runtime Data (`config/data.json`)
+Editable runtime values that can be modified without code changes.
+
+### Schema (`config/schema.json`)
+JSON Schema for configuration validation - auto-generated from config structure.
+
+### CRUD Rules (`config/crud.json`)
+Defines which fields are editable, readonly, or protected in admin interfaces.
+
+## 🔧 Development
+
+### Local Testing
+```bash
+# Run component tests
+npm test -- loginForm.test.js
+
+# Validate configuration
+npm run module:validate loginForm
+
+# Update schemas after config changes
+npm run config:generate-components
+```
+
+### Configuration Updates
+1. Edit `config/config.json` for structural changes
+2. Edit `config/data.json` for runtime value updates  
+3. Run `npm run config:generate-components` to update schemas
+4. Test changes with `npm run component:dev:loginForm`
+
+### Manual Schema Edits
+To preserve manual schema changes:
+```json
+{
+  "_manual": true,
+  "_modified": "2025-01-27T10:00:00Z",
+  "_comment": "Custom validation rules",
+  // your manual schema...
+}
+```
+
+## 🎛️ Admin Interface
+
+Access the admin interface at http://localhost:3001/admin when running dev server:
+
+- **Config Editor**: Edit runtime data with live validation
+- **Schema Viewer**: View current validation rules  
+- **Reset Tools**: Restore default configurations
+- **Export/Import**: Backup and restore configurations
+
+## 📊 API Endpoints
+
+When running the dev server, these API endpoints are available:
+
+| Endpoint | Method | Description |
+|----------|---------|-------------|
+| `/api/info` | GET | Component information |
+| `/api/config` | GET | Full configuration |
+| `/api/data` | GET | Runtime data only |
+| `/api/data` | POST | Update runtime data |
+| `/api/reset` | POST | Reset to defaults |
+
+### API Usage Examples
+```javascript
+// Get component info
+const info = await fetch('http://localhost:3001/api/info').then(r => r.json());
+
+// Get current data
+const data = await fetch('http://localhost:3001/api/data').then(r => r.json());
+
+// Update data
+const updated = await fetch('http://localhost:3001/api/data', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ key: 'newValue' })
+}).then(r => r.json());
+```
+
+## 🧪 Testing
+
+
+### Running Tests
+```bash
+npm test -- loginForm.test.js
+```
+
+### Test Coverage
+- ✅ Component initialization
+- ✅ Configuration validation  
+- ✅ API response handling
+- ✅ Error scenarios
+
+
+## 🔍 Dependencies
+
+- `vue`
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| Dev server won't start | Check port availability, run `npm install` |
+| Config validation fails | Check `config/schema.json`, validate JSON syntax |
+| Component not loading | Verify `index.js` exports, check browser console |
+| API calls fail | Ensure dev server is running, check CORS settings |
+
+### Debug Commands
+```bash
+# Validate component structure
+npm run module:validate loginForm
+
+# Check configuration
+npm run config:validate
+
+# View component info
+curl http://localhost:3001/api/info
+
+# Test API endpoints
+curl http://localhost:3001/api/data
+```
+
+## 📝 Changelog
+
+See `CHANGELOG.md` for version history and updates.
+
+## 🎯 TODOs
+
+See `TODO.md` for pending development tasks.
+
+---
+
+**Generated**: 2025-09-27T07:16:41.993Z  
+**Generator**: componentReadmeGenerator v1.0.0  
+**Component**: loginForm@0.1.0

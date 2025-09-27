@@ -1,0 +1,91 @@
+{
+  "timestamp": "2025-09-27T07:33:20.129Z",
+  "successful": 14,
+  "failed": 0,
+  "results": [
+    {
+      "component": "userMenu",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/userMenu/0.1.0/userMenu.png",
+      "status": "success"
+    },
+    {
+      "component": "testMenu",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/testMenu/0.1.0/testMenu.png",
+      "status": "success"
+    },
+    {
+      "component": "systemSettings",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/systemSettings/0.1.0/systemSettings.png",
+      "status": "success"
+    },
+    {
+      "component": "serviceMenu",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/serviceMenu/0.1.0/serviceMenu.png",
+      "status": "success"
+    },
+    {
+      "component": "reportsViewer",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/reportsViewer/0.1.0/reportsViewer.png",
+      "status": "success"
+    },
+    {
+      "component": "realtimeSensors",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/realtimeSensors/0.1.0/realtimeSensors.png",
+      "status": "success"
+    },
+    {
+      "component": "pressurePanel",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/pressurePanel/0.1.0/pressurePanel.png",
+      "status": "success"
+    },
+    {
+      "component": "pageTemplate",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/pageTemplate/0.1.0/pageTemplate.png",
+      "status": "success"
+    },
+    {
+      "component": "mainMenu",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/mainMenu/0.1.0/mainMenu.png",
+      "status": "success"
+    },
+    {
+      "component": "loginForm",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/loginForm/0.1.0/loginForm.png",
+      "status": "success"
+    },
+    {
+      "component": "deviceData",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/deviceData/0.1.0/deviceData.png",
+      "status": "success"
+    },
+    {
+      "component": "auditLogViewer",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/auditLogViewer/0.1.0/auditLogViewer.png",
+      "status": "success"
+    },
+    {
+      "component": "appHeader",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/appHeader/0.1.0/appHeader.png",
+      "status": "success"
+    },
+    {
+      "component": "appFooter",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/appFooter/0.1.0/appFooter.png",
+      "status": "success"
+    }
+  ]
+}

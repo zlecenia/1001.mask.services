@@ -1,16 +1,16 @@
-![appHeader Screenshot](./appHeader.png)
+![userMenu Screenshot](./userMenu.png)
 
-# App Header
+# UserMenu
 
-Header component with device status, language selector, and 7.9" display optimization
+Dynamic role-based user menu component with security integration and multi-language support
 
 ## 📋 Component Information
 
-- **Name**: `appHeader`
+- **Name**: `userMenu`
 - **Version**: `0.1.0`
-- **Type**: `layout`
+- **Type**: `component`
 - **Category**: `ui-component`
-- **Status**: 🟢 **Complete**
+- **Status**: 🟡 **Nearly Complete**
 
 ## 🚀 Quick Start
 
@@ -19,10 +19,10 @@ Run this component in isolation for development and testing:
 
 ```bash
 # Start dev server for this component
-npm run component:dev:appHeader
+npm run component:dev:userMenu
 
 # Or manually with custom port
-node tools/dev/componentDevServer.js js/features/appHeader/0.1.0 3001
+node tools/dev/componentDevServer.js js/features/userMenu/0.1.0 3001
 ```
 
 **Available URLs:**
@@ -33,19 +33,19 @@ node tools/dev/componentDevServer.js js/features/appHeader/0.1.0 3001
 
 ### Integration Usage
 ```javascript
-import appHeader from './js/features/appHeader/0.1.0/index.js';
+import userMenu from './js/features/userMenu/0.1.0/index.js';
 
 // Initialize component
-const result = await appHeader.init(context);
+const result = await userMenu.init(context);
 
 // Use component
-if (appHeader.component) {
+if (userMenu.component) {
   // Vue component available
-  const VueComponent = appHeader.component;
+  const VueComponent = userMenu.component;
 }
 
 // Handle actions
-const response = appHeader.handle({
+const response = userMenu.handle({
   action: 'render',
   data: { /* your data */ }
 });
@@ -54,11 +54,11 @@ const response = appHeader.handle({
 ## 📁 Project Structure
 
 ```
-appHeader/
+userMenu/
 ├── 0.1.0/
 │   ├── index.js                 # Main module export
-│   ├── appHeader.js              # Vue component ✅
-│   ├── appHeader.test.js         # Component tests ✅
+│   ├── userMenu.js              # Vue component ✅
+│   ├── userMenu.test.js         # Component tests ❌
 │   ├── package.json            # Module metadata
 │   ├── config/                 # Configuration directory
 │   │   ├── config.json         # Main configuration
@@ -75,37 +75,33 @@ appHeader/
 ### Main Config (`config/config.json`)
 Configuration sections:
 
-#### `component`
-Component metadata and identification
-- Key properties: `name`, `displayName`, `type`, ...
+#### `metadata`
+Metadata configuration
+- Key properties: `name`, `version`, `description`, ...
 
 #### `ui`
 User interface settings and styling
-- Key properties: `layout`, `sections`
+- Key properties: `layout`, `colors`, `animations`
 
-#### `data`
-Default runtime data values
-- Key properties: `deviceStatus`, `deviceInfo`, `currentLanguage`, ...
+#### `roles`
+Roles configuration
+- Key properties: `OPERATOR`, `ADMIN`, `SUPERUSER`, ...
 
-#### `languages`
-Languages configuration
-- Key properties: `pl`, `en`, `de`
-
-#### `responsive`
-Responsive configuration
-- Key properties: `display79`
-
-#### `accessibility`
-Accessibility configuration
-- Key properties: `ariaLabels`, `keyboardNavigation`, `highContrast`, ...
+#### `navigation`
+Navigation configuration
+- Key properties: `integration`, `events`
 
 #### `performance`
 Performance and optimization settings
-- Key properties: `statusUpdateInterval`, `enableCaching`, `lazyLoading`, ...
+- Key properties: `loadingDelay`, `refreshDelay`, `enableLazyLoading`, ...
 
 #### `security`
 Security and validation rules
-- Key properties: `validation`, `protection`, `audit`
+- Key properties: `auditMenuSelection`, `auditLogout`, `validateMenuAccess`, ...
+
+#### `localization`
+Localization configuration
+- Key properties: `supportedLanguages`, `defaultLanguage`, `fallbackLanguage`, ...
 
 
 
@@ -123,10 +119,10 @@ Defines which fields are editable, readonly, or protected in admin interfaces.
 ### Local Testing
 ```bash
 # Run component tests
-npm test -- appHeader.test.js
+npm test -- userMenu.test.js
 
 # Validate configuration
-npm run module:validate appHeader
+npm run module:validate userMenu
 
 # Update schemas after config changes
 npm run config:generate-components
@@ -136,7 +132,7 @@ npm run config:generate-components
 1. Edit `config/config.json` for structural changes
 2. Edit `config/data.json` for runtime value updates  
 3. Run `npm run config:generate-components` to update schemas
-4. Test changes with `npm run component:dev:appHeader`
+4. Test changes with `npm run component:dev:userMenu`
 
 ### Manual Schema Edits
 To preserve manual schema changes:
@@ -189,16 +185,13 @@ const updated = await fetch('http://localhost:3001/api/data', {
 ## 🧪 Testing
 
 
-### Running Tests
-```bash
-npm test -- appHeader.test.js
-```
+### Tests Status
+❌ Tests not yet implemented
 
-### Test Coverage
-- ✅ Component initialization
-- ✅ Configuration validation  
-- ✅ API response handling
-- ✅ Error scenarios
+To add tests:
+1. Create `userMenu.test.js`
+2. Use Vitest framework
+3. Test component initialization, config validation, and API responses
 
 
 ## 🔍 Dependencies
@@ -219,7 +212,7 @@ No external dependencies
 ### Debug Commands
 ```bash
 # Validate component structure
-npm run module:validate appHeader
+npm run module:validate userMenu
 
 # Check configuration
 npm run config:validate
@@ -241,6 +234,6 @@ See `TODO.md` for pending development tasks.
 
 ---
 
-**Generated**: 2025-09-27T07:16:41.990Z  
+**Generated**: 2025-09-27T07:16:42.000Z  
 **Generator**: componentReadmeGenerator v1.0.0  
-**Component**: appHeader@0.1.0
+**Component**: userMenu@0.1.0

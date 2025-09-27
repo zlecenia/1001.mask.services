@@ -1,14 +1,14 @@
-![appHeader Screenshot](./appHeader.png)
+![testMenu Screenshot](./testMenu.png)
 
-# App Header
+# TestMenu
 
-Header component with device status, language selector, and 7.9" display optimization
+Advanced test menu with wizard, scenarios, history and templates
 
 ## 📋 Component Information
 
-- **Name**: `appHeader`
+- **Name**: `testMenu`
 - **Version**: `0.1.0`
-- **Type**: `layout`
+- **Type**: `component`
 - **Category**: `ui-component`
 - **Status**: 🟢 **Complete**
 
@@ -19,10 +19,10 @@ Run this component in isolation for development and testing:
 
 ```bash
 # Start dev server for this component
-npm run component:dev:appHeader
+npm run component:dev:testMenu
 
 # Or manually with custom port
-node tools/dev/componentDevServer.js js/features/appHeader/0.1.0 3001
+node tools/dev/componentDevServer.js js/features/testMenu/0.1.0 3001
 ```
 
 **Available URLs:**
@@ -33,19 +33,19 @@ node tools/dev/componentDevServer.js js/features/appHeader/0.1.0 3001
 
 ### Integration Usage
 ```javascript
-import appHeader from './js/features/appHeader/0.1.0/index.js';
+import testMenu from './js/features/testMenu/0.1.0/index.js';
 
 // Initialize component
-const result = await appHeader.init(context);
+const result = await testMenu.init(context);
 
 // Use component
-if (appHeader.component) {
+if (testMenu.component) {
   // Vue component available
-  const VueComponent = appHeader.component;
+  const VueComponent = testMenu.component;
 }
 
 // Handle actions
-const response = appHeader.handle({
+const response = testMenu.handle({
   action: 'render',
   data: { /* your data */ }
 });
@@ -54,11 +54,11 @@ const response = appHeader.handle({
 ## 📁 Project Structure
 
 ```
-appHeader/
+testMenu/
 ├── 0.1.0/
 │   ├── index.js                 # Main module export
-│   ├── appHeader.js              # Vue component ✅
-│   ├── appHeader.test.js         # Component tests ✅
+│   ├── testMenu.js              # Vue component ✅
+│   ├── testMenu.test.js         # Component tests ✅
 │   ├── package.json            # Module metadata
 │   ├── config/                 # Configuration directory
 │   │   ├── config.json         # Main configuration
@@ -75,37 +75,49 @@ appHeader/
 ### Main Config (`config/config.json`)
 Configuration sections:
 
-#### `component`
-Component metadata and identification
-- Key properties: `name`, `displayName`, `type`, ...
+#### `metadata`
+Metadata configuration
+- Key properties: `name`, `version`, `type`, ...
 
 #### `ui`
 User interface settings and styling
-- Key properties: `layout`, `sections`
+- Key properties: `layout`, `colors`, `animations`
 
-#### `data`
-Default runtime data values
-- Key properties: `deviceStatus`, `deviceInfo`, `currentLanguage`, ...
+#### `testWizard`
+TestWizard configuration
+- Key properties: `steps`, `stepNames`, `defaultDuration`, ...
 
-#### `languages`
-Languages configuration
-- Key properties: `pl`, `en`, `de`
+#### `deviceTypes`
+DeviceTypes configuration
+- Key properties: `0`, `1`, `2`
 
-#### `responsive`
-Responsive configuration
-- Key properties: `display79`
+#### `testTypes`
+TestTypes configuration
+- Key properties: `0`, `1`, `2`, ...
 
-#### `accessibility`
-Accessibility configuration
-- Key properties: `ariaLabels`, `keyboardNavigation`, `highContrast`, ...
+#### `testStandards`
+TestStandards configuration
+- Key properties: `0`, `1`, `2`, ...
+
+#### `pressureRanges`
+PressureRanges configuration
+- Key properties: `0`, `1`, `2`
+
+#### `exportFormats`
+ExportFormats configuration
+- Key properties: `0`, `1`, `2`, ...
+
+#### `api`
+API connection configuration
+- Key properties: `endpoints`
 
 #### `performance`
 Performance and optimization settings
-- Key properties: `statusUpdateInterval`, `enableCaching`, `lazyLoading`, ...
+- Key properties: `maxHistoryItems`, `maxTemplateItems`, `maxScenarioItems`, ...
 
 #### `security`
 Security and validation rules
-- Key properties: `validation`, `protection`, `audit`
+- Key properties: `requiredRole`, `allowedExportFormats`, `maxExportSize`, ...
 
 
 
@@ -123,10 +135,10 @@ Defines which fields are editable, readonly, or protected in admin interfaces.
 ### Local Testing
 ```bash
 # Run component tests
-npm test -- appHeader.test.js
+npm test -- testMenu.test.js
 
 # Validate configuration
-npm run module:validate appHeader
+npm run module:validate testMenu
 
 # Update schemas after config changes
 npm run config:generate-components
@@ -136,7 +148,7 @@ npm run config:generate-components
 1. Edit `config/config.json` for structural changes
 2. Edit `config/data.json` for runtime value updates  
 3. Run `npm run config:generate-components` to update schemas
-4. Test changes with `npm run component:dev:appHeader`
+4. Test changes with `npm run component:dev:testMenu`
 
 ### Manual Schema Edits
 To preserve manual schema changes:
@@ -191,7 +203,7 @@ const updated = await fetch('http://localhost:3001/api/data', {
 
 ### Running Tests
 ```bash
-npm test -- appHeader.test.js
+npm test -- testMenu.test.js
 ```
 
 ### Test Coverage
@@ -203,7 +215,8 @@ npm test -- appHeader.test.js
 
 ## 🔍 Dependencies
 
-No external dependencies
+- `vue`
+- `vuex`
 
 ## 🛠️ Troubleshooting
 
@@ -219,7 +232,7 @@ No external dependencies
 ### Debug Commands
 ```bash
 # Validate component structure
-npm run module:validate appHeader
+npm run module:validate testMenu
 
 # Check configuration
 npm run config:validate
@@ -241,6 +254,6 @@ See `TODO.md` for pending development tasks.
 
 ---
 
-**Generated**: 2025-09-27T07:16:41.990Z  
+**Generated**: 2025-09-27T07:16:41.999Z  
 **Generator**: componentReadmeGenerator v1.0.0  
-**Component**: appHeader@0.1.0
+**Component**: testMenu@0.1.0

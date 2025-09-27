@@ -1,159 +1,242 @@
-# AuditLogViewer Component 0.1.0
+![auditLogViewer Screenshot](./auditLogViewer.png)
 
-## Overview
+# AuditLogViewer
 
-The AuditLogViewer is a comprehensive security dashboard component that provides monitoring and analysis capabilities for authentication events, user actions, sensor access, and system security across all components of the 1001.mask.services industrial application.
+Comprehensive security audit log viewer and dashboard for monitoring authentication events, user actions, and system security
 
-## Features
+## 📋 Component Information
 
-### Core Functionality
-- **Real-time Log Display**: Live monitoring of security events with auto-refresh
-- **Advanced Filtering**: Filter by event type, component, time range, and search terms  
-- **Sorting & Pagination**: Sortable columns with efficient pagination for large datasets
-- **Export Capabilities**: CSV export functionality for compliance and reporting
-- **Detailed Log Inspection**: Modal view for comprehensive log entry analysis
-- **Security Alerting**: Visual indicators for critical security events and warnings
+- **Name**: `auditLogViewer`
+- **Version**: `0.1.0`
+- **Type**: `security-dashboard`
+- **Category**: `ui-component`
+- **Status**: 🟢 **Complete**
 
-### Security Features
-- **Role-Based Access**: Restricted to ADMIN, SUPERUSER, and SERWISANT roles
-- **Audit Trail**: All viewer actions are logged for security compliance
-- **Data Validation**: Input sanitization and validation for all user interactions
-- **Export Permissions**: Controlled export capabilities with audit logging
+## 🚀 Quick Start
 
-### Industrial Optimization
-- **7.9" Display Ready**: Optimized for 1280x400px landscape industrial displays
-- **Touch Interface**: Touch-optimized controls and responsive design
-- **Performance Optimized**: Efficient rendering for continuous monitoring
-- **Multi-language**: Full i18n support (PL/EN/DE)
+### Development Server
+Run this component in isolation for development and testing:
 
-## Usage
+```bash
+# Start dev server for this component
+npm run component:dev:auditLogViewer
 
-### Basic Integration
-```javascript
-import AuditLogViewer from './js/features/auditLogViewer/0.1.0/auditLogViewer.js';
-
-// Register component
-Vue.component('AuditLogViewer', AuditLogViewer);
+# Or manually with custom port
+node tools/dev/componentDevServer.js js/features/auditLogViewer/0.1.0 3001
 ```
 
-### Props
-- None (self-contained component)
+**Available URLs:**
+- 🏠 Component: http://localhost:3001
+- 🎮 Demo: http://localhost:3001/demo  
+- ⚙️ Admin: http://localhost:3001/admin
+- 📊 API: http://localhost:3001/api/info
 
-### Events
-- `log-selected`: Emitted when a log entry is selected for detailed view
-- `export-completed`: Emitted when log export operation completes
+### Integration Usage
+```javascript
+import auditLogViewer from './js/features/auditLogViewer/0.1.0/index.js';
 
-## Log Event Types
+// Initialize component
+const result = await auditLogViewer.init(context);
 
-### Authentication Events
-- `LOGIN_FORM_SUCCESS`: Successful user login
-- `LOGIN_FORM_FAILED`: Failed login attempt
-- `LOGIN_FORM_ERROR`: Login system error
-- `AUTH_SESSION_TIMEOUT`: Session timeout event
+// Use component
+if (auditLogViewer.component) {
+  // Vue component available
+  const VueComponent = auditLogViewer.component;
+}
 
-### Navigation & Menu Events  
-- `MENU_ACCESS_SUCCESS`: Menu item accessed successfully
-- `MENU_ACCESS_DENIED`: Unauthorized menu access attempt
-- `MENU_NAVIGATION`: Menu navigation event
-- `PAGE_TEMPLATE_MENU_SELECT`: Menu selection from page template
+// Handle actions
+const response = auditLogViewer.handle({
+  action: 'render',
+  data: { /* your data */ }
+});
+```
 
-### Sensor & Monitoring Events
-- `PRESSURE_PANEL_SENSOR_REFRESH`: Sensor data refresh request
-- `PRESSURE_PANEL_WEBSOCKET_CONNECT`: WebSocket connection established
-- `PRESSURE_PANEL_DATA_VALIDATION_ERROR`: Sensor data validation failure
-- `PRESSURE_PANEL_SUSPICIOUS_ACTIVITY`: Suspicious monitoring activity detected
+## 📁 Project Structure
 
-### Security Events
-- `SECURITY_INPUT_VALIDATION_ERROR`: Input validation failure
-- `SECURITY_CSRF_TOKEN_GENERATED`: CSRF token generation
-- `SECURITY_SESSION_EXTENDED`: Session timeout extended
-- `SECURITY_EXCESSIVE_REQUESTS`: Rate limiting triggered
+```
+auditLogViewer/
+├── 0.1.0/
+│   ├── index.js                 # Main module export
+│   ├── auditLogViewer.js              # Vue component ✅
+│   ├── auditLogViewer.test.js         # Component tests ✅
+│   ├── package.json            # Module metadata
+│   ├── config/                 # Configuration directory
+│   │   ├── config.json         # Main configuration
+│   │   ├── data.json           # Runtime data
+│   │   ├── schema.json         # Validation schema  
+│   │   └── crud.json           # Edit rules
+│   ├── CHANGELOG.md            # Version history
+│   ├── TODO.md                 # Development tasks
+│   └── README.md               # This file
+```
 
-## Configuration
+## ⚙️ Configuration
 
-### Display Settings
+### Main Config (`config/config.json`)
+Configuration sections:
+
+#### `component`
+Component metadata and identification
+- Key properties: `name`, `version`, `description`, ...
+
+#### `ui`
+User interface settings and styling
+- Key properties: `display`, `layout`, `theme`
+
+#### `data`
+Default runtime data values
+- Key properties: `refreshInterval`, `pageSize`, `maxDisplayLogs`, ...
+
+#### `responsive`
+Responsive configuration
+- Key properties: `breakpoints`, `display79`
+
+#### `accessibility`
+Accessibility configuration
+- Key properties: `keyboardNavigation`, `screenReader`, `highContrast`, ...
+
+#### `performance`
+Performance and optimization settings
+- Key properties: `virtualScrolling`, `lazyLoading`, `caching`, ...
+
+#### `security`
+Security and validation rules
+- Key properties: `roleBasedAccess`, `auditLogging`, `dataValidation`, ...
+
+
+
+### Runtime Data (`config/data.json`)
+Editable runtime values that can be modified without code changes.
+
+### Schema (`config/schema.json`)
+JSON Schema for configuration validation - auto-generated from config structure.
+
+### CRUD Rules (`config/crud.json`)
+Defines which fields are editable, readonly, or protected in admin interfaces.
+
+## 🔧 Development
+
+### Local Testing
+```bash
+# Run component tests
+npm test -- auditLogViewer.test.js
+
+# Validate configuration
+npm run module:validate auditLogViewer
+
+# Update schemas after config changes
+npm run config:generate-components
+```
+
+### Configuration Updates
+1. Edit `config/config.json` for structural changes
+2. Edit `config/data.json` for runtime value updates  
+3. Run `npm run config:generate-components` to update schemas
+4. Test changes with `npm run component:dev:auditLogViewer`
+
+### Manual Schema Edits
+To preserve manual schema changes:
 ```json
 {
-  "refreshInterval": 30000,
-  "pageSize": 50,
-  "maxDisplayLogs": 10000,
-  "autoRefresh": true
+  "_manual": true,
+  "_modified": "2025-01-27T10:00:00Z",
+  "_comment": "Custom validation rules",
+  // your manual schema...
 }
 ```
 
-### Time Range Options
-- **1h**: Last hour
-- **24h**: Last 24 hours  
-- **7d**: Last 7 days
-- **30d**: Last 30 days
-- **all**: All available logs
+## 🎛️ Admin Interface
 
-### Export Options
-- **Format**: CSV
-- **Permissions**: Role-based export access
-- **Audit Logging**: All exports are logged
+Access the admin interface at http://localhost:3001/admin when running dev server:
 
-## Security Implementation
+- **Config Editor**: Edit runtime data with live validation
+- **Schema Viewer**: View current validation rules  
+- **Reset Tools**: Restore default configurations
+- **Export/Import**: Backup and restore configurations
 
-### Access Control
-- Integration with SecurityService for role validation
-- Restricted access to authorized personnel only
-- Session monitoring and timeout handling
+## 📊 API Endpoints
 
-### Data Protection
-- Input sanitization for search and filter parameters
-- Secure data handling and display
-- Protected export functionality
+When running the dev server, these API endpoints are available:
 
-### Audit Compliance
-- All viewer actions are logged
-- Export activities tracked
-- Access attempts monitored
+| Endpoint | Method | Description |
+|----------|---------|-------------|
+| `/api/info` | GET | Component information |
+| `/api/config` | GET | Full configuration |
+| `/api/data` | GET | Runtime data only |
+| `/api/data` | POST | Update runtime data |
+| `/api/reset` | POST | Reset to defaults |
 
-## Performance Optimization
+### API Usage Examples
+```javascript
+// Get component info
+const info = await fetch('http://localhost:3001/api/info').then(r => r.json());
 
-### Efficient Rendering
-- Virtual scrolling for large datasets
-- Debounced search functionality (300ms)
-- Optimized sorting and filtering algorithms
+// Get current data
+const data = await fetch('http://localhost:3001/api/data').then(r => r.json());
 
-### Memory Management
-- Configurable maximum log display limit
-- Automatic cleanup of old log entries
-- Efficient data structures for fast access
+// Update data
+const updated = await fetch('http://localhost:3001/api/data', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ key: 'newValue' })
+}).then(r => r.json());
+```
 
-## Browser Compatibility
+## 🧪 Testing
 
-- Modern browsers with ES6+ support
-- Vue 3 Composition API compatibility
-- Touch interface support for industrial displays
-- Responsive design for various screen sizes
 
-## Testing
+### Running Tests
+```bash
+npm test -- auditLogViewer.test.js
+```
 
-Comprehensive test suite covering:
-- Component rendering and initialization
-- SecurityService integration
-- Filter and search functionality
-- Export capabilities
-- Error handling and edge cases
-- Performance benchmarks
+### Test Coverage
+- ✅ Component initialization
+- ✅ Configuration validation  
+- ✅ API response handling
+- ✅ Error scenarios
 
-## Industrial Use Cases
 
-1. **Security Monitoring**: Real-time monitoring of authentication and access events
-2. **Compliance Reporting**: Export capabilities for regulatory compliance
-3. **Incident Investigation**: Detailed log analysis for security incidents
-4. **Operational Auditing**: Tracking of system and user activities
-5. **Performance Monitoring**: Analysis of system performance and usage patterns
+## 🔍 Dependencies
 
-## Deployment Notes
+No external dependencies
 
-- Requires SecurityService for audit log data access
-- Needs proper role-based authentication setup
-- Should be deployed with appropriate export permissions
-- Recommended for secure network environments only
+## 🛠️ Troubleshooting
 
-## Version History
+### Common Issues
 
-- **0.1.0**: Initial implementation with core audit log viewing capabilities
+| Issue | Solution |
+|-------|----------|
+| Dev server won't start | Check port availability, run `npm install` |
+| Config validation fails | Check `config/schema.json`, validate JSON syntax |
+| Component not loading | Verify `index.js` exports, check browser console |
+| API calls fail | Ensure dev server is running, check CORS settings |
+
+### Debug Commands
+```bash
+# Validate component structure
+npm run module:validate auditLogViewer
+
+# Check configuration
+npm run config:validate
+
+# View component info
+curl http://localhost:3001/api/info
+
+# Test API endpoints
+curl http://localhost:3001/api/data
+```
+
+## 📝 Changelog
+
+See `CHANGELOG.md` for version history and updates.
+
+## 🎯 TODOs
+
+See `TODO.md` for pending development tasks.
+
+---
+
+**Generated**: 2025-09-27T07:16:41.991Z  
+**Generator**: componentReadmeGenerator v1.0.0  
+**Component**: auditLogViewer@0.1.0

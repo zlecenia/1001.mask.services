@@ -8,7 +8,7 @@ import express from 'express';
 import path from 'path';
 import fs from 'fs-extra';
 import chalk from 'chalk';
-import glob from 'glob';
+import { glob } from 'glob';
 import { fileURLToPath } from 'url';
 import { exec } from 'child_process';
 import { promisify } from 'util';
@@ -94,29 +94,29 @@ class ComponentScreenshotGenerator {
   }
 
   async findComponents() {
-    return new Promise((resolve, reject) => {
-      glob(`${this.featuresDir}/*/`, (err, dirs) => {
-        if (err) reject(err);
+    try {
+      const dirs = await glob(`${this.featuresDir}/*/`);
+      
+      const components = [];
+      for (const dir of dirs) {
+        const componentName = path.basename(dir);
+        // Find version directories
+        const versionDirs = fs.readdirSync(dir)
+          .filter(v => /^\d+\.\d+\.\d+$/.test(v));
         
-        const components = [];
-        dirs.forEach(dir => {
-          const componentName = path.basename(dir);
-          // Find version directories
-          const versionDirs = fs.readdirSync(dir)
-            .filter(v => /^\d+\.\d+\.\d+$/.test(v));
-          
-          versionDirs.forEach(version => {
-            components.push({
-              name: componentName,
-              version: version,
-              path: path.join(dir, version)
-            });
+        versionDirs.forEach(version => {
+          components.push({
+            name: componentName,
+            version: version,
+            path: path.join(dir, version)
           });
         });
-        
-        resolve(components);
-      });
-    });
+      }
+      
+      return components;
+    } catch (error) {
+      throw error;
+    }
   }
 
   async processComponent(component) {
@@ -139,20 +139,32 @@ class ComponentScreenshotGenerator {
       }
       
       // Take screenshot
-      const screenshotPath = await this.takeScreenshot(component);
+      const screenshotResult = await this.takeScreenshot(component);
+      const screenshotPath = typeof screenshotResult === 'string' ? screenshotResult : screenshotResult.path;
+      const warnings = screenshotResult.warnings || [];
       
       // Update README
       await this.updateReadme(component, screenshotPath);
       
       // Record result
-      this.results.push({
+      const result = {
         component: component.name,
         version: component.version,
         screenshot: screenshotPath,
-        status: 'success'
-      });
+        status: warnings.length > 0 ? 'warning' : 'success'
+      };
       
-      console.log(chalk.green(`  ✓ Screenshot saved: ${component.name}.png`));
+      if (warnings.length > 0) {
+        result.warnings = warnings;
+      }
+      
+      this.results.push(result);
+      
+      if (warnings.length > 0) {
+        console.log(chalk.yellow(`  ⚠ Screenshot saved with warnings: ${component.name}.png`));
+      } else {
+        console.log(chalk.green(`  ✓ Screenshot saved: ${component.name}.png`));
+      }
       
     } catch (error) {
       console.log(chalk.red(`  ✗ Failed: ${error.message}`));
@@ -358,17 +370,74 @@ class ComponentScreenshotGenerator {
     try {
       // Navigate to component preview
       const url = `http://localhost:${this.port}/preview/${component.name}/${component.version}`;
-      await page.goto(url, { waitUntil: 'networkidle0', timeout: 10000 });
+      
+      // Enhanced error detection
+      const response = await page.goto(url, { waitUntil: 'networkidle0', timeout: 15000 });
+      
+      if (!response.ok()) {
+        throw new Error(`HTTP ${response.status()}: ${response.statusText()}`);
+      }
+      
+      // Listen for console errors
+      const consoleErrors = [];
+      page.on('console', msg => {
+        if (msg.type() === 'error') {
+          consoleErrors.push(msg.text());
+        }
+      });
+      
+      // Listen for page errors
+      const pageErrors = [];
+      page.on('pageerror', error => {
+        pageErrors.push(error.message);
+      });
       
       // Wait for component to render
-      await page.waitForTimeout(2000);
+      await page.waitForFunction(() => document.readyState === 'complete', { timeout: 8000 });
+      
+      // Check for Vue app mount
+      const hasVueApp = await page.evaluate(() => {
+        return document.querySelector('#app') !== null;
+      });
+      
+      if (!hasVueApp) {
+        throw new Error('Vue app container not found');
+      }
+      
+      // Wait for Vue to mount and render
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      
+      // Check if component actually rendered
+      const hasContent = await page.evaluate(() => {
+        const app = document.querySelector('#app');
+        return app && app.children.length > 0;
+      });
+      
+      if (!hasContent) {
+        console.log(chalk.yellow(`    ⚠ Component may not have rendered properly`));
+        if (consoleErrors.length > 0) {
+          console.log(chalk.red(`    Console errors: ${consoleErrors.join(', ')}`));
+        }
+        if (pageErrors.length > 0) {
+          console.log(chalk.red(`    Page errors: ${pageErrors.join(', ')}`));
+        }
+      }
       
       // Take screenshot
       const screenshotPath = path.join(component.path, `${component.name}.png`);
       await page.screenshot({ 
         path: screenshotPath,
-        fullPage: false
+        fullPage: false,
+        clip: { x: 0, y: 0, width: 1280, height: 400 }
       });
+      
+      // Add error info to result if any
+      if (consoleErrors.length > 0 || pageErrors.length > 0) {
+        return { 
+          path: screenshotPath, 
+          warnings: [...consoleErrors, ...pageErrors] 
+        };
+      }
       
       return screenshotPath;
       
@@ -434,12 +503,25 @@ import ${component.name} from './${component.name}/index.js';
     console.log(chalk.blue('='.repeat(50) + '\n'));
     
     const successful = this.results.filter(r => r.status === 'success');
+    const warnings = this.results.filter(r => r.status === 'warning');
     const failed = this.results.filter(r => r.status === 'failed');
     
     if (successful.length > 0) {
       console.log(chalk.green(`✓ Successfully generated ${successful.length} screenshots:`));
       successful.forEach(r => {
         console.log(chalk.gray(`  - ${r.component} v${r.version}`));
+      });
+    }
+    
+    if (warnings.length > 0) {
+      console.log(chalk.yellow(`\n⚠ Generated ${warnings.length} screenshots with warnings:`));
+      warnings.forEach(r => {
+        console.log(chalk.gray(`  - ${r.component} v${r.version}`));
+        if (r.warnings) {
+          r.warnings.forEach(w => {
+            console.log(chalk.red(`    • ${w}`));
+          });
+        }
       });
     }
     

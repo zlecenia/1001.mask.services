@@ -1,129 +1,254 @@
-# PageTemplate Module v0.1.0
+![pageTemplate Screenshot](./pageTemplate.png)
 
-## Overview
-The PageTemplate module provides a Vue 3 base template component for the MASKSERVICE system, specifically designed for 7.9" displays (400x1280px landscape). It serves as the foundation layout for all application pages with configurable sections and responsive design.
+# Page Template
 
-## Features
-- **Base Layout Structure**: Standardized page layout with header, sidebar, content, and footer areas
-- **Responsive Design**: Optimized for 7.9" landscape displays (400x1280px)
-- **Configurable Sections**: Toggle visibility of sidebar, pressure panel, and other components
-- **Menu Integration**: Support for dynamic menu items and navigation
-- **User Context**: Display current user information and device details
-- **Layout Modes**: Support for different layout configurations
-- **Component Slots**: Flexible content areas for different page types
-- **Professional Styling**: Industrial-grade interface design
+Bazowy template strony dla systemu MASKSERVICE z układem dla wyświetlacza 7.9 cala (400x1280px landscape)
 
-## Component Structure
-```
-<div class="page-template" :class="layoutClass">
-  <header class="page-header">
-    <!-- App header component -->
-  </header>
-  
-  <div class="page-body">
-    <aside class="page-sidebar" v-if="showSidebar">
-      <!-- Navigation menu -->
-    </aside>
-    
-    <main class="page-content">
-      <div class="content-header">
-        <h1 class="page-title">{{ title }}</h1>
-      </div>
-      <div class="content-body">
-        <!-- Dynamic content slot -->
-      </div>
-    </main>
-    
-    <aside class="pressure-panel" v-if="showPressurePanel">
-      <!-- Pressure monitoring panel -->
-    </aside>
-  </div>
-  
-  <footer class="page-footer">
-    <!-- App footer component -->
-  </footer>
-</div>
+## 📋 Component Information
+
+- **Name**: `pageTemplate`
+- **Version**: `0.1.0`
+- **Type**: `layout`
+- **Category**: `ui-component`
+- **Status**: 🟢 **Complete**
+
+## 🚀 Quick Start
+
+### Development Server
+Run this component in isolation for development and testing:
+
+```bash
+# Start dev server for this component
+npm run component:dev:pageTemplate
+
+# Or manually with custom port
+node tools/dev/componentDevServer.js js/features/pageTemplate/0.1.0 3001
 ```
 
-## Props
-- `title`: String for page title display
-- `showSidebar`: Boolean to toggle sidebar visibility (default: true)
-- `showPressurePanel`: Boolean to toggle pressure panel visibility (default: false)
-- `menuItems`: Array of menu items for navigation
-- `currentUser`: Object containing current user information
-- `deviceId`: String identifying the current device
-- `layout`: String defining layout mode ('landscape', 'portrait')
+**Available URLs:**
+- 🏠 Component: http://localhost:3001
+- 🎮 Demo: http://localhost:3001/demo  
+- ⚙️ Admin: http://localhost:3001/admin
+- 📊 API: http://localhost:3001/api/info
 
-## Layout Configuration
-The template supports flexible configuration for different page types:
-
+### Integration Usage
 ```javascript
-{
-  title: "Dashboard",
-  showSidebar: true,
-  showPressurePanel: false,
-  menuItems: [...],
-  currentUser: { name: "Operator", role: "OPERATOR" },
-  deviceId: "MASK-001",
-  layout: "landscape"
+import pageTemplate from './js/features/pageTemplate/0.1.0/index.js';
+
+// Initialize component
+const result = await pageTemplate.init(context);
+
+// Use component
+if (pageTemplate.component) {
+  // Vue component available
+  const VueComponent = pageTemplate.component;
 }
-```
 
-## CSS Classes
-- `.page-template`: Main template container
-- `.page-header`: Header section
-- `.page-body`: Main body container
-- `.page-sidebar`: Sidebar navigation area
-- `.page-content`: Main content area
-- `.content-header`: Content header with title
-- `.content-body`: Dynamic content area
-- `.pressure-panel`: Pressure monitoring sidebar
-- `.page-footer`: Footer section
-- `.layout-landscape`: Landscape mode styling
-
-## Usage
-```javascript
-const component = await registry.load('pageTemplate', '0.1.0');
-await component.handle({
-  action: 'show',
-  data: {
-    title: 'System Dashboard',
-    showSidebar: true,
-    showPressurePanel: false,
-    menuItems: [
-      { label: 'Dashboard', route: '/dashboard' },
-      { label: 'Settings', route: '/settings' }
-    ],
-    currentUser: { name: 'Operator', role: 'OPERATOR' },
-    deviceId: 'MASK-001'
-  }
+// Handle actions
+const response = pageTemplate.handle({
+  action: 'render',
+  data: { /* your data */ }
 });
 ```
 
-## Responsive Behavior
-- **7.9" Landscape (400x1280px)**: Optimized primary layout
-- **Sidebar**: Collapsible on smaller screens
-- **Content Area**: Flexible width based on sidebar state
-- **Pressure Panel**: Optional right sidebar for monitoring data
-- **Header/Footer**: Fixed height, responsive content
+## 📁 Project Structure
 
-## Testing
-- 25 comprehensive unit tests covering all functionality
-- Layout configuration tests
-- Responsive behavior tests
-- Component integration tests
-- Accessibility and navigation tests
+```
+pageTemplate/
+├── 0.1.0/
+│   ├── index.js                 # Main module export
+│   ├── pageTemplate.js              # Vue component ✅
+│   ├── pageTemplate.test.js         # Component tests ✅
+│   ├── package.json            # Module metadata
+│   ├── config/                 # Configuration directory
+│   │   ├── config.json         # Main configuration
+│   │   ├── data.json           # Runtime data
+│   │   ├── schema.json         # Validation schema  
+│   │   └── crud.json           # Edit rules
+│   ├── CHANGELOG.md            # Version history
+│   ├── TODO.md                 # Development tasks
+│   └── README.md               # This file
+```
 
-## Dependencies
-- Vue 3.x
-- Vuex (for state management)
-- Vue-i18n (for internationalization)
-- appHeader module
-- appFooter module
-- mainMenu module
+## ⚙️ Configuration
 
-## Browser Compatibility
-- Chrome 80+
-- Firefox 75+
-- Safari 13+
-- Edge 80+
+### Main Config (`config/config.json`)
+Configuration sections:
+
+#### `component`
+Component metadata and identification
+- Key properties: `name`, `displayName`, `type`, ...
+
+#### `ui`
+User interface settings and styling
+- Key properties: `layout`, `contentArea`, `transitions`
+
+#### `components`
+Components configuration
+- Key properties: `header`, `sidebar`, `content`, ...
+
+#### `routing`
+Routing configuration
+- Key properties: `defaultRoute`, `errorRoute`, `loginRoute`, ...
+
+#### `data`
+Default runtime data values
+- Key properties: `currentRoute`, `layoutState`, `contentProps`, ...
+
+#### `responsive`
+Responsive configuration
+- Key properties: `display79`, `breakpoints`, `adaptiveLayout`
+
+#### `accessibility`
+Accessibility configuration
+- Key properties: `ariaLabels`, `keyboardNavigation`, `skipLinks`, ...
+
+#### `performance`
+Performance and optimization settings
+- Key properties: `enableCaching`, `lazyLoading`, `prefetchRoutes`, ...
+
+#### `security`
+Security and validation rules
+- Key properties: `validateRoutes`, `requireAuthentication`, `roleBasedAccess`, ...
+
+#### `errorHandling`
+ErrorHandling configuration
+- Key properties: `enableErrorBoundary`, `fallbackComponent`, `logErrors`, ...
+
+
+
+### Runtime Data (`config/data.json`)
+Editable runtime values that can be modified without code changes.
+
+### Schema (`config/schema.json`)
+JSON Schema for configuration validation - auto-generated from config structure.
+
+### CRUD Rules (`config/crud.json`)
+Defines which fields are editable, readonly, or protected in admin interfaces.
+
+## 🔧 Development
+
+### Local Testing
+```bash
+# Run component tests
+npm test -- pageTemplate.test.js
+
+# Validate configuration
+npm run module:validate pageTemplate
+
+# Update schemas after config changes
+npm run config:generate-components
+```
+
+### Configuration Updates
+1. Edit `config/config.json` for structural changes
+2. Edit `config/data.json` for runtime value updates  
+3. Run `npm run config:generate-components` to update schemas
+4. Test changes with `npm run component:dev:pageTemplate`
+
+### Manual Schema Edits
+To preserve manual schema changes:
+```json
+{
+  "_manual": true,
+  "_modified": "2025-01-27T10:00:00Z",
+  "_comment": "Custom validation rules",
+  // your manual schema...
+}
+```
+
+## 🎛️ Admin Interface
+
+Access the admin interface at http://localhost:3001/admin when running dev server:
+
+- **Config Editor**: Edit runtime data with live validation
+- **Schema Viewer**: View current validation rules  
+- **Reset Tools**: Restore default configurations
+- **Export/Import**: Backup and restore configurations
+
+## 📊 API Endpoints
+
+When running the dev server, these API endpoints are available:
+
+| Endpoint | Method | Description |
+|----------|---------|-------------|
+| `/api/info` | GET | Component information |
+| `/api/config` | GET | Full configuration |
+| `/api/data` | GET | Runtime data only |
+| `/api/data` | POST | Update runtime data |
+| `/api/reset` | POST | Reset to defaults |
+
+### API Usage Examples
+```javascript
+// Get component info
+const info = await fetch('http://localhost:3001/api/info').then(r => r.json());
+
+// Get current data
+const data = await fetch('http://localhost:3001/api/data').then(r => r.json());
+
+// Update data
+const updated = await fetch('http://localhost:3001/api/data', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ key: 'newValue' })
+}).then(r => r.json());
+```
+
+## 🧪 Testing
+
+
+### Running Tests
+```bash
+npm test -- pageTemplate.test.js
+```
+
+### Test Coverage
+- ✅ Component initialization
+- ✅ Configuration validation  
+- ✅ API response handling
+- ✅ Error scenarios
+
+
+## 🔍 Dependencies
+
+- `vue`
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| Dev server won't start | Check port availability, run `npm install` |
+| Config validation fails | Check `config/schema.json`, validate JSON syntax |
+| Component not loading | Verify `index.js` exports, check browser console |
+| API calls fail | Ensure dev server is running, check CORS settings |
+
+### Debug Commands
+```bash
+# Validate component structure
+npm run module:validate pageTemplate
+
+# Check configuration
+npm run config:validate
+
+# View component info
+curl http://localhost:3001/api/info
+
+# Test API endpoints
+curl http://localhost:3001/api/data
+```
+
+## 📝 Changelog
+
+See `CHANGELOG.md` for version history and updates.
+
+## 🎯 TODOs
+
+See `TODO.md` for pending development tasks.
+
+---
+
+**Generated**: 2025-09-27T07:16:41.995Z  
+**Generator**: componentReadmeGenerator v1.0.0  
+**Component**: pageTemplate@0.1.0

@@ -1,133 +1,258 @@
-# PressurePanel Module v0.1.0
+![pressurePanel Screenshot](./pressurePanel.png)
 
-## Overview
-The PressurePanel module provides a Vue 3 component for real-time pressure sensor monitoring with critical alerts, optimized for 7.9" industrial displays. It displays pressure readings from multiple sensors with color-coded status indicators and threshold-based alerting.
+# Pressure Panel
 
-## Features
-- **Real-time Monitoring**: Live pressure sensor data display and updates
-- **Multi-sensor Support**: Monitor low, medium, and high pressure ranges
-- **Alert System**: Color-coded status indicators with critical threshold alerts
-- **Unit Flexibility**: Support for multiple pressure units (mbar, bar, psi, kPa)
-- **Responsive Design**: Optimized for 7.9" landscape displays
-- **Data Visualization**: Graphical pressure trend displays and gauges
-- **Threshold Configuration**: Customizable alert thresholds for different pressure levels
-- **Professional Interface**: Industrial-grade monitoring panel design
+Real-time pressure sensor monitoring panel with critical alerts for 7.9" display
 
-## Component Structure
-```
-<div class="pressure-panel">
-  <div class="panel-header">
-    <h3 class="panel-title">Pressure Monitoring</h3>
-    <div class="panel-controls">
-      <button class="refresh-button">Refresh</button>
-    </div>
-  </div>
-  
-  <div class="pressure-sensors">
-    <div class="sensor-group" v-for="sensor in sensors">
-      <div class="sensor-header">
-        <span class="sensor-label">{{ sensor.label }}</span>
-        <span class="sensor-status" :class="sensor.status">{{ sensor.status }}</span>
-      </div>
-      <div class="sensor-reading">
-        <span class="pressure-value">{{ sensor.value }}</span>
-        <span class="pressure-unit">{{ sensor.unit }}</span>
-      </div>
-      <div class="sensor-gauge">
-        <!-- Pressure gauge visualization -->
-      </div>
-    </div>
-  </div>
-  
-  <div class="alert-section" v-if="hasAlerts">
-    <div class="alert-item" v-for="alert in activeAlerts">
-      <i class="alert-icon"></i>
-      <span class="alert-message">{{ alert.message }}</span>
-    </div>
-  </div>
-</div>
+## 📋 Component Information
+
+- **Name**: `pressurePanel`
+- **Version**: `0.1.0`
+- **Type**: `monitoring`
+- **Category**: `ui-component`
+- **Status**: 🟢 **Complete**
+
+## 🚀 Quick Start
+
+### Development Server
+Run this component in isolation for development and testing:
+
+```bash
+# Start dev server for this component
+npm run component:dev:pressurePanel
+
+# Or manually with custom port
+node tools/dev/componentDevServer.js js/features/pressurePanel/0.1.0 3001
 ```
 
-## Props
-- `pressureData`: Object containing sensor readings (low, medium, high pressure)
-- `alertThresholds`: Object defining critical pressure thresholds
-- `updateInterval`: Number defining data refresh interval in milliseconds
-- `units`: Object specifying pressure units for each sensor
+**Available URLs:**
+- 🏠 Component: http://localhost:3001
+- 🎮 Demo: http://localhost:3001/demo  
+- ⚙️ Admin: http://localhost:3001/admin
+- 📊 API: http://localhost:3001/api/info
 
-## Pressure Data Structure
+### Integration Usage
 ```javascript
-{
-  low: { value: 150, unit: 'mbar', status: 'normal' },
-  medium: { value: 2.5, unit: 'bar', status: 'warning' },
-  high: { value: 8.2, unit: 'bar', status: 'critical' }
+import pressurePanel from './js/features/pressurePanel/0.1.0/index.js';
+
+// Initialize component
+const result = await pressurePanel.init(context);
+
+// Use component
+if (pressurePanel.component) {
+  // Vue component available
+  const VueComponent = pressurePanel.component;
 }
-```
 
-## Alert Thresholds
-```javascript
-{
-  low: { min: 100, max: 200, critical: 50 },
-  medium: { min: 1.0, max: 5.0, critical: 0.5 },
-  high: { min: 5.0, max: 10.0, critical: 12.0 }
-}
-```
-
-## Status Indicators
-- **Normal**: Green - Pressure within acceptable range
-- **Warning**: Yellow - Pressure approaching threshold limits
-- **Critical**: Red - Pressure outside safe operating range
-- **Error**: Gray - Sensor communication failure or invalid reading
-
-## CSS Classes
-- `.pressure-panel`: Main panel container
-- `.panel-header`: Header with title and controls
-- `.pressure-sensors`: Sensors display area
-- `.sensor-group`: Individual sensor container
-- `.sensor-reading`: Pressure value display
-- `.sensor-gauge`: Pressure gauge visualization
-- `.alert-section`: Alert messages area
-- `.status-normal/warning/critical/error`: Status-specific styling
-
-## Usage
-```javascript
-const component = await registry.load('pressurePanel', '0.1.0');
-await component.handle({
+// Handle actions
+const response = pressurePanel.handle({
   action: 'render',
-  pressureData: {
-    low: { value: 150, unit: 'mbar', status: 'normal' },
-    medium: { value: 2.5, unit: 'bar', status: 'warning' },
-    high: { value: 8.2, unit: 'bar', status: 'normal' }
-  },
-  alertThresholds: {
-    low: { min: 100, max: 200, critical: 50 },
-    medium: { min: 1.0, max: 5.0, critical: 0.5 },
-    high: { min: 5.0, max: 10.0, critical: 12.0 }
-  }
+  data: { /* your data */ }
 });
 ```
 
-## Real-time Updates
-The panel supports automatic data refresh with configurable intervals:
-- Default update interval: 1000ms (1 second)
-- Configurable refresh rates from 100ms to 10s
-- Manual refresh button for immediate updates
-- Automatic reconnection on data source failures
+## 📁 Project Structure
 
-## Testing
-- Comprehensive unit tests covering all functionality
-- Sensor data validation tests
-- Alert threshold and status tests
-- Real-time update mechanism tests
-- User interaction and control tests
+```
+pressurePanel/
+├── 0.1.0/
+│   ├── index.js                 # Main module export
+│   ├── pressurePanel.js              # Vue component ✅
+│   ├── pressurePanel.test.js         # Component tests ✅
+│   ├── package.json            # Module metadata
+│   ├── config/                 # Configuration directory
+│   │   ├── config.json         # Main configuration
+│   │   ├── data.json           # Runtime data
+│   │   ├── schema.json         # Validation schema  
+│   │   └── crud.json           # Edit rules
+│   ├── CHANGELOG.md            # Version history
+│   ├── TODO.md                 # Development tasks
+│   └── README.md               # This file
+```
 
-## Dependencies
-- Vue 3.x
-- Vuex (for state management)
-- Vue-i18n (for internationalization)
-- Chart.js (for pressure trend visualization)
+## ⚙️ Configuration
 
-## Browser Compatibility
-- Chrome 80+
-- Firefox 75+
-- Safari 13+
-- Edge 80+
+### Main Config (`config/config.json`)
+Configuration sections:
+
+#### `component`
+Component metadata and identification
+- Key properties: `name`, `displayName`, `type`, ...
+
+#### `ui`
+User interface settings and styling
+- Key properties: `layout`, `gauges`, `alerts`, ...
+
+#### `sensors`
+Sensors configuration
+- Key properties: `pressure1`, `pressure2`, `pressure3`
+
+#### `alerting`
+Alerting configuration
+- Key properties: `enabled`, `soundAlerts`, `visualAlerts`, ...
+
+#### `data`
+Default runtime data values
+- Key properties: `sensorValues`, `alerts`, `connectionStatus`, ...
+
+#### `realTime`
+RealTime configuration
+- Key properties: `enabled`, `updateInterval`, `websocketUrl`, ...
+
+#### `responsive`
+Responsive configuration
+- Key properties: `display79`, `adaptiveLayout`
+
+#### `accessibility`
+Accessibility configuration
+- Key properties: `ariaLabels`, `announceAlerts`, `highContrast`, ...
+
+#### `performance`
+Performance and optimization settings
+- Key properties: `enableCaching`, `lazyLoading`, `throttleUpdates`, ...
+
+#### `calibration`
+Calibration configuration
+- Key properties: `enabled`, `coefficients`, `lastCalibration`
+
+#### `logging`
+Logging configuration
+- Key properties: `enabled`, `logLevel`, `logAlerts`, ...
+
+
+
+### Runtime Data (`config/data.json`)
+Editable runtime values that can be modified without code changes.
+
+### Schema (`config/schema.json`)
+JSON Schema for configuration validation - auto-generated from config structure.
+
+### CRUD Rules (`config/crud.json`)
+Defines which fields are editable, readonly, or protected in admin interfaces.
+
+## 🔧 Development
+
+### Local Testing
+```bash
+# Run component tests
+npm test -- pressurePanel.test.js
+
+# Validate configuration
+npm run module:validate pressurePanel
+
+# Update schemas after config changes
+npm run config:generate-components
+```
+
+### Configuration Updates
+1. Edit `config/config.json` for structural changes
+2. Edit `config/data.json` for runtime value updates  
+3. Run `npm run config:generate-components` to update schemas
+4. Test changes with `npm run component:dev:pressurePanel`
+
+### Manual Schema Edits
+To preserve manual schema changes:
+```json
+{
+  "_manual": true,
+  "_modified": "2025-01-27T10:00:00Z",
+  "_comment": "Custom validation rules",
+  // your manual schema...
+}
+```
+
+## 🎛️ Admin Interface
+
+Access the admin interface at http://localhost:3001/admin when running dev server:
+
+- **Config Editor**: Edit runtime data with live validation
+- **Schema Viewer**: View current validation rules  
+- **Reset Tools**: Restore default configurations
+- **Export/Import**: Backup and restore configurations
+
+## 📊 API Endpoints
+
+When running the dev server, these API endpoints are available:
+
+| Endpoint | Method | Description |
+|----------|---------|-------------|
+| `/api/info` | GET | Component information |
+| `/api/config` | GET | Full configuration |
+| `/api/data` | GET | Runtime data only |
+| `/api/data` | POST | Update runtime data |
+| `/api/reset` | POST | Reset to defaults |
+
+### API Usage Examples
+```javascript
+// Get component info
+const info = await fetch('http://localhost:3001/api/info').then(r => r.json());
+
+// Get current data
+const data = await fetch('http://localhost:3001/api/data').then(r => r.json());
+
+// Update data
+const updated = await fetch('http://localhost:3001/api/data', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ key: 'newValue' })
+}).then(r => r.json());
+```
+
+## 🧪 Testing
+
+
+### Running Tests
+```bash
+npm test -- pressurePanel.test.js
+```
+
+### Test Coverage
+- ✅ Component initialization
+- ✅ Configuration validation  
+- ✅ API response handling
+- ✅ Error scenarios
+
+
+## 🔍 Dependencies
+
+No external dependencies
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+| Issue | Solution |
+|-------|----------|
+| Dev server won't start | Check port availability, run `npm install` |
+| Config validation fails | Check `config/schema.json`, validate JSON syntax |
+| Component not loading | Verify `index.js` exports, check browser console |
+| API calls fail | Ensure dev server is running, check CORS settings |
+
+### Debug Commands
+```bash
+# Validate component structure
+npm run module:validate pressurePanel
+
+# Check configuration
+npm run config:validate
+
+# View component info
+curl http://localhost:3001/api/info
+
+# Test API endpoints
+curl http://localhost:3001/api/data
+```
+
+## 📝 Changelog
+
+See `CHANGELOG.md` for version history and updates.
+
+## 🎯 TODOs
+
+See `TODO.md` for pending development tasks.
+
+---
+
+**Generated**: 2025-09-27T07:16:41.996Z  
+**Generator**: componentReadmeGenerator v1.0.0  
+**Component**: pressurePanel@0.1.0

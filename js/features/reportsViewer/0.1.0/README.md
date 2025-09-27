@@ -1,16 +1,16 @@
-![appHeader Screenshot](./appHeader.png)
+![reportsViewer Screenshot](./reportsViewer.png)
 
-# App Header
+# ReportsViewer
 
-Header component with device status, language selector, and 7.9" display optimization
+Advanced reports viewer with filters, data visualization and export capabilities
 
 ## 📋 Component Information
 
-- **Name**: `appHeader`
+- **Name**: `reportsViewer`
 - **Version**: `0.1.0`
-- **Type**: `layout`
+- **Type**: `component`
 - **Category**: `ui-component`
-- **Status**: 🟢 **Complete**
+- **Status**: 🟡 **Nearly Complete**
 
 ## 🚀 Quick Start
 
@@ -19,10 +19,10 @@ Run this component in isolation for development and testing:
 
 ```bash
 # Start dev server for this component
-npm run component:dev:appHeader
+npm run component:dev:reportsViewer
 
 # Or manually with custom port
-node tools/dev/componentDevServer.js js/features/appHeader/0.1.0 3001
+node tools/dev/componentDevServer.js js/features/reportsViewer/0.1.0 3001
 ```
 
 **Available URLs:**
@@ -33,19 +33,19 @@ node tools/dev/componentDevServer.js js/features/appHeader/0.1.0 3001
 
 ### Integration Usage
 ```javascript
-import appHeader from './js/features/appHeader/0.1.0/index.js';
+import reportsViewer from './js/features/reportsViewer/0.1.0/index.js';
 
 // Initialize component
-const result = await appHeader.init(context);
+const result = await reportsViewer.init(context);
 
 // Use component
-if (appHeader.component) {
+if (reportsViewer.component) {
   // Vue component available
-  const VueComponent = appHeader.component;
+  const VueComponent = reportsViewer.component;
 }
 
 // Handle actions
-const response = appHeader.handle({
+const response = reportsViewer.handle({
   action: 'render',
   data: { /* your data */ }
 });
@@ -54,11 +54,11 @@ const response = appHeader.handle({
 ## 📁 Project Structure
 
 ```
-appHeader/
+reportsViewer/
 ├── 0.1.0/
 │   ├── index.js                 # Main module export
-│   ├── appHeader.js              # Vue component ✅
-│   ├── appHeader.test.js         # Component tests ✅
+│   ├── reportsViewer.js              # Vue component ✅
+│   ├── reportsViewer.test.js         # Component tests ❌
 │   ├── package.json            # Module metadata
 │   ├── config/                 # Configuration directory
 │   │   ├── config.json         # Main configuration
@@ -75,37 +75,41 @@ appHeader/
 ### Main Config (`config/config.json`)
 Configuration sections:
 
-#### `component`
-Component metadata and identification
-- Key properties: `name`, `displayName`, `type`, ...
+#### `metadata`
+Metadata configuration
+- Key properties: `name`, `version`, `type`, ...
 
 #### `ui`
 User interface settings and styling
-- Key properties: `layout`, `sections`
+- Key properties: `layout`, `colors`, `animations`
 
-#### `data`
-Default runtime data values
-- Key properties: `deviceStatus`, `deviceInfo`, `currentLanguage`, ...
+#### `reportFilters`
+ReportFilters configuration
+- Key properties: `dateRange`, `deviceTypes`, `testStatuses`
 
-#### `languages`
-Languages configuration
-- Key properties: `pl`, `en`, `de`
+#### `exportFormats`
+ExportFormats configuration
+- Key properties: `0`, `1`, `2`, ...
 
-#### `responsive`
-Responsive configuration
-- Key properties: `display79`
-
-#### `accessibility`
-Accessibility configuration
-- Key properties: `ariaLabels`, `keyboardNavigation`, `highContrast`, ...
+#### `api`
+API connection configuration
+- Key properties: `endpoints`, `timeout`, `retryAttempts`
 
 #### `performance`
 Performance and optimization settings
-- Key properties: `statusUpdateInterval`, `enableCaching`, `lazyLoading`, ...
+- Key properties: `maxReportSize`, `cacheTimeout`, `maxExportSize`, ...
 
 #### `security`
 Security and validation rules
-- Key properties: `validation`, `protection`, `audit`
+- Key properties: `requiredRole`, `allowedExportFormats`, `maxDateRange`, ...
+
+#### `chartConfiguration`
+ChartConfiguration configuration
+- Key properties: `defaultType`, `colors`, `animations`, ...
+
+#### `localization`
+Localization configuration
+- Key properties: `supportedLanguages`, `fallbackLanguage`, `dateFormats`
 
 
 
@@ -123,10 +127,10 @@ Defines which fields are editable, readonly, or protected in admin interfaces.
 ### Local Testing
 ```bash
 # Run component tests
-npm test -- appHeader.test.js
+npm test -- reportsViewer.test.js
 
 # Validate configuration
-npm run module:validate appHeader
+npm run module:validate reportsViewer
 
 # Update schemas after config changes
 npm run config:generate-components
@@ -136,7 +140,7 @@ npm run config:generate-components
 1. Edit `config/config.json` for structural changes
 2. Edit `config/data.json` for runtime value updates  
 3. Run `npm run config:generate-components` to update schemas
-4. Test changes with `npm run component:dev:appHeader`
+4. Test changes with `npm run component:dev:reportsViewer`
 
 ### Manual Schema Edits
 To preserve manual schema changes:
@@ -189,21 +193,19 @@ const updated = await fetch('http://localhost:3001/api/data', {
 ## 🧪 Testing
 
 
-### Running Tests
-```bash
-npm test -- appHeader.test.js
-```
+### Tests Status
+❌ Tests not yet implemented
 
-### Test Coverage
-- ✅ Component initialization
-- ✅ Configuration validation  
-- ✅ API response handling
-- ✅ Error scenarios
+To add tests:
+1. Create `reportsViewer.test.js`
+2. Use Vitest framework
+3. Test component initialization, config validation, and API responses
 
 
 ## 🔍 Dependencies
 
-No external dependencies
+- `vue`
+- `vuex`
 
 ## 🛠️ Troubleshooting
 
@@ -219,7 +221,7 @@ No external dependencies
 ### Debug Commands
 ```bash
 # Validate component structure
-npm run module:validate appHeader
+npm run module:validate reportsViewer
 
 # Check configuration
 npm run config:validate
@@ -241,6 +243,6 @@ See `TODO.md` for pending development tasks.
 
 ---
 
-**Generated**: 2025-09-27T07:16:41.990Z  
+**Generated**: 2025-09-27T07:16:41.998Z  
 **Generator**: componentReadmeGenerator v1.0.0  
-**Component**: appHeader@0.1.0
+**Component**: reportsViewer@0.1.0
