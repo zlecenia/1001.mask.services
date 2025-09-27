@@ -1,0 +1,103 @@
+{
+  "metadata": {
+    "name": "reportsViewer",
+    "version": "0.1.0", 
+    "type": "component",
+    "dependencies": ["vue", "vuex"],
+    "description": "Advanced reports viewer with filters, data visualization and export capabilities",
+    "author": "MASKTRONIC C20",
+    "created": "2024-01-21"
+  },
+  "ui": {
+    "layout": {
+      "containerMaxWidth": "1200px",
+      "padding": "20px",
+      "borderRadius": "12px",
+      "filtersGrid": "repeat(auto-fit, minmax(200px, 1fr))",
+      "summaryGrid": "repeat(auto-fit, minmax(200px, 1fr))",
+      "breakdownGrid": "repeat(auto-fit, minmax(250px, 1fr))"
+    },
+    "colors": {
+      "background": "linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%)",
+      "cardBackground": "#f8f9fa",
+      "primaryBlue": "#007bff",
+      "successGreen": "#28a745", 
+      "dangerRed": "#dc3545",
+      "warningYellow": "#ffc107",
+      "textPrimary": "#333",
+      "textSecondary": "#666"
+    },
+    "animations": {
+      "buttonHover": "translateY(-2px)",
+      "transition": "all 0.3s",
+      "pulseAnimation": "pulse 1.5s infinite",
+      "progressAnimation": "width 0.5s ease"
+    }
+  },
+  "reportFilters": {
+    "dateRange": {
+      "defaultDays": 30,
+      "maxDays": 365,
+      "format": "YYYY-MM-DD"
+    },
+    "deviceTypes": [
+      {"id": "all", "label": {"pl": "Wszystkie typy", "en": "All Types", "de": "Alle Typen"}},
+      {"id": "PP_MASK", "label": {"pl": "Maska PP", "en": "PP Mask", "de": "PP Maske"}},
+      {"id": "NP_MASK", "label": {"pl": "Maska NP", "en": "NP Mask", "de": "NP Maske"}},
+      {"id": "SCBA", "label": {"pl": "SCBA", "en": "SCBA", "de": "SCBA"}},
+      {"id": "CPS", "label": {"pl": "Kombinezon CPS", "en": "CPS Protection Suit", "de": "CPS Schutzanzug"}}
+    ],
+    "testStatuses": [
+      {"id": "all", "label": {"pl": "Wszystkie", "en": "All", "de": "Alle"}},
+      {"id": "passed", "label": {"pl": "Zakończone sukcesem", "en": "Passed", "de": "Bestanden"}},
+      {"id": "failed", "label": {"pl": "Nieudane", "en": "Failed", "de": "Fehlgeschlagen"}},
+      {"id": "in_progress", "label": {"pl": "W trakcie", "en": "In Progress", "de": "In Bearbeitung"}}
+    ]
+  },
+  "exportFormats": [
+    {"id": "json", "label": "JSON", "icon": "📄", "mimeType": "application/json"},
+    {"id": "csv", "label": "CSV", "icon": "📊", "mimeType": "text/csv"},
+    {"id": "pdf", "label": "PDF", "icon": "📑", "mimeType": "application/pdf"},
+    {"id": "xml", "label": "XML", "icon": "📋", "mimeType": "application/xml"}
+  ],
+  "api": {
+    "endpoints": {
+      "generateReport": "/api/reports/generate",
+      "exportReport": "/api/reports/export",
+      "getReportData": "/api/reports/data",
+      "getDeviceStats": "/api/reports/device-stats"
+    },
+    "timeout": 30000,
+    "retryAttempts": 3
+  },
+  "performance": {
+    "maxReportSize": 50000,
+    "cacheTimeout": 300000,
+    "maxExportSize": 10485760,
+    "reportGenerationTimeout": 30000
+  },
+  "security": {
+    "requiredRole": "OPERATOR",
+    "allowedExportFormats": ["json", "csv", "xml"],
+    "maxDateRange": 365,
+    "validationRules": {
+      "dateFrom": "required|date",
+      "dateTo": "required|date|after_or_equal:dateFrom"
+    }
+  },
+  "chartConfiguration": {
+    "defaultType": "bar",
+    "colors": ["#007bff", "#28a745", "#dc3545", "#ffc107", "#6f42c1"],
+    "animations": true,
+    "responsiveBreakpoints": [576, 768, 992, 1200]
+  },
+  "localization": {
+    "supportedLanguages": ["pl", "en", "de"],
+    "fallbackLanguage": "pl",
+    "dateFormats": {
+      "pl": "DD.MM.YYYY",
+      "en": "MM/DD/YYYY", 
+      "de": "DD.MM.YYYY"
+    }
+  }
+}

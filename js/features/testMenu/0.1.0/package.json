@@ -1,0 +1,71 @@
+{
+  "name": "@masktronic/test-menu",
+  "version": "0.1.0",
+  "description": "Advanced test menu with wizard, scenarios, history and templates",
+  "type": "module",
+  "main": "index.js",
+  "author": "MASKTRONIC C20",
+  "license": "PROPRIETARY",
+  "keywords": [
+    "vue3",
+    "test-menu",
+    "wizard",
+    "scenarios",
+    "masktronic",
+    "industrial"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/masktronic/1001.mask.services.git"
+  },
+  "dependencies": {
+    "vue": "^3.4.0",
+    "vuex": "^4.1.0"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^2.4.0",
+    "vitest": "^1.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.4.0",
+    "vuex": "^4.1.0"
+  },
+  "files": [
+    "index.js",
+    "testMenu.js",
+    "config.json",
+    "README.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "test": "vitest",
+    "test:coverage": "vitest --coverage",
+    "dev": "vite --config ../../../vite.config.js"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "moduleInfo": {
+    "migrated": true,
+    "originalFile": "TestMenuTemplate.js",
+    "migratedDate": "2024-01-21",
+    "features": [
+      "test-wizard",
+      "custom-scenarios", 
+      "test-history",
+      "test-templates",
+      "data-export",
+      "security-integration"
+    ],
+    "requiredServices": [
+      "securityService",
+      "store"
+    ],
+    "supportedRoles": [
+      "OPERATOR",
+      "ADMIN",
+      "SUPERUSER",
+      "SERWISANT"
+    ]
+  }
+}

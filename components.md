@@ -1,4 +1,4 @@
-# MASKSERVICE C20 Components - LLM Guidelines
+# MASKSERVICE C20 Components - Complete Documentation
 
 ## Project Structure (Unified)
 ```
@@ -6,42 +6,152 @@ js/features/[component]/[version]/
 ├── index.js              # Module export
 ├── [component].js        # Vue component
 ├── [component].test.js   # Tests
-├── package.json          # Metadata
-├── config/               # All configs here
-│   ├── config.json       # Source config
-│   ├── data.json         # Runtime values
-│   ├── schema.json       # Validation
-│   └── crud.json         # Edit rules
-└── locales/              # Translations (optional)
+├── package.json          # Component scripts
+├── standalone.html       # Standalone preview
+├── dev-server.js        # Component dev server
+├── vite.config.js       # Build configuration
+├── config/              # All configs here
+│   ├── config.json      # Source config
+│   ├── data.json        # Runtime values
+│   ├── schema.json      # Validation
+│   └── crud.json        # Edit rules
+└── locales/             # Translations (optional)
 ```
 
-## Quick Reference
+## Component Registry
 
-### Component Locations
-All components in: `js/features/[name]/0.1.0/`
+| Component | Type | Purpose | Status | Standalone |
+|-----------|------|---------|--------|-----------|
+| **pageTemplate** | Layout | Main grid container | ✅ Active | ✅ |
+| **appHeader** | Layout | Top bar with status | ✅ Active | ✅ |
+| **mainMenu** | Navigation | Role-based sidebar | ✅ Active | ✅ |
+| **loginForm** | Auth | Login + virtual keyboard | ✅ Active | ✅ |
+| **appFooter** | Layout | System info footer | ✅ Active | ✅ |
+| **pressurePanel** | Monitoring | Pressure gauges | ✅ Active | ✅ |
+| **realtimeSensors** | Monitoring | WebSocket data | ✅ Active | ✅ |
+| **deviceData** | Data | Device management | ⚠️ Beta | ⚠️ |
+| **systemSettings** | Config | Settings UI | ⚠️ Beta | ⚠️ |
+| **auditLogViewer** | Security | Audit logs | ✅ Active | ✅ |
 
-| Component | Type | Purpose | Status |
-|-----------|------|---------|--------|
-| **pageTemplate** | Layout | Main grid container | ✅ Active |
-| **appHeader** | Layout | Top bar with status | ✅ Active |
-| **mainMenu** | Navigation | Role-based sidebar | ✅ Active |
-| **loginForm** | Auth | Login + virtual keyboard | ✅ Active |
-| **appFooter** | Layout | System info footer | ✅ Active |
-| **pressurePanel** | Monitoring | Pressure gauges | ✅ Active |
-| **realtimeSensors** | Monitoring | WebSocket data | ✅ Active |
-| **deviceData** | Data | Device management | ⚠️ Beta |
-| **systemSettings** | Config | Settings UI | ⚠️ Beta |
-| **auditLogViewer** | Security | Audit logs | ✅ Active |
+## NPM Scripts - Complete Reference
 
-### Config File Purposes
-- **config.json** - Full component configuration (source of truth)
-- **data.json** - Runtime changeable values only
-- **schema.json** - JSON Schema validation rules
-- **crud.json** - Field editability and UI hints
+### Global Commands (root package.json)
+```bash
+# Component Management
+npm run module:init              # Create new component
+npm run module:init-all          # Initialize all components
+npm run module:migrate           # Migrate to unified structure
+npm run module:list              # List all components
+
+# Standalone Execution
+npm run dev:component [name]     # Run specific component
+npm run dev:appFooter           # Run appFooter standalone
+npm run dev:mainMenu            # Run mainMenu standalone
+npm run playground              # Interactive component selector
+
+# Testing
+npm run test                    # Test all components
+npm run test:component [name]   # Test specific component
+npm run test:watch [name]       # Watch mode for component
+
+# Building
+npm run build                   # Build full application
+npm run build:component [name]  # Build component standalone
+npm run build:all-standalone    # Build all as widgets
+
+# Configuration
+npm run config:generate         # Generate schemas locally
+npm run crud:generate           # Generate CRUD locally
+npm run validate-all            # Validate everything
+```
+
+### Component-Level Commands (component package.json)
+```bash
+# From component directory: js/features/[name]/0.1.0/
+npm run dev                      # Start component dev server
+npm run build                    # Build as library
+npm run preview                  # Preview build
+npm run test                     # Run component tests
+npm run serve                    # Custom dev server
+```
+
+## Standalone Component Setup
+
+### 1. Standalone HTML Template
+```html
+<!-- js/features/[component]/0.1.0/standalone.html -->
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=400">
+    <title>Component - Standalone</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        #preview-container {
+            width: 1280px;
+            height: 400px;
+            background: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div id="preview-container">
+        <div id="app"></div>
+    </div>
+    <script type="module">
+        import Component from './index.js';
+        await Component.init();
+        const { createApp } = Vue;
+        const app = createApp({
+            components: { 'my-component': Component.component },
+            template: '<my-component />'
+        });
+        app.mount('#app');
+    </script>
+</body>
+</html>
+```
+
+### 2. Component Vite Config
+```javascript
+// js/features/[component]/0.1.0/vite.config.js
+import { defineConfig } from 'vite';
+import vue from '@vitejs/plugin-vue';
+
+export default defineConfig({
+  plugins: [vue()],
+  root: __dirname,
+  server: { port: 3001 },
+  build: {
+    lib: {
+      entry: './index.js',
+      name: 'ComponentName',
+      formats: ['es', 'umd']
+    }
+  }
+});
+```
+
+### 3. Component Package.json
+```json
+{
+  "name": "@maskservice/component-name",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite serve",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "serve": "node ./dev-server.js"
+  }
+}
+```
 
 ## Component Template
 
-### Minimal Working Component
+### Complete Component Structure
 ```javascript
 // js/features/myComponent/0.1.0/index.js
 import component from './myComponent.js';
@@ -51,202 +161,141 @@ export default {
   metadata: {
     name: 'myComponent',
     version: '0.1.0',
-    type: 'component', // component|service|layout
+    type: 'component',
     config: './config/'
   },
+  
   component,
+  
   async init(context) {
     const data = await import('./config/data.json');
     return { success: true, config: data };
   },
+  
   async handle(request) {
-    return { success: true, data: request };
+    const { action, payload } = request;
+    switch(action) {
+      case 'GET_CONFIG':
+        return this.getConfig(payload.section);
+      case 'UPDATE_CONFIG':
+        return this.updateConfig(payload);
+      default:
+        return { success: true, data: request };
+    }
+  },
+  
+  async getConfig(section) {
+    const data = await import('./config/data.json');
+    return section ? data[section] : data;
+  },
+  
+  async updateConfig(updates) {
+    const key = `config_${this.metadata.name}_${this.metadata.version}`;
+    localStorage.setItem(key, JSON.stringify(updates));
+    return updates;
   }
 };
 ```
 
-### Vue Component Structure
-```javascript
-// myComponent.js
-export default {
-  name: 'MyComponent',
-  template: `<div class="my-component">{{text}}</div>`,
-  data: () => ({ text: 'Hello' }),
-  mounted() {
-    console.log('Component mounted');
-  }
-};
+## Running Components
+
+### Method 1: Quick Start
+```bash
+# From root directory
+npm run dev:appFooter
+npm run dev:mainMenu
+npm run dev:loginForm
 ```
 
-## NPM Scripts
-
-### Essential Commands
+### Method 2: Interactive Playground
 ```bash
-# Component operations
-npm run module:init              # Create new component
-npm run module:init-all          # Initialize all
-npm run module:migrate           # Migrate to unified structure
-
-# Config management (works with local configs)
-npm run config:generate          # Generate schemas locally
-npm run crud:generate            # Generate CRUD locally
-npm run validate-all             # Validate everything
-
-# Development
-npm run dev                      # Start dev server
-npm run build                    # Production build
-npm run test                     # Run all tests
+npm run playground
+# Select component from list
+# Opens at http://localhost:3001
 ```
 
-### Component-specific Commands
+### Method 3: Direct Component
 ```bash
-# Work with single component
-npm run component:update [name]     # Update schemas/CRUD
-npm run component:validate [name]   # Validate component
-npm run component:test [name]       # Test component
+cd js/features/appFooter/0.1.0
+npm run dev
+```
+
+### Method 4: All Components
+```bash
+npm run dev:all              # Run all in parallel
 ```
 
 ## Configuration System
 
-### Config Hierarchy
-```
-config.json (source) → schema.json (validation) → data.json (runtime) → crud.json (UI)
-```
+### Config Files
+- **config.json** - Full configuration (source)
+- **data.json** - Runtime values only
+- **schema.json** - JSON Schema validation
+- **crud.json** - Edit permissions & UI hints
 
-### Manual Changes Flag
+### Manual Changes Preservation
 ```json
-// Add to any .json file to preserve manual edits
 {
   "_manual": true,
   "_modified": "2025-01-27T10:00:00Z",
-  "_comment": "Reason for manual change"
+  "_comment": "Custom validation rules"
 }
 ```
 
-### Config Sections
-```javascript
-{
-  "component": {      // Metadata (don't generate schema)
-    "name": "componentName",
-    "version": "0.1.0"
-  },
-  "ui": {             // UI settings (generate schema)
-    "theme": "default",
-    "responsive": true
-  },
-  "api": {            // API config (generate schema)
-    "baseUrl": "http://localhost:3000",
-    "timeout": 30000
-  },
-  "performance": {    // Performance (generate schema)
-    "cache": true,
-    "updateInterval": 1000
-  }
-}
+## Development Workflows
+
+### 1. Create New Component
+```bash
+npm run module:init
+# Interactive prompts:
+# - Name: myComponent
+# - Type: component
+# - Version: 0.1.0
+
+cd js/features/myComponent/0.1.0
+npm run dev
+```
+
+### 2. Test Component
+```bash
+# Unit tests
+npm run test:component myComponent
+
+# Visual test
+npm run dev:myComponent
+# Open browser at localhost:3001
+```
+
+### 3. Build for Production
+```bash
+# Build as widget
+npm run build:component myComponent
+# Output: dist/myComponent.umd.js
+
+# Embed anywhere:
+<script src="myComponent.umd.js"></script>
 ```
 
 ## Import Patterns
 
 ### Within Component
 ```javascript
-// All imports are relative to component folder
 import config from './config/config.json';
 import schema from './config/schema.json';
-import crud from './config/crud.json';
 import data from './config/data.json';
 ```
 
-### From Other Components
+### Cross-Component
 ```javascript
-// Import from other components
 import appFooter from '../appFooter/0.1.0/index.js';
 const footerConfig = await appFooter.getConfig();
 ```
 
-## Data Access Patterns
-
-### Reading Config
-```javascript
-// In component
-async loadConfig() {
-  const data = await import('./config/data.json');
-  return data.default || data;
-}
-```
-
-### Updating Config (Browser)
-```javascript
-// Store in localStorage for browser
-updateConfig(updates) {
-  const key = `config_${this.metadata.name}_${this.metadata.version}`;
-  localStorage.setItem(key, JSON.stringify(updates));
-}
-```
-
-### Validation
-```javascript
-// Validate against schema
-import Ajv from 'ajv';
-const ajv = new Ajv();
-const validate = ajv.compile(schema);
-const valid = validate(data);
-```
-
-## Development Workflow
-
-### 1. Create Component
-```bash
-npm run module:init
-# Name: myComponent
-# Type: component
-# Edit: js/features/myComponent/0.1.0/config/config.json
-npm run config:generate
-```
-
-### 2. Update Existing
-```bash
-# Edit files in js/features/[name]/0.1.0/
-npm run component:update [name]
-npm run component:test [name]
-git commit -am "Updated component"
-```
-
-### 3. Manual Config Edit
-```bash
-# Edit js/features/[name]/0.1.0/config/schema.json
-# Add "_manual": true
-npm run component:validate [name]
-```
-
-## User Roles
-
-| Role | Color | Routes |
-|------|-------|--------|
-| OPERATOR | #27ae60 | /dashboard, /monitoring |
-| ADMIN | #f39c12 | + /tests, /reports, /users |
-| SUPERUSER | #e74c3c | + /system |
-| SERWISANT | #3498db | + /service, /calibration |
-
-## Display Specs
-- **Target**: 7.9" LCD (1280x400px)
-- **Touch**: Min 40px targets
-- **Grid**: Fixed layout, no responsive
-- **Refresh**: 1s intervals via WebSocket
-
-## State Management
-```javascript
-// Vuex store
-{
-  auth: { user, role, permissions },
-  navigation: { currentRoute, menuState },
-  sensors: { pressure1, pressure2, pressure3 },
-  system: { deviceStatus, language }
-}
-```
-
 ## Testing
+
+### Unit Tests
 ```javascript
-// Component test template
+// [component].test.js
 import { describe, it, expect } from 'vitest';
 import module from './index.js';
 
@@ -258,27 +307,57 @@ describe('Component', () => {
 });
 ```
 
-## Common Issues & Solutions
+### Run Tests
+```bash
+npm run test:component appFooter
+npm run test:watch appFooter
+npm run test:all
+```
 
+## Build & Deploy
+
+### Build Component
+```bash
+npm run build:component appFooter
+# Creates: dist/appFooter.umd.js
+```
+
+### Deploy as Widget
+```html
+<div id="footer-widget"></div>
+<script src="https://cdn/appFooter.umd.js"></script>
+<script>
+  AppFooter.mount('#footer-widget');
+</script>
+```
+
+## User Roles & Display
+
+### Roles
+| Role | Color | Access |
+|------|-------|--------|
+| OPERATOR | #27ae60 | Dashboard, Monitoring |
+| ADMIN | #f39c12 | + Tests, Reports, Users |
+| SUPERUSER | #e74c3c | + System Config |
+| SERWISANT | #3498db | + Service, Calibration |
+
+### Display
+- **Target**: 7.9" LCD (1280x400px)
+- **Touch**: Min 40px targets
+- **Layout**: Fixed grid
+- **Refresh**: 1s WebSocket
+
+## Quick Reference
+
+### Common Issues
 | Issue | Solution |
 |-------|----------|
-| Config not found | Check path: `./config/data.json` |
-| Schema validation fails | Remove `_manual` flag, regenerate |
+| Config not found | Check `./config/data.json` |
+| Component won't run | Check `vite.config.js` exists |
 | Import errors | Use relative paths `./config/` |
-| Component not loading | Check `index.js` exports |
+| Standalone fails | Generate `standalone.html` |
 
-## File Validation Rules
-
-### Required Files
-```
-index.js         # Main export
-[name].js        # Vue component
-package.json     # Dependencies
-config/
-  └── config.json # Configuration
-```
-
-### Naming Convention
+### File Conventions
 - Folders: camelCase (`appFooter`)
 - Components: PascalCase (`AppFooter`)
 - Files: camelCase (`appFooter.js`)
@@ -288,26 +367,24 @@ config/
 
 ## For AI Assistants
 
-When working with this codebase:
+### Key Points:
+1. **All configs local** in `./config/` folder
+2. **Each component standalone** with own dev server
+3. **Use npm scripts** for all operations
+4. **Check _manual flag** before regenerating
+5. **Version format** always 0.1.0 style
 
-1. **All configs are local** - Look in `js/features/[name]/0.1.0/config/`
-2. **Use npm scripts** - Don't manually create/modify files
-3. **Check _manual flag** - Preserve manual edits
-4. **Import relatively** - Use `./config/` within components
-5. **Test changes** - Run `npm run validate-all`
-6. **Version format** - Always use semantic versioning (0.1.0)
-
-### Quick Commands
+### Quick Commands:
 ```bash
-npm run module:init          # New component
-npm run config:generate      # Generate schemas
-npm run validate-all         # Validate everything
-npm run dev                  # Start development
+npm run dev:[component]      # Run standalone
+npm run test:component       # Test component
+npm run build:component      # Build widget
+npm run playground           # Interactive mode
 ```
 
-### Component Access
+### Component Access:
 ```javascript
-// Get component config
+// Config access
 const config = await import('./config/data.json');
 
 // Update config
