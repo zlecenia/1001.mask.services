@@ -1,755 +1,248 @@
-# MASKSERVICE C20 1001 - Components Specification
+# MASKSERVICE C20 Components - LLM Guidelines
 
-## Overview
 
-This document provides a comprehensive specification of all Vue 3 components in the MASKSERVICE industrial monitoring system, optimized for 7.9" LCD IPS displays (1280x400px landscape). The system uses a modular architecture with versioned components, role-based access control, and real-time sensor monitoring.
-
-## System Architecture
-
-### Core Principles
-- **Modular Design**: Each component is self-contained with its own configuration, styles, and logic
-- **Version Control**: All components are versioned using semantic versioning (0.1.0)
-- **Role-Based Access**: Four distinct user roles with specific permissions
-- **Real-Time Monitoring**: WebSocket-based live data updates
-- **Touch Optimization**: Designed for industrial touch interfaces
-- **Accessibility**: Full ARIA support and keyboard navigation
-
-### Technology Stack
-- **Framework**: Vue 3 with Composition API
-- **State Management**: Vuex 4
-- **Routing**: Vue Router 4
-- **Internationalization**: Vue-i18n
-- **Testing**: Vitest + Vue Test Utils
-- **Build Tool**: Vite
-
-## Component Categories
-
-### Layout Components
-Components that define the overall application structure and page organization.
-
-### Navigation Components
-Components responsible for user navigation and menu systems.
-
-### Authentication Components
-Components handling user authentication and role management.
-
-### Monitoring Components
-Components for real-time data visualization and sensor monitoring.
-
----
-
-## Component Specifications
-
-## 1. pageTemplate
-
-**Category**: Layout  
-**Type**: Container Component  
-**Version**: 0.1.0
-
-### Purpose
-The main layout container that defines the grid structure for the entire application, orchestrating the positioning of header, sidebar, content area, footer, and pressure panel.
-
-### Structure
+## Project Structure
 ```
-┌─────────────────────────────────────────┐
-│                 appHeader               │
-├─────────┬─────────────────┬─────────────┤
-│mainMenu │   content-area  │pressurePanel│
-│         │                 │             │
-│         │                 │             │
-├─────────┴─────────────────┴─────────────┤
-│               appFooter                 │
-└─────────────────────────────────────────┘
+maskservice-c20/
+├── js/features/          # Vue 3 components (versioned)
+├── config/              # JSON configurations
+├── configs/             # Generated schemas & CRUD
+├── tools/               # Generators & validators
+└── package.json         # NPM scripts & config
 ```
 
-### Grid Layout
-- **Rows**: `40px 1fr 30px` (header, content, footer)
-- **Columns**: `180px 1fr 120px` (sidebar, content, pressure panel)
-- **Total Height**: 400px (7.9" display optimized)
-- **Total Width**: 1280px
+### Key Paths
+- **Components**: `js/features/[componentName]/0.1.0/`
+- **Configs**: `config/[name].json` → `config/[name]/data.json|schema.json|crud.json`
+- **Tools**: `tools/generators/`, `tools/validators/`, `tools/init/`
 
-### Configuration Options
-- Component enable/disable toggles
-- Responsive breakpoints
-- Route-based content loading
-- Error boundary handling
-- Transition animations
+## Component Architecture
 
-### Child Components
-- `appHeader`: Application header with device status
-- `mainMenu`: Role-based navigation sidebar
-- `appFooter`: System information footer
-- `pressurePanel`: Real-time pressure monitoring
-- Dynamic content area based on routing
-
-### Responsive Behavior
-- **Mobile (≤400px)**: Stacked layout
-- **Tablet (≤768px)**: Responsive grid adjustments
-- **Desktop (≥1024px)**: Full grid layout
-- **7.9" Display**: Fixed optimized layout
-
----
-
-## 2. appHeader
-
-**Category**: Layout  
-**Type**: Navigation Component  
-**Version**: 0.1.0
-
-### Purpose
-Fixed header component displaying application branding, device status, connection information, and language selection.
-
-### Layout Structure
-```
-┌─────────────────────────────────────────────────────┐
-│ MASKSERVICE C20  │  Device Status  │  🇵🇱 PL ▼     │
-│                  │  Connection Info │               │
-└─────────────────────────────────────────────────────┘
-```
-
-### Sections
-1. **Left Section**: Application logo and branding
-2. **Center Section**: Device status and connection information
-3. **Right Section**: Language selector and user actions
-
-### Device Status States
-- **ONLINE**: Green indicator (#27ae60)
-- **OFFLINE**: Red indicator (#e74c3c)  
-- **CONNECTING**: Orange indicator (#f39c12)
-
-### Language Support
-- **Polish** (pl): Default language
-- **English** (en): Secondary language
-- **German** (de): Additional language
-
-### Configuration
-- Customizable status colors
-- Toggle visibility of sections
-- Device information format
-- Language selector options
-
----
-
-## 3. mainMenu
-
-**Category**: Navigation  
-**Type**: Menu Component  
-**Version**: 0.1.0
-
-### Purpose
-Role-based navigation sidebar providing access to different system areas based on user permissions.
-
-### Role-Based Menu Structure
-
-#### OPERATOR (Green #27ae60)
-- Dashboard
-- Monitoring
-**Permissions**: view_sensors, view_alerts
-
-#### ADMIN (Orange #f39c12)
-- Dashboard
-- Monitoring  
-- Tests
-- Reports
-- Users
-**Permissions**: manage_tests, manage_reports, manage_users
-
-#### SUPERUSER (Red #e74c3c)
-- Dashboard
-- Monitoring
-- Tests
-- Reports
-- Users
-- System
-**Permissions**: full_system_access, config_edit
-
-#### SERWISANT (Blue #3498db)
-- Dashboard
-- Monitoring
-- Service
-- Calibration
-- Diagnostics
-- Workshop
-**Permissions**: service_mode, calibration, diagnostics
-
-### Menu Item Structure
+### Standard Component Structure
 ```javascript
-{
-  label: "Display Name",
-  icon: "icon-name", 
-  route: "/route-path",
-  roles: ["ROLE1", "ROLE2"],
-  order: 1
+// js/features/[componentName]/0.1.0/index.js
+export default {
+  metadata: {
+    name: 'componentName',
+    version: '0.1.0',
+    type: 'component|service|layout',
+    dependencies: ['vue', 'vuex']
+  },
+  component: VueComponent,      // Vue 3 component
+  async init(context) {},       // Initialize
+  async handle(request) {},     // Handle actions
+  async destroy() {}           // Cleanup
 }
 ```
 
-### Interactive Features
-- Hover effects with background color change
-- Active state highlighting
-- Keyboard navigation support
-- ARIA labels for accessibility
+### Configuration Files
+Each component has:
+1. **config.json** - Source configuration
+2. **package.json** - Module metadata
+3. **[name].js** - Vue component
+4. **[name].test.js** - Tests
 
----
+## Available Components
 
-## 4. loginForm
+| Component | Path | Type | Purpose |
+|-----------|------|------|---------|
+| **pageTemplate** | `js/features/pageTemplate/0.1.0/` | Layout | Main grid container (header/menu/content/footer) |
+| **appHeader** | `js/features/appHeader/0.1.0/` | Layout | Top bar with status & language |
+| **mainMenu** | `js/features/mainMenu/0.1.0/` | Navigation | Role-based sidebar menu |
+| **loginForm** | `js/features/loginForm/0.1.0/` | Auth | Login with virtual keyboard |
+| **appFooter** | `js/features/appFooter/0.1.0/` | Layout | System info footer |
+| **pressurePanel** | `js/features/pressurePanel/0.1.0/` | Monitoring | Real-time pressure gauges |
+| **realtimeSensors** | `js/features/realtimeSensors/0.1.0/` | Monitoring | WebSocket sensor data |
+| **deviceData** | `js/features/deviceData/0.1.0/` | Data | Device management |
+| **systemSettings** | `js/features/systemSettings/0.1.0/` | Config | System configuration UI |
+| **auditLogViewer** | `js/features/auditLogViewer/0.1.0/` | Security | Audit log display |
 
-**Category**: Authentication  
-**Type**: Form Component  
-**Version**: 0.1.0
+## Configuration System
 
-### Purpose
-Secure authentication form with virtual keyboard support, role selection, and session management.
-
-### Form Structure
+### Config → Schema → CRUD Pipeline
 ```
-┌─────────────────────┐
-│   Login to System   │
-├─────────────────────┤
-│ Username: [_______] │
-│ Password: [_______] │
-│ Role:     [OPERATOR▼]│
-├─────────────────────┤
-│ [1][2][3][4][5][6]  │ ← Virtual Keyboard
-│ [q][w][e][r][t][y]  │
-│ [a][s][d][f][g][h]  │
-│ [SPACE] [⌫] [↵]     │
-├─────────────────────┤
-│      [LOGIN]        │
-└─────────────────────┘
+config/app.json → config/app/
+  ├── data.json    # Runtime values
+  ├── schema.json  # Validation rules
+  └── crud.json    # Edit permissions
 ```
 
-### Virtual Keyboard
-- **QWERTY Layout**: Standard keyboard layout
-- **Numeric Layout**: Numbers and basic symbols
-- **Special Keys**: Space, Backspace, Enter
-- **Touch Optimized**: 40px key height for industrial use
-
-### Security Features
-- Password encryption
-- Brute force protection (3 attempts)
-- Session timeout (30 minutes)
-- Input validation and sanitization
-- CSRF protection
-
-### Role Selection
-- Dropdown with four available roles
-- Color-coded role indicators
-- Default route assignment per role
-- Permission validation
-
-### Validation Rules
-- Minimum password length: 3 characters
-- Maximum login attempts: 3
-- Lockout duration: 5 minutes
-- Session timeout: 30 minutes
-
----
-
-## 5. appFooter
-
-**Category**: Layout  
-**Type**: Information Component  
-**Version**: 0.1.0
-
-### Purpose
-Fixed footer displaying system information, user status, device status, and operational data.
-
-### Layout Structure
-```
-┌─────────────────────────────────────────────────────┐
-│ System: v1.0.0 │ User: OPERATOR │ Status: ● ONLINE │
-└─────────────────────────────────────────────────────┘
-```
-
-### Information Sections
-
-#### System Information
-- Application version
-- Build information
-- System uptime
-- Memory usage
-
-#### User Information  
-- Current user role
-- Login timestamp
-- Session remaining time
-- Last activity
-
-#### Device Status
-- Connection status indicator
-- Last ping time
-- Network latency
-- Data quality metrics
-
-### Status Indicators
-- **Online**: Green circle (●)
-- **Offline**: Red circle (●)
-- **Warning**: Orange circle (●)
-- **Unknown**: Gray circle (●)
-
-### Configuration Options
-- Toggle section visibility
-- Custom status colors
-- Information display format
-- Update intervals
-
----
-
-## 6. pressurePanel
-
-**Category**: Monitoring  
-**Type**: Data Visualization Component  
-**Version**: 0.1.0
-
-### Purpose
-Real-time pressure monitoring panel with circular gauges, alerts, and trend indicators for industrial sensor data.
-
-### Layout Structure
-```
-┌─────────────┐
-│      P1     │
-│   ╭─────╮   │
-│  ╱  5.2  ╲  │
-│ │   bar   │ │
-│  ╲       ╱  │
-│   ╰─────╯   │
-├─────────────┤
-│      P2     │
-│   ╭─────╮   │
-│  ╱  2.1  ╲  │
-│ │   bar   │ │
-│  ╲       ╱  │
-│   ╰─────╯   │
-├─────────────┤
-│      P3     │
-│   ╭─────╮   │
-│  ╱  450  ╲  │
-│ │  mbar  │ │
-│  ╲       ╱  │
-│   ╰─────╯   │
-└─────────────┘
-```
-
-### Sensor Configuration
-
-#### Pressure 1 (P1)
-- **Range**: 0-10 bar
-- **Normal**: 2-8 bar
-- **Warning**: 1.5-9 bar
-- **Critical**: <1.5 or >9 bar
-
-#### Pressure 2 (P2)  
-- **Range**: 0-5 bar
-- **Normal**: 1-4 bar
-- **Warning**: 0.5-4.5 bar
-- **Critical**: <0.5 or >4.5 bar
-
-#### Pressure 3 (P3)
-- **Range**: 0-1000 mbar
-- **Normal**: 200-800 mbar
-- **Warning**: 100-900 mbar
-- **Critical**: <100 or >900 mbar
-
-### Alert System
-- **Visual Alerts**: Color-coded indicators
-- **Blinking Alerts**: Critical status blinking
-- **Sound Alerts**: Configurable audio warnings
-- **Alert Acknowledgment**: Required for critical alerts
-
-### Real-Time Features
-- **Update Interval**: 1 second
-- **WebSocket Connection**: `ws://localhost:5000/ws/pressure`
-- **Auto Reconnection**: 5 attempts with 2-second delay
-- **Data Retention**: 1000 points / 1 hour window
-
-### Gauge Visualization
-- **Size**: 80px diameter
-- **Stroke Width**: 4px
-- **Color Coding**: Normal/Warning/Critical states
-- **Text Display**: Value and unit
-- **Trend Indicators**: Up/Down/Stable arrows
-
----
-
-## State Management
-
-### Vuex Store Structure
-```javascript
-{
-  auth: {
-    isAuthenticated: false,
-    currentUser: null,
-    role: null,
-    permissions: []
-  },
-  navigation: {
-    currentRoute: '/dashboard',
-    menuState: 'collapsed'
-  },
-  sensors: {
-    pressure1: { value: 0, status: 'unknown' },
-    pressure2: { value: 0, status: 'unknown' },
-    pressure3: { value: 0, status: 'unknown' }
-  },
-  system: {
-    deviceStatus: 'OFFLINE',
-    connectionInfo: {},
-    language: 'pl'
-  }
-}
-```
-
-## Module-Based Architecture with Config Validation
-
-The system now uses a comprehensive module-based architecture with automated configuration validation, schema generation, and CRUD management.
-
-### Module Structure
-```
-modules/
-├── [moduleName]/
-│   └── [version]/
-│       ├── config.json          # Source configuration
-│       ├── package.json         # Module metadata
-│       ├── index.js            # Module implementation
-│       ├── [moduleName].vue    # Vue component (if applicable)
-│       ├── [moduleName].test.js # Test suite
-│       ├── README.md           # Documentation
-│       ├── TODO.md             # Task tracking
-│       └── CHANGELOG.md        # Version history
-```
-
-### Configuration System
-```
-configs/
-├── _templates/                 # Configuration templates
-├── _schemas/                   # Global schemas
-├── _generated/                 # Generated configurations
-├── _backups/                   # Automatic backups
-└── [moduleName]_[section]/     # Module configurations
-    ├── data.json              # Configuration data
-    ├── schema.json            # JSON schema (generated/manual)
-    └── crud.json              # CRUD rules (generated/manual)
-```
-
-### Standard Configuration Sections
-1. **component**: Metadata and identification
-2. **ui**: Visual styling and layout options  
-3. **api**: API connection settings
-4. **data**: Data management and caching
-5. **accessibility**: ARIA and keyboard navigation
-6. **performance**: Caching and optimization
-
-### Example Module Configuration
+### Manual Changes Preservation
 ```json
-{
-  "component": {
-    "name": "componentName",
-    "displayName": "Human Readable Name",
-    "type": "component",
-    "category": "ui-component",
-    "version": "0.1.0",
-    "enabled": true,
-    "dependencies": ["vue"]
-  },
-  "ui": {
-    "enabled": true,
-    "theme": "default",
-    "responsive": true,
-    "touchOptimized": true,
-    "accessibility": {
-      "ariaLabels": true,
-      "keyboardNavigation": true,
-      "highContrast": false
-    }
-  },
-  "api": {
-    "baseUrl": "http://localhost:3000/api",
-    "timeout": 30000,
-    "retries": 3,
-    "headers": {
-      "Content-Type": "application/json"
-    }
-  }
-}
-```
-
-### Development Workflow
-
-#### 1. Module Creation
-```bash
-# Create a new module interactively
-npm run module:init
-
-# Initialize all existing modules
-npm run module:init-all
-
-# List all modules and their status
-npm run module:list
-```
-
-#### 2. Configuration Management
-```bash
-# Generate schemas from data
-npm run schema:generate
-
-# Generate CRUD rules from schemas
-npm run crud:generate
-
-# Validate all configurations
-npm run validate-all
-
-# Update configurations after changes
-npm run update
-```
-
-#### 3. Development Workflow
-```bash
-# Watch for configuration changes
-npm run config:watch
-
-# Sync module configs to centralized configs
-npm run config:sync
-
-# Clean generated files
-npm run clean
-
-# Create backup
-npm run backup
-```
-
-#### 4. Manual Configuration Editing
-To mark configurations as manually edited and preserve changes:
-
-```json
+// Mark files as manual to preserve changes
 {
   "_manual": true,
-  "_modified": "2025-01-26T10:00:00Z",
-  "_comment": "Manually adjusted validation rules",
-  "type": "object",
-  "properties": {
-    // your manual changes...
-  }
+  "_comment": "Custom validation for API URLs",
+  // your manual changes...
 }
 ```
 
-### Schema Validation
-Each configuration section automatically generates:
+## NPM Scripts Reference
 
-- **JSON Schema**: Validates data structure and types
-- **CRUD Rules**: Defines field editability and UI hints
-- **Validation**: Runtime validation with detailed error reporting
-
-### SDK Generation
-Generate SDKs for different programming languages:
-
+### Essential Commands
 ```bash
-# JavaScript SDK
-npm run sdk:js
+# Module Management
+npm run module:init          # Create new component
+npm run module:init-all      # Initialize all modules
+npm run module:list          # List all components
 
-# Python SDK  
-npm run sdk:python
+# Configuration
+npm run config:generate      # Generate schemas from configs
+npm run crud:generate        # Generate CRUD rules
+npm run validate-all         # Validate everything
 
-# Go SDK
-npm run sdk:go
-
-# All SDKs
-npm run sdk:generate
+# Development
+npm run dev                  # Start dev server
+npm run test                 # Run tests
+npm run build               # Production build
 ```
 
-### Development Tools
+## Development Workflow
 
-The system includes a comprehensive set of development tools:
+### 1. Creating New Component
+```bash
+npm run module:init
+# Follow interactive prompts
+# Edit js/features/[name]/0.1.0/config.json
+npm run config:generate
+```
 
-#### Generators
-- **schemaGenerator.js**: Generates JSON schemas from config data with type inference
-- **crudGenerator.js**: Creates CRUD rules with field types, validation, and UI hints
-- **sdkGenerator.js**: Generates SDKs for JavaScript, Python, and Go
+### 2. Modifying Existing Component
+```bash
+# Edit component files
+npm run validate-all
+npm run test
+git commit
+```
 
-#### Validators
-- **configValidator.js**: Validates configurations against schemas
-- **schemaValidator.js**: Validates JSON schema structure and best practices
-- **crudValidator.js**: Validates CRUD rules for consistency and correctness
+### 3. Manual Config Editing
+```bash
+# Edit config/[name]/schema.json
+# Add "_manual": true
+npm run crud:generate --preserve
+```
 
-#### Initialization Tools
-- **initComponent.js**: Interactive component creation wizard
-- **initAll.js**: Batch initialization of all modules
-- **listModules.js**: Module inventory and status reporting
+## Key Technologies
 
-#### Synchronization Tools
-- **syncConfigs.js**: Synchronizes module configs with centralized configs
-- **watchConfigs.js**: Watches for file changes and auto-regenerates
+- **Vue 3.4** - Composition API preferred
+- **Vuex 4** - State management
+- **Vite 5** - Build tool
+- **Vitest** - Testing
+- **Vue-i18n** - Translations (pl/en/de)
 
-#### Utility Tools
-- **clean.js**: Cleanup tool for generated files and backups
-- **backup.js**: Backup and restore system for configurations
+## Display Specifications
 
-### Best Practices
+- **Target**: 7.9" LCD IPS (1280x400px)
+- **Touch**: Min 40px targets
+- **Layout**: Fixed grid, no responsive breakpoints
+- **Performance**: 1s data refresh, WebSocket for real-time
 
-1. **Always validate** configurations before committing:
-   ```bash
-   npm run validate-all
-   ```
+## User Roles & Permissions
 
-2. **Use manual markers** for custom edits:
-   ```json
-   { "_manual": true, "_comment": "Custom validation rules" }
-   ```
+| Role | Color | Access |
+|------|-------|--------|
+| OPERATOR | Green | Dashboard, Monitoring |
+| ADMIN | Orange | + Tests, Reports, Users |
+| SUPERUSER | Red | + System config |
+| SERWISANT | Blue | + Service, Calibration |
 
-3. **Keep backups** before major changes:
-   ```bash
-   npm run backup
-   ```
+## Component Communication
 
-4. **Watch during development**:
-   ```bash
-   npm run config:watch
-   ```
-
-5. **Generate SDKs** for external integrations:
-   ```bash
-   npm run sdk:generate
-   ```
-
-## Testing Strategy
-
-### Test Coverage
-- **Unit Tests**: Component logic and methods
-- **Integration Tests**: Component interactions
-- **Accessibility Tests**: ARIA compliance and keyboard navigation
-- **Performance Tests**: Rendering and update speed
-- **Visual Tests**: Layout and responsive design
-
-### Test Environment
-- **Framework**: Vitest + Vue Test Utils
-- **Mocking**: Reactive store mocking for Vue reactivity
-- **Event Testing**: Specific `mousedown` events for virtual keyboard
-- **DOM Testing**: Precise selector specificity
-
-### Test Results
-- **Total Tests**: 174 passing
-- **appFooter**: 64/64 tests passing
-- **appHeader**: Tests pending implementation
-- **mainMenu**: 42/42 tests passing  
-- **loginForm**: 43/43 tests passing
-- **pageTemplate**: 25/25 tests passing
-- **pressurePanel**: Tests pending implementation
-
-## Performance Considerations
-
-### 7.9" Display Optimization
-- **Fixed Layout**: No responsive breakpoints needed
-- **Touch Targets**: Minimum 40px height/width
-- **Font Sizes**: Optimized for 1280x400 resolution
-- **Contrast**: High contrast for industrial environments
-
-### Performance Features
-- **Component Caching**: Enabled where appropriate
-- **Lazy Loading**: Route-based component loading
-- **Throttling**: Real-time data update throttling
-- **Memory Management**: Automatic cleanup and disposal
-
-## Security Features
-
-### Authentication & Authorization
-- **Role-Based Access Control**: Four distinct roles
-- **Session Management**: 30-minute timeout
-- **Password Security**: Encryption and validation
-- **Audit Logging**: User action tracking
-
-### Input Validation
-- **Form Validation**: Client and server-side
-- **XSS Protection**: Input sanitization
-- **CSRF Protection**: Token-based validation
-- **SQL Injection Prevention**: Parameterized queries
-
-## Internationalization
-
-### Supported Languages
-- **Polish (pl)**: Default system language
-- **English (en)**: Secondary language  
-- **German (de)**: Additional language support
-
-### Translation Keys
+### State Management
 ```javascript
+// Vuex store structure
 {
-  "auth.login": "Zaloguj",
-  "auth.username": "Nazwa użytkownika", 
-  "auth.password": "Hasło",
-  "auth.role": "Rola",
-  "nav.dashboard": "Panel główny",
-  "nav.monitoring": "Monitoring",
-  "system.status": "Status",
-  "alerts.critical": "Krytyczny"
+  auth: { user, role, permissions },
+  navigation: { currentRoute, menuState },
+  sensors: { pressure1, pressure2, pressure3 },
+  system: { deviceStatus, language }
 }
 ```
 
-## Deployment & Environment
-
-### Production Configuration
-- **API Base URL**: Configurable via environment
-- **WebSocket URL**: Real-time data connection
-- **Session Timeout**: 30 minutes default
-- **Update Intervals**: Configurable per component
-
-### Browser Support
-- **Chrome**: v90+ (primary target)
-- **Firefox**: v88+ (secondary)
-- **Edge**: v90+ (secondary)
-- **Safari**: v14+ (limited support)
-
-### Hardware Requirements
-- **Display**: 7.9" LCD IPS 1280x400px
-- **Touch**: Capacitive touch support
-- **Network**: WebSocket-capable connection
-- **Memory**: 2GB RAM minimum
-
-## Development Guidelines
-
-### Code Style
-- **Vue 3 Composition API**: Preferred approach
-- **TypeScript**: Optional but recommended
-- **ESLint**: Airbnb configuration
-- **Prettier**: Code formatting
-
-### Component Structure
+### Data Service Integration
+```javascript
+// Inject in component
+const dataService = inject('dataService');
+const config = await dataService.get('appFooter_ui');
+dataService.watch('appFooter_ui', callback);
 ```
-component-name/
-├── 0.1.0/
-│   ├── index.js          # Module metadata
-│   ├── componentName.js  # Vue component
-│   ├── config.json       # Configuration
-│   ├── package.json      # Manifest
-│   ├── README.md         # Documentation
-│   ├── TODO.md           # Task list
-│   └── CHANGELOG.md      # Version history
-```
+
+## Testing Requirements
+
+- Unit tests for logic
+- Integration tests for component interaction
+- Min 80% coverage
+- Test file: `[name].test.js`
+
+## File Validation Rules
+
+### Required Files
+- `index.js` - Module export
+- `config.json` - Configuration
+- `package.json` - Dependencies
+- `README.md` - Documentation
 
 ### Naming Conventions
-- **Components**: PascalCase (e.g., `MainMenu`)
-- **Files**: camelCase (e.g., `mainMenu.js`)
-- **CSS Classes**: kebab-case (e.g., `.main-menu`)
-- **Variables**: camelCase (e.g., `currentUser`)
+- Components: PascalCase (`MainMenu`)
+- Files: camelCase (`mainMenu.js`)
+- CSS: kebab-case (`.main-menu`)
+- Config sections: snake_case (`api_config`)
 
-## Future Enhancements
+## Common Patterns
 
-### Planned Features
-- **WebSocket Integration**: Real-time sensor data
-- **Advanced Analytics**: Trend analysis and reporting
-- **Mobile Responsiveness**: Tablet and phone support
-- **Additional Languages**: Extended i18n support
-- **Theme System**: Light/dark mode switching
+### Component Registration
+```javascript
+// js/registerAllModules.js
+registry.register('componentName', '0.1.0', component);
+```
 
-### Technical Roadmap
-- **Vue 3.4**: Upgrade to latest Vue version
-- **Vite 5**: Build system improvements
-- **TypeScript**: Full TypeScript migration
-- **PWA**: Progressive Web App features
-- **CI/CD**: Automated testing and deployment
+### Config Access
+```javascript
+const config = await import('./config.json');
+const { ui, api, performance } = config;
+```
+
+### WebSocket Connection
+```javascript
+const ws = new WebSocket('ws://localhost:3000');
+ws.on('pressure:update', (data) => {
+  store.commit('sensors/UPDATE', data);
+});
+```
+
+## Troubleshooting
+
+| Issue | Solution |
+|-------|----------|
+| Module not found | Run `npm run module:init-all` |
+| Config validation fails | Check schema.json, run `npm run validate-all` |
+| Manual changes lost | Add `"_manual": true` to preserved files |
+| Tests failing | Check test setup in vitest.config.js |
+
+## Quick Component Template
+
+```javascript
+// Minimal working component
+export default {
+  metadata: {
+    name: 'myComponent',
+    version: '0.1.0',
+    type: 'component'
+  },
+  component: {
+    name: 'MyComponent',
+    template: '<div>{{text}}</div>',
+    data: () => ({ text: 'Hello' })
+  },
+  async init() { return { success: true }; }
+};
+```
 
 ---
 
-## Conclusion
-
-This component specification provides a comprehensive overview of the MASKSERVICE C20 1001 system architecture, individual component specifications, and development guidelines. The modular design ensures maintainability, scalability, and testability while meeting the specific requirements of industrial touch-screen applications.
-
-For detailed implementation examples and API documentation, refer to the individual component README files in their respective directories.
+**For AI Assistants**: When working with this codebase:
+1. Always check actual file paths in `js/features/`
+2. Use npm scripts for operations, don't create files manually
+3. Preserve `_manual` flags in configs
+4. Follow versioning (0.1.0 format)
+5. Test changes with `npm run validate-all`
