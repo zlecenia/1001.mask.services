@@ -148,6 +148,15 @@ class ComponentDevServer {
       }
     }));
     
+    // Alias for shared files to support /shared/ paths from components
+    this.app.use('/shared', express.static(path.join(projectRoot, 'js/shared'), {
+      setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+          res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        }
+      }
+    }));
+    
     console.log(chalk.green('✅ Middleware configured with proper MIME types'));
   }
 

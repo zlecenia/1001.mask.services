@@ -754,17 +754,21 @@ const TestMenu = {
             prevWizardStep,
             finishTestWizard,
             cancelTestWizard,
+            resetWizardData,
             
             // Custom Scenarios methods
             showCustomScenarios,
             createNewScenario,
+            loadCustomScenarios,
             
             // Test History methods
             showTestHistory,
+            loadTestHistory,
             
             // Test Templates methods
             showTestTemplates,
             useTemplate,
+            loadTestTemplates,
             
             // Utility methods
             closeAllModals,
