@@ -126,6 +126,12 @@ const createTestStore = () => {
   });
 };
 
+// Minimal test component to isolate DOM mounting issues
+const MinimalTestComponent = {
+  name: 'MinimalTestComponent',
+  template: '<div class="minimal-test">Minimal Test Component</div>'
+};
+
 describe('DeviceData Component', () => {
   let wrapper;
   let store;
@@ -185,6 +191,14 @@ describe('DeviceData Component', () => {
       }
     });
   };
+
+  describe('Minimal Component Test (DOM Mounting Isolation)', () => {
+    it('should mount minimal component without DOM errors', () => {
+      wrapper = mount(MinimalTestComponent);
+      expect(wrapper.exists()).toBe(true);
+      expect(wrapper.text()).toContain('Minimal Test Component');
+    });
+  });
 
   describe('Component Initialization', () => {
     it('should render without crashing', () => {

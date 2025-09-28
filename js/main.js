@@ -462,21 +462,27 @@ const app = createApp({
           container.innerHTML = `
             <div class="pressure-panel-test" style="background: #e8f5e8; border: 2px solid #28a745; padding: 16px; border-radius: 8px;">
               <h3 style="color: #155724; margin: 0 0 12px 0;">✅ PRESSURE PANEL TEST DZIAŁA!</h3>
-              <div style="display: flex; gap: 12px; margin-bottom: 12px;">
-                <div style="background: #fff; padding: 8px; border-radius: 4px; flex: 1; text-align: center;">
-                  <div style="font-weight: bold; color: #666;">P1</div>
-                  <div style="font-size: 18px; color: #000;">12.3 bar</div>
-                  <div style="color: #28a745; font-size: 12px;">NORMAL</div>
+              <div style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px;">
+                <div style="background: #fff; padding: 12px; border-radius: 4px; text-align: left; border: 1px solid #ddd;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: bold; color: #666;">P1 (Sensor 1):</span>
+                    <span style="font-size: 16px; color: #000; font-weight: bold;">12.3 bar</span>
+                    <span style="color: #28a745; font-size: 12px; padding: 2px 6px; background: #d4edda; border-radius: 3px;">NORMAL</span>
+                  </div>
                 </div>
-                <div style="background: #fff; padding: 8px; border-radius: 4px; flex: 1; text-align: center;">
-                  <div style="font-weight: bold; color: #666;">P2</div>
-                  <div style="font-size: 18px; color: #000;">8.7 bar</div>
-                  <div style="color: #ffc107; font-size: 12px;">WARNING</div>
+                <div style="background: #fff; padding: 12px; border-radius: 4px; text-align: left; border: 1px solid #ddd;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: bold; color: #666;">P2 (Sensor 2):</span>
+                    <span style="font-size: 16px; color: #000; font-weight: bold;">8.7 bar</span>
+                    <span style="color: #856404; font-size: 12px; padding: 2px 6px; background: #fff3cd; border-radius: 3px;">WARNING</span>
+                  </div>
                 </div>
-                <div style="background: #fff; padding: 8px; border-radius: 4px; flex: 1; text-align: center;">
-                  <div style="font-weight: bold; color: #666;">P3</div>
-                  <div style="font-size: 18px; color: #000;">950 mbar</div>
-                  <div style="color: #28a745; font-size: 12px;">NORMAL</div>
+                <div style="background: #fff; padding: 12px; border-radius: 4px; text-align: left; border: 1px solid #ddd;">
+                  <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-weight: bold; color: #666;">P3 (Sensor 3):</span>
+                    <span style="font-size: 16px; color: #000; font-weight: bold;">950 mbar</span>
+                    <span style="color: #28a745; font-size: 12px; padding: 2px 6px; background: #d4edda; border-radius: 3px;">NORMAL</span>
+                  </div>
                 </div>
               </div>
               <div style="text-align: center; color: #666; font-size: 12px;">
