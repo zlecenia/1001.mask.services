@@ -251,7 +251,16 @@ class FeatureRegistry {
             '/login': 'loginForm',
             '/users': 'pageTemplate',
             '/settings': 'pageTemplate',
-            '/status': 'pageTemplate'
+            '/status': 'pageTemplate',
+            // SERWISANT routes
+            '/diagnostics': 'diagnostics',
+            '/calibration': 'calibration',
+            '/maintenance': 'maintenance',
+            // OPERATOR routes
+            '/monitoring': 'monitoring',
+            '/alerts': 'alerts',
+            // SUPERUSER routes
+            '/analytics': 'analytics'
           };
           
           if (routeModuleMap[route] === module.name) {

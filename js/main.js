@@ -150,6 +150,7 @@ const app = createApp({
         </div>
       </div>
     </div>
+  </div>
   `,
   data() {
     return {
