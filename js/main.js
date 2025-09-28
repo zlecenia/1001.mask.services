@@ -351,6 +351,11 @@ const app = createApp({
           // Render pressure panel in the container
           const container = document.getElementById('pressure-panel-container');
           console.log('📦 [Main] Container found:', !!container);
+          console.log('📦 [Main] Container details:', {
+            id: container?.id,
+            className: container?.className,
+            innerHTML: container?.innerHTML.substring(0, 100) + '...'
+          });
           
           if (container && pressurePanelModule.render) {
             console.log('🎨 [Main] Rendering pressure panel...');
