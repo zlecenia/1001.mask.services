@@ -314,7 +314,9 @@ const app = createApp({
         await this.loadMainMenu();
         
         // Load PressurePanel
+        console.log('🔥 [MAIN] ABOUT TO LOAD PRESSUREPANEL!!!');
         await this.loadPressurePanel();
+        console.log('🔥 [MAIN] PRESSUREPANEL LOAD COMPLETED!!!');
         
         // Load AppHeader
         await this.loadAppHeader();

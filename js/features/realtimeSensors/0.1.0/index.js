@@ -279,5 +279,4 @@ export const devTools = {
   }
 };
 
-// Export module for FeatureRegistry integration
-export default moduleInfo;
+// Export module for FeatureRegistry integration (already exported above)
