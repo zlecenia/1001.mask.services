@@ -5,7 +5,7 @@
  */
 
 import { SystemSettingsComponent } from './systemSettings.js';
-import config from './config.json' assert { type: 'json' };
+import { ConfigLoader } from '../../../shared/configLoader.js';
 
 // FeatureRegistry integration metadata
 export const metadata = {
@@ -132,10 +132,10 @@ export const metadata = {
 export const storeModule = {
   namespaced: true,
   state: () => ({
-    networkSettings: { ...config.data.defaults.networkSettings },
-    systemConfig: { ...config.data.defaults.systemConfig },
-    deviceSettings: { ...config.data.defaults.deviceSettings },
-    securitySettings: { ...config.data.defaults.securitySettings },
+    networkSettings: {},
+    systemConfig: {},
+    deviceSettings: {},
+    securitySettings: {},
     settingsState: {
       isLoading: false,
       isValidating: false,
@@ -180,10 +180,10 @@ export const storeModule = {
     },
     
     RESET_SETTINGS(state) {
-      state.networkSettings = { ...config.data.defaults.networkSettings };
-      state.systemConfig = { ...config.data.defaults.systemConfig };
-      state.deviceSettings = { ...config.data.defaults.deviceSettings };
-      state.securitySettings = { ...config.data.defaults.securitySettings };
+      state.networkSettings = {};
+      state.systemConfig = {};
+      state.deviceSettings = {};
+      state.securitySettings = {};
       state.settingsState.hasUnsavedChanges = true;
       state.settingsState.validationErrors = [];
       state.networkTestResult = null;
@@ -456,11 +456,30 @@ export async function initializeModule(app, options = {}) {
 
 // Export main component and configuration
 export { SystemSettingsComponent };
-export { config };
+
 export default {
   metadata,
   component: SystemSettingsComponent,
-  config,
+  config: null,
+  
+  async loadConfig() {
+    const result = await ConfigLoader.loadConfig('./config/config.json', 'systemSettings');
+    this.config = result.config;
+    return result;
+  },
+  
+  async init(context = {}) {
+    try {
+      // Load configuration first
+      await this.loadConfig();
+      this.metadata.initialized = true;
+      return true;
+    } catch (error) {
+      console.error('SystemSettings init error:', error);
+      return false;
+    }
+  },
+  
   storeModule,
   hooks,
   devUtils,

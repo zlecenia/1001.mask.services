@@ -1426,5 +1426,6 @@ const SystemSettingsComponent = {
   }
 };
 
-// Also export as default
+// Export both as named and default
+export { SystemSettingsComponent };
 export default SystemSettingsComponent;

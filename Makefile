@@ -72,6 +72,34 @@ test: install
 	npm test
 	@echo "$(GREEN)✅ Wszystkie testy zakończone$(RESET)"
 
+# Testowanie wszystkich typów
+.PHONY: test-all
+test-all: install
+	@echo "$(BLUE)Uruchamianie wszystkich typów testów...$(RESET)"
+	npm run test:all
+	@echo "$(GREEN)✅ Wszystkie typy testów zakończone$(RESET)"
+
+# Testy integracyjne
+.PHONY: test-integration
+test-integration: install
+	@echo "$(BLUE)Uruchamianie testów integracyjnych...$(RESET)"
+	npm run test:integration
+	@echo "$(GREEN)✅ Testy integracyjne zakończone$(RESET)"
+
+# Testy E2E
+.PHONY: test-e2e
+test-e2e: install
+	@echo "$(BLUE)Uruchamianie testów E2E...$(RESET)"
+	npm run test:e2e
+	@echo "$(GREEN)✅ Testy E2E zakończone$(RESET)"
+
+# Testy property-based
+.PHONY: test-property
+test-property: install
+	@echo "$(BLUE)Uruchamianie testów property-based...$(RESET)"
+	npm run test:property
+	@echo "$(GREEN)✅ Testy property-based zakończone$(RESET)"
+
 # Analiza zdrowia komponentów
 .PHONY: analyze
 analyze: install
@@ -93,30 +121,82 @@ config-validate: install
 	npm run config:validate
 	@echo "$(GREEN)✅ Konfiguracja zwalidowana$(RESET)"
 
-# JSON Editor development server
+# Poszczególne komponenty development servers
 .PHONY: json-editor
 json-editor: install
 	@echo "$(BLUE)Uruchamianie JSON Editor...$(RESET)"
 	npm run component:dev:jsonEditor
 
+.PHONY: user-menu
+user-menu: install
+	@echo "$(BLUE)Uruchamianie User Menu...$(RESET)"
+	npm run component:dev:userMenu
+
+.PHONY: service-menu
+service-menu: install
+	@echo "$(BLUE)Uruchamianie Service Menu...$(RESET)"
+	npm run component:dev:serviceMenu
+
+.PHONY: system-settings
+system-settings: install
+	@echo "$(BLUE)Uruchamianie System Settings...$(RESET)"
+	npm run component:dev:systemSettings
+
+.PHONY: device-data
+device-data: install
+	@echo "$(BLUE)Uruchamianie Device Data...$(RESET)"
+	npm run component:dev:deviceData
+
+.PHONY: reports-viewer
+reports-viewer: install
+	@echo "$(BLUE)Uruchamianie Reports Viewer...$(RESET)"
+	npm run component:dev:reportsViewer
+
+.PHONY: device-history
+device-history: install
+	@echo "$(BLUE)Uruchamianie Device History...$(RESET)"
+	npm run component:dev:deviceHistory
+
+.PHONY: test-menu
+test-menu: install
+	@echo "$(BLUE)Uruchamianie Test Menu...$(RESET)"
+	npm run component:dev:testMenu
+
+.PHONY: component-editor
+component-editor: install
+	@echo "$(BLUE)Uruchamianie Component Editor...$(RESET)"
+	npm run component:dev:componentEditor
+
+.PHONY: pressure-panel
+pressure-panel: install
+	@echo "$(BLUE)Uruchamianie Pressure Panel...$(RESET)"
+	npm run component:dev:pressurePanel
+
+.PHONY: main-menu
+main-menu: install
+	@echo "$(BLUE)Uruchamianie Main Menu...$(RESET)"
+	npm run component:dev:mainMenu
+
+.PHONY: audit-log-viewer
+audit-log-viewer: install
+	@echo "$(BLUE)Uruchamianie Audit Log Viewer...$(RESET)"
+	npm run component:dev:auditLogViewer
+
 # Playground - wybór komponentów
 .PHONY: playground
-playground: install
 	@echo "$(BLUE)Uruchamianie Playground...$(RESET)"
 	npm run playground
 
 # Testowanie z pokryciem kodu
 .PHONY: test-coverage
 test-coverage: install
-	@echo "$(BLUE)Uruchamianie testów z pokryciem kodu...$(RESET)"
-	npm run test:coverage || npm test -- --coverage
-	@echo "$(GREEN)✅ Testy z pokryciem zakończone$(RESET)"
+	@echo "$(BLUE)Running tests with coverage...$(RESET)"
+	npm run test:coverage
 
 # Testowanie poszczególnych modułów
 .PHONY: test-modules
 test-modules: install
 	@echo "$(BLUE)Testowanie poszczególnych modułów...$(RESET)"
-	@$(SCRIPTS_DIR)/test-modules.sh
 	@echo "$(GREEN)✅ Testowanie modułów zakończone$(RESET)"
 
 # Testowanie konkretnego modułu

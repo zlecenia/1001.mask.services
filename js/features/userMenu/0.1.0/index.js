@@ -10,7 +10,7 @@
  */
 
 import UserMenu from './userMenu.js';
-import config from './config.json' assert { type: 'json' };
+import { ConfigLoader } from '../../../shared/configLoader.js';
 
 // Module metadata
 const metadata = {
@@ -391,10 +391,18 @@ const createUserMenuModule = () => {
         styles,
         
         // Module configuration
-        moduleConfig: config,
+        moduleConfig: null,
+        
+        async loadConfig() {
+            const result = await ConfigLoader.loadConfig('./config/config.json', 'userMenu');
+            this.moduleConfig = result.config;
+            return result;
+        },
         
         // Lifecycle hooks
         init: async function(params = {}) {
+            // Load configuration first
+            await this.loadConfig();
             try {
                 console.log('UserMenu Module: Initializing...');
                 
@@ -439,7 +447,7 @@ const createUserMenuModule = () => {
                         return { success: true, hasAccess };
                         
                     case 'getMenuItems':
-                        const roleConfig = config.roles[params.userRole] || config.roles.OPERATOR;
+                        const roleConfig = this.moduleConfig?.roles?.[params.userRole] || this.moduleConfig?.roles?.OPERATOR || {};
                         return { success: true, menuItems: roleConfig.menuItems };
                         
                     case 'logActivity':
@@ -515,4 +523,4 @@ const createUserMenuModule = () => {
 
 // Export module factory and metadata
 export default createUserMenuModule;
-export { metadata, config, UserMenu };
+export { metadata, UserMenu };

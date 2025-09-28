@@ -1,5 +1,5 @@
 import TestMenu from './testMenu.js';
-import config from './config.json';
+import { ConfigLoader } from '../../../shared/configLoader.js';
 
 /**
  * Test Menu Module - Entry Point
@@ -168,12 +168,21 @@ export default {
         `
     },
     
-    config: config,
+    config: null,
+    
+    async loadConfig() {
+        const result = await ConfigLoader.loadConfig('./config/config.json', 'testMenu');
+        this.config = result.config;
+        return result;
+    },
     
     async init(context) {
         console.log('🔶 TestMenu Module: Initializing...');
         
         try {
+            // Load configuration first
+            await this.loadConfig();
+            
             // Validate required dependencies
             const requiredServices = ['$store', 'securityService'];
             const missing = requiredServices.filter(service => !context[service]);
@@ -184,7 +193,7 @@ export default {
             
             // Initialize module configuration
             if (context.moduleConfig) {
-                context.moduleConfig.testMenu = config;
+                context.moduleConfig.testMenu = this.config;
             }
             
             // Security check

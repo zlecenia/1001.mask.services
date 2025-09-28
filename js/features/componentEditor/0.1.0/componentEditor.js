@@ -1,15 +1,20 @@
-import config from './config/config.json';
+import { ConfigLoader } from '../../../shared/configLoader.js';
 
 /**
  * Login Form Module 0.1.0
  * Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9"
  */
-import Component from './loginForm.js';
 
 export default {
   name: 'loginForm',
   version: '0.1.0',
-  component: Component,
+  moduleConfig: null,
+  
+  async loadConfig() {
+    const result = await ConfigLoader.loadConfig('./config/config.json', 'componentEditor');
+    this.moduleConfig = result.config;
+    return result;
+  },
   
   /**
    * Main handler function for the login form module
@@ -108,8 +113,8 @@ export default {
 
     const { username, password: pwd, role: providedRole } = normalized;
     const errors = {};
-    const minUsername = this.config?.authentication?.minUsernameLength ?? 3;
-    const minPassword = this.config?.authentication?.minPasswordLength ?? 3;
+    const minUsername = this.moduleConfig?.authentication?.minUsernameLength ?? 3;
+    const minPassword = this.moduleConfig?.authentication?.minPasswordLength ?? 3;
     const allowedRoles = this.getValidRoles();
 
     // Username validation
@@ -290,8 +295,8 @@ export default {
   getStats() {
     return {
       supportedRoles: this.getValidRoles().length,
-      virtualKeyboardEnabled: this.config?.virtualKeyboardEnabled || false,
-      touchOptimized: this.config?.touchOptimized || false,
+      virtualKeyboardEnabled: this.moduleConfig?.virtualKeyboardEnabled || false,
+      touchOptimized: this.moduleConfig?.touchOptimized || false,
       displayOptimization: '7.9inch-landscape-1280x400px',
       features: [
         'virtual-keyboard',
@@ -333,6 +338,9 @@ export default {
    */
   async init(context) {
     try {
+      // Load configuration first
+      await this.loadConfig();
+      
       // Validate context
       if (!context || !context.store || !context.router) {
         console.error('loginForm: Invalid context provided');

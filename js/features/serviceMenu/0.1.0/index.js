@@ -10,7 +10,7 @@
  */
 
 import ServiceMenu from './serviceMenu.js';
-import config from './config.json' assert { type: 'json' };
+import { ConfigLoader } from '../../../shared/configLoader.js';
 
 // Module metadata
 const metadata = {
@@ -560,12 +560,21 @@ const createServiceMenuModule = () => {
         styles,
         
         // Module configuration
-        moduleConfig: config,
+        moduleConfig: null,
+        
+        async loadConfig() {
+            const result = await ConfigLoader.loadConfig('./config/config.json', 'serviceMenu');
+            this.moduleConfig = result.config;
+            return result;
+        },
         
         // Lifecycle hooks
         init: async function(params = {}) {
             try {
                 console.log('ServiceMenu Module: Initializing...');
+                
+                // Load configuration first
+                await this.loadConfig();
                 
                 // Validate required dependencies
                 if (!params.user || !params.user.role) {
@@ -633,7 +642,7 @@ const createServiceMenuModule = () => {
                         // Return mock sensor calibration status
                         return {
                             success: true,
-                            sensors: config.calibration.sensors.map(sensor => ({
+                            sensors: this.moduleConfig?.calibration?.sensors?.map(sensor => ({
                                 ...sensor,
                                 status: Math.random() > 0.7 ? 'needs_calibration' : 'calibrated'
                             }))
@@ -718,4 +727,4 @@ const createServiceMenuModule = () => {
 
 // Export module factory and metadata
 export default createServiceMenuModule;
-export { metadata, config, ServiceMenu };
+export { metadata, ServiceMenu };
