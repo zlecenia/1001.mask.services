@@ -125,10 +125,10 @@ Przykład 3 - Bez prawego panelu (25% + 75% + 0%):
 /* Main Menu */
 .main-menu {
   width: 250px;
-  background: #f8f9fa;
+  /*background: #f8f9fa;*/
   border-right: 1px solid #dee2e6;
   overflow-y: auto;
-  padding: 16px 0;
+  /*padding: 16px 0;*/
 }
 
 .menu-group {
@@ -398,13 +398,13 @@ Przykład 3 - Bez prawego panelu (25% + 75% + 0%):
   background: var(--grid-background);
   border-right: 1px solid var(--grid-border-color);
   overflow-y: auto;
-  padding: 16px 0;
+  /*padding: 16px 0;*/
 }
 
 .menu-header {
-  padding: 0 20px 16px;
+  /*padding: 0 20px 16px;*/
   border-bottom: 1px solid var(--grid-border-color);
-  margin-bottom: 16px;
+  /*margin-bottom: 16px;*/
 }
 
 .menu-header h3 {

@@ -1,0 +1,280 @@
+{
+  "name": "mainMenu",
+  "version": "0.1.1",
+  "contractVersion": "2.0",
+  "lockVersion": "1.0.0",
+  "timestamp": "2024-12-19T10:30:00.000Z",
+  "description": "Component lock file to prevent breaking changes in mainMenu role-based navigation component",
+  
+  "critical": {
+    "exports": {
+      "locked": true,
+      "structure": {
+        "default": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "init": "function",
+            "handle": "function", 
+            "loadComponent": "function",
+            "loadConfig": "function",
+            "runSmokeTests": "function",
+            "render": "function",
+            "metadata": "object"
+          }
+        }
+      },
+      "hash": "mainMenu-v0.1.1-exports-2024-12-19"
+    },
+    
+    "vuePattern": {
+      "locked": true,
+      "description": "Global Vue import pattern for CDN compatibility",
+      "pattern": "const { reactive, computed, onMounted, inject } = Vue || window.Vue || {};",
+      "forbidden": [
+        "import { reactive } from 'vue'",
+        "import Vue from 'vue'",
+        "require('vue')"
+      ],
+      "hash": "vue-global-pattern-v2.0"
+    },
+    
+    "contractMethods": {
+      "locked": true,
+      "required": [
+        {
+          "name": "init",
+          "signature": "async init(context = {})",
+          "returns": "Promise<{success: boolean, message?: string, error?: string}>"
+        },
+        {
+          "name": "handle", 
+          "signature": "handle(request)",
+          "returns": "{success: boolean, data?: any, error?: string}"
+        },
+        {
+          "name": "loadComponent",
+          "signature": "async loadComponent()",
+          "returns": "Promise<void>"
+        },
+        {
+          "name": "loadConfig",
+          "signature": "async loadConfig()",
+          "returns": "Promise<void>"
+        },
+        {
+          "name": "runSmokeTests",
+          "signature": "async runSmokeTests()",
+          "returns": "Promise<{success: boolean, details?: any}>"
+        }
+      ],
+      "hash": "contract-v2.0-methods"
+    }
+  },
+  
+  "roleBasedMenus": {
+    "locked": true,
+    "description": "Role-based menu structure must be preserved",
+    "requiredRoles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+    "menuStructure": {
+      "OPERATOR": {
+        "maxItems": 3,
+        "requiredItems": ["monitoring", "alerts", "device-data"]
+      },
+      "ADMIN": {
+        "maxItems": 4,
+        "requiredItems": ["tests", "reports", "users", "system"]
+      },
+      "SUPERUSER": {
+        "maxItems": 4,
+        "requiredItems": ["integration", "analytics", "advanced-system", "audit"]
+      },
+      "SERWISANT": {
+        "maxItems": 5,
+        "requiredItems": ["diagnostics", "calibration", "maintenance", "workshop", "tech-docs"]
+      }
+    },
+    "hash": "role-menus-v0.1.1"
+  },
+  
+  "configuration": {
+    "locked": true,
+    "description": "Component configuration structure",
+    "requiredSections": [
+      "metadata",
+      "ui", 
+      "data",
+      "menus",
+      "roles",
+      "responsive",
+      "accessibility",
+      "performance",
+      "security",
+      "translations"
+    ],
+    "criticalSettings": {
+      "security.validation.enabled": true,
+      "security.validation.validateRoles": true,
+      "accessibility.enabled": true,
+      "responsive.display79inch.enabled": true
+    },
+    "hash": "config-structure-v0.1.1"
+  },
+  
+  "security": {
+    "locked": true,
+    "description": "Security features that must remain enabled",
+    "requiredFeatures": {
+      "roleValidation": true,
+      "xssProtection": true,
+      "auditLogging": true,
+      "inputSanitization": true
+    },
+    "hash": "security-features-v0.1.1"
+  },
+  
+  "accessibility": {
+    "locked": true,
+    "description": "Accessibility features for 7.9\" industrial display",
+    "requiredFeatures": {
+      "keyboardNavigation": true,
+      "screenReader": true,
+      "focusIndicators": true,
+      "touchTargetSize": "48px"
+    },
+    "ariaSupport": {
+      "labels": true,
+      "descriptions": true,
+      "roles": true
+    },
+    "hash": "accessibility-v0.1.1"
+  },
+  
+  "performance": {
+    "locked": true,
+    "description": "Performance benchmarks that must be maintained",
+    "benchmarks": {
+      "initTime": {
+        "max": 1000,
+        "unit": "ms",
+        "description": "Component initialization"
+      },
+      "renderTime": {
+        "max": 100,
+        "unit": "ms", 
+        "description": "Component render time"
+      },
+      "actionResponse": {
+        "max": 50,
+        "unit": "ms",
+        "description": "Action handling response time"
+      }
+    },
+    "hash": "performance-benchmarks-v0.1.1"
+  },
+  
+  "translations": {
+    "locked": true,
+    "description": "Multi-language support must be preserved",
+    "requiredLanguages": ["pl", "en", "de"],
+    "requiredKeys": [
+      "menuTitle",
+      "menu.monitoring",
+      "menu.alerts", 
+      "menu.device-data",
+      "menu.tests",
+      "menu.reports",
+      "menu.users",
+      "menu.system",
+      "role_operator",
+      "role_admin",
+      "role_superuser",
+      "role_serwisant"
+    ],
+    "hash": "translations-v0.1.1"
+  },
+  
+  "testing": {
+    "locked": true,
+    "description": "Smoke tests requirements",
+    "maxDuration": 10000,
+    "requiredTests": [
+      "Vue Integration",
+      "Component Contract v2.0",
+      "Role-Based Menus",
+      "Performance Benchmarks",
+      "Error Handling",
+      "Security Validation",
+      "Accessibility",
+      "Configuration Loading"
+    ],
+    "hash": "smoke-tests-v0.1.1"
+  },
+  
+  "refactoringHistory": {
+    "v0.1.0-to-v0.1.1": {
+      "date": "2024-12-19",
+      "changes": [
+        "Migrated from ES modules to global Vue pattern",
+        "Implemented components.md v2.0 contract",
+        "Added role-based menu system with 4 distinct roles",
+        "Created unified component.config.js configuration",
+        "Added comprehensive smoke tests for regression protection",
+        "Enhanced security validation and audit logging",
+        "Improved accessibility for 7.9\" industrial displays",
+        "Added multi-language support (Polish, English, German)",
+        "Performance optimizations with <1s init, <100ms actions"
+      ],
+      "breakingChanges": [
+        "Changed Vue import pattern from ES modules to global",
+        "Added required v2.0 contract methods",
+        "Changed component export structure"
+      ],
+      "hash": "refactor-v0.1.0-to-v0.1.1"
+    }
+  },
+  
+  "validation": {
+    "rules": [
+      {
+        "rule": "exports.default must be object with v2.0 contract methods",
+        "severity": "critical"
+      },
+      {
+        "rule": "Vue imports must use global pattern only",
+        "severity": "critical"
+      },
+      {
+        "rule": "All 4 role menus must be present and functional",
+        "severity": "high"
+      },
+      {
+        "rule": "Security validation must remain enabled",
+        "severity": "high"
+      },
+      {
+        "rule": "Accessibility features must remain enabled",
+        "severity": "high"
+      },
+      {
+        "rule": "Performance benchmarks must be met",
+        "severity": "medium"
+      },
+      {
+        "rule": "All translations must be present",
+        "severity": "medium"
+      }
+    ]
+  },
+  
+  "checksum": {
+    "algorithm": "SHA-256",
+    "files": {
+      "index.js": "mainMenu-index-v0.1.1-contract-v2.0",
+      "mainMenu.js": "mainMenu-vue-global-pattern-v0.1.1", 
+      "component.config.js": "mainMenu-config-unified-v0.1.1",
+      "mainMenu.smoke.js": "mainMenu-smoke-tests-v0.1.1"
+    },
+    "generated": "2024-12-19T10:30:00.000Z"
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "mainMenu",
+  "version": "1.0.0",
+  "description": "Główne menu aplikacji z kontrolą dostępu opartą na rolach (OPERATOR, ADMIN, SUPERUSER, SERWISANT)",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "vitest run mainMenu.spec.js",
+    "test:watch": "vitest watch mainMenu.spec.js",
+    "serve": "node ./dev-server.js"
+  },
+  "dependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0"
+  },
+  "moduleMetadata": {
+    "contracts": [],
+    "rollbackConditions": {
+      "errorRate": ">5%",
+      "testFailures": ">0"
+    },
+    "generated": {
+      "prompt": "Główne menu aplikacji z kontrolą dostępu opartą na rolach",
+      "timestamp": "2025-09-26T10:22:13.000Z",
+      "generator": "manual-creation 0.1.0"
+    },
+    "roleBasedAccess": {
+      "supportedRoles": [
+        "OPERATOR",
+        "ADMIN",
+        "SUPERUSER",
+        "SERWISANT"
+      ],
+      "menuCounts": {
+        "OPERATOR": 2,
+        "ADMIN": 4,
+        "SUPERUSER": 4,
+        "SERWISANT": 5
+      },
+      "uniqueFunctions": true,
+      "hierarchicalPermissions": true
+    }
+  },
+  "maskservice": {
+    "component": {
+      "name": "mainMenu",
+      "version": "0.1.0",
+      "configPath": "./config/"
+    }
+  }
+}

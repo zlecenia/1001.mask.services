@@ -167,19 +167,12 @@ const componentModule = {
     console.log('🎨 [Monitoring] Starting render...');
     
     if (!container) {
-      console.error('❌ [Monitoring] No container provided');
       return;
     }
     
     // Create monitoring dashboard HTML
     container.innerHTML = `
       <div class="monitoring-dashboard" style="padding: 20px; background: #f8f9fa; border-radius: 8px;">
-        <div class="dashboard-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #dee2e6;">
-          <h2 style="color: #2c3e50; margin: 0; font-size: 24px;">📊 System Monitoring</h2>
-          <div class="refresh-btn" style="background: #3498db; color: white; padding: 8px 16px; border-radius: 4px; cursor: pointer;" onclick="this.refresh()">
-            🔄 Refresh
-          </div>
-        </div>
         
         <div class="monitoring-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
           

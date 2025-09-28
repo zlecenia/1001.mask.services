@@ -5,7 +5,27 @@ All notable changes to the DeviceData component will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.0] - 2024-12-28
+## [0.1.1] - 2024-12-28
+
+### 🔄 VERSIONING CORRECTION
+**Risk Level**: NONE - No functional changes, only version structure fix
+**Migration**: Moved from backup approach to semantic versioning
+
+### 🔧 Changed - Version Management
+- **Corrected Versioning Structure** - Fixed backup approach to semantic versioning
+  - BEFORE: Using js/features/deviceData.backup/ directory
+  - AFTER: Using js/features/deviceData/0.1.1/ semantic version
+  - **WHY**: Follows industry standards and components.md v2.0 specification
+
+- **Updated Metadata** - Version number updated to 0.1.1
+  - index.js metadata.version: '0.1.0' → '0.1.1'
+  - Maintains all v2.0 contract compliance features
+
+### 📝 Documentation Updates
+- **CHANGELOG Structure** - Added proper version progression documentation
+- **Version History** - Tracks semantic versioning adoption
+
+## [0.1.0] - 2024-12-28 [REFACTORING BASE]
 
 ### 🔧 MAJOR REFACTORING - Contract v2.0 Migration
 **Risk Level**: LOW - All breaking changes protected by component lock system

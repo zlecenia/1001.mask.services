@@ -77,7 +77,10 @@ async function registerRealModules(registry) {
     { name: 'appFooter', version: '0.1.0' },
     
     // Monitoring components
-    { name: 'pressurePanel', version: '0.1.0' }
+    { name: 'pressurePanel', version: '0.1.0' },
+    
+    // Data components (v2.0 contract compliant)
+    { name: 'deviceData', version: '0.1.1' }
   ];
 
   const moduleLoaders = {
@@ -86,7 +89,8 @@ async function registerRealModules(registry) {
     loginForm: () => import('./features/loginForm/0.1.0/index.js'),
     appHeader: () => import('./features/appHeader/0.1.0/index.js'),
     appFooter: () => import('./features/appFooter/0.1.0/index.js'),
-    pressurePanel: () => import('./features/pressurePanel/0.1.0/index.js')
+    pressurePanel: () => import('./features/pressurePanel/0.1.0/index.js'),
+    deviceData: () => import('./features/deviceData/0.1.1/index.js')
   };
   
   for (const { name, version } of modules) {

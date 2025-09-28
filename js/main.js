@@ -70,16 +70,23 @@ const app = createApp({
       <!-- Main Application with Grid Layout Template -->
       <div v-else-if="appState === 'ready'" class="main-app grid-layout">
         <div class="app-header grid-header" id="app-header-container">
-          <div class="header-logo">
-            <img src="/favicon.ico" alt="MASKSERVICE" class="logo">
-            <span class="app-title">MASKSERVICE C20 1001</span>
-          </div>
           <div class="header-user">
+            <div class="role-switcher">
+              <select @change="switchRole($event.target.value)" :value="currentUser.role">
+                <option v-for="role in availableRoles" :key="role.id" :value="role.id">
+                  {{ role.name }}
+                </option>
+              </select>
+            </div>
             <span class="user-name">{{ currentUser.name }}</span>
             <span class="user-role">({{ currentUser.role }})</span>
             <button class="logout-btn" @click="logout">
               <i class="fas fa-sign-out-alt"></i>
             </button>
+          </div>
+          <div class="header-logo">
+            <img src="/favicon.ico" alt="MASKSERVICE" class="logo">
+            <span class="app-title">MASKSERVICE C20 1001</span>
           </div>
         </div>
 
@@ -88,17 +95,7 @@ const app = createApp({
           <!-- Main Menu (Left Column) -->
           <div class="main-menu grid-sidebar" id="main-menu-container">
             <div class="menu-header">
-              <h3>GŁÓWNE MENU</h3>
-              <div class="role-switcher" style="margin-top: 10px;">
-                <select @change="switchRole($event.target.value)" :value="currentUser.role" 
-                        style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; background: #fff; color: #2c3e50; border-radius: 4px; font-size: 12px;">
-                  <option v-for="role in availableRoles" :key="role.id" :value="role.id" 
-                          style="background: #fff; color: #2c3e50;">
-                    {{ role.name }}
-                  </option>
-                </select>
-              </div>
-              <span class="user-role-badge" style="margin-top: 8px; display: inline-block;">{{ currentUser?.role || 'OPERATOR' }}</span>
+              <span class="user-role-badge">{{ currentUser?.role || 'OPERATOR' }}</span>
             </div>
             <div v-for="menuItem in roleBasedMenuItems" :key="menuItem.id" class="menu-item-role"
                  :class="{ active: currentRoute === menuItem.route }"
@@ -536,19 +533,7 @@ const app = createApp({
     // Show role change notification
     showRoleChangeNotification(roleData) {
       const notification = document.createElement('div');
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #3498db, #2980b9);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-        z-index: 10000;
-        font-size: 14px;
-        min-width: 250px;
-      `;
+      notification.className = 'role-change-notification';
       
       notification.innerHTML = `
         <div style="display: flex; align-items: center; gap: 10px;">
@@ -903,6 +888,25 @@ const router = createRouter({
           } catch (error) {
             console.error('❌ [Router] Failed to load Analytics:', error);
             document.getElementById('analytics-container').innerHTML = '<div style="color: red; padding: 20px;">❌ Error loading Analytics component</div>';
+          }
+        }
+      }
+    },
+    { 
+      path: '/device-data', 
+      component: { 
+        template: '<div id="device-data-container" style="padding: 20px;"></div>',
+        async mounted() {
+          console.log('📱 [Router] Loading DeviceData v0.1.1 component...');
+          try {
+            const deviceDataModule = await import('./features/deviceData/0.1.1/index.js');
+            console.log('📱 [Router] DeviceData module loaded:', deviceDataModule.default?.metadata);
+            await deviceDataModule.default.init();
+            deviceDataModule.default.render(document.getElementById('device-data-container'));
+            console.log('✅ [Router] DeviceData v0.1.1 loaded successfully');
+          } catch (error) {
+            console.error('❌ [Router] Failed to load DeviceData:', error);
+            document.getElementById('device-data-container').innerHTML = '<div style="color: red; padding: 20px;">❌ Error loading DeviceData component: ' + error.message + '</div>';
           }
         }
       }
