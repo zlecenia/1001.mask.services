@@ -1,0 +1,26 @@
+{
+  "editable": [
+    "searchQuery", 
+    "showDeviceDetails", 
+    "enableSearch",
+    "autoSelectTimeout"
+  ],
+  "readonly": [
+    "availableDevices",
+    "deviceCategories",
+    "lastSelected"
+  ],
+  "hidden": [
+    "internal_id"
+  ],
+  "validation": {
+    "searchQuery": {
+      "maxLength": 100,
+      "pattern": "^[a-zA-Z0-9\\s\\-_]*$"
+    },
+    "autoSelectTimeout": {
+      "min": 500,
+      "max": 5000
+    }
+  }
+}

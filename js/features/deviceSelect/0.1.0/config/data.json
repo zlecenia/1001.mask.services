@@ -1,0 +1,50 @@
+{
+  "selectedDevice": null,
+  "searchQuery": "",
+  "showDeviceDetails": true,
+  "enableSearch": true,
+  "autoSelectTimeout": 1000,
+  "lastSelected": null,
+  "deviceCategories": [
+    {
+      "id": "respiratory",
+      "name": "Ochrona dróg oddechowych",
+      "count": 3
+    },
+    {
+      "id": "chemical", 
+      "name": "Ochrona chemiczna",
+      "count": 1
+    }
+  ],
+  "availableDevices": [
+    {
+      "id": "PP_MASK",
+      "name": "Maska PP",
+      "category": "respiratory",
+      "color": "blue",
+      "enabled": true
+    },
+    {
+      "id": "NP_MASK", 
+      "name": "Maska NP",
+      "category": "respiratory",
+      "color": "green",
+      "enabled": true
+    },
+    {
+      "id": "SCBA",
+      "name": "Aparat oddechowy SCBA", 
+      "category": "respiratory",
+      "color": "purple",
+      "enabled": true
+    },
+    {
+      "id": "CPS",
+      "name": "Kombinezon CPS",
+      "category": "chemical",
+      "color": "orange", 
+      "enabled": true
+    }
+  ]
+}
