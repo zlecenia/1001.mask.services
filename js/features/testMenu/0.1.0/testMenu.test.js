@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import TestMenu from './testMenu.js';
-import config from './config.json';
+import config from './config/config.json';
 
 describe('TestMenu Module', () => {
     let wrapper;

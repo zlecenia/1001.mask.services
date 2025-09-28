@@ -1,8 +1,7 @@
 <template>
-  <div 
+  <nav 
     class="main-menu" 
     :class="'role-' + (userRole || 'none').toLowerCase()" 
-    role="navigation" 
     aria-label="Main application menu"
   >
     <div class="menu-header">
@@ -28,20 +27,23 @@
               'primary': item.isPrimary 
             }
           ]"
-          role="menuitem"
-          tabindex="0"
-          @click="selectMenuItem(item)"
-          @keydown.enter="selectMenuItem(item)"
-          @keydown.space="selectMenuItem(item)"
         >
-          <div class="menu-item-content">
+          <button
+            class="menu-item-button"
+            :aria-label="`Navigate to ${item.label}`"
+            @click="selectMenuItem(item)"
+            @keydown.enter="selectMenuItem(item)"
+            @keydown.space="selectMenuItem(item)"
+          >
+            <div class="menu-item-content">
             <i :class="['menu-icon', item.icon]"></i>
             <div class="menu-text">
               <span class="menu-label">{{ $t('menu.' + item.key) }}</span>
               <span v-if="item.count" class="menu-count">{{ item.count }}</span>
             </div>
             <i class="menu-arrow fas fa-chevron-right"></i>
-          </div>
+            </div>
+          </button>
         </li>
       </ul>
     </nav>
@@ -52,7 +54,7 @@
         <span class="stats-count">{{ filteredMenuItems.length }}</span>
       </div>
     </div>
-  </div>
+  </nav>
 </template>
 
 <script>
@@ -113,7 +115,7 @@ export default {
     ];
     
     // Computed
-    const userRole = computed(() => store.state.user?.role || 'OPERATOR');
+    const userRole = computed(() => store?.state?.user?.role || 'OPERATOR');
     
     const filteredMenuItems = computed(() => {
       return menuItems.filter(item => {
@@ -289,15 +291,6 @@ export default {
   align-items: center;
 }
 
-.menu-item:hover {
-  background-color: #f0f0f0;
-}
-
-.menu-item.active {
-  background-color: #e3f2fd;
-  color: #1976d2;
-}
-
 .menu-item.disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -345,6 +338,22 @@ export default {
   margin-left: 8px;
   font-size: 10px;
   opacity: 0.7;
+}
+
+.menu-item-button {
+  width: 100%;
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  outline: none;
+}
+
+.menu-item-button:focus {
+  outline: 2px solid #4CAF50;
+  outline-offset: -2px;
 }
 
 .menu-footer {

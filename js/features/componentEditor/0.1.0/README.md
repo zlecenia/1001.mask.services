@@ -1,3 +1,5 @@
+![componentEditor Screenshot](./componentEditor.png)
+
 Stworzę wizualny edytor komponentów Vue z systemem schematów i kontrolą edycji. To będzie kompletne rozwiązanie do bezpiecznej edycji komponentów.Stworzyłem **Visual Component Editor** - kompletny wizualny edytor komponentów Vue z następującymi funkcjami:
 
 ## 🎯 Główne funkcje edytora:

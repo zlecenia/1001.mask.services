@@ -1,5 +1,5 @@
+import config from './config/config.json';
 import MainMenu from './MainMenu.vue';
-import { ConfigLoader } from '../../../shared/configLoader.js';
 
 /**
  * Main Menu Module 0.1.0
@@ -229,36 +229,31 @@ export default {
       utilizationPercent: (config.length / capabilities.maxMenuItems) * 100
     };
   },
+  
+
+
 
   /**
-   * Load component configuration
-   * @returns {object} Configuration object
+   * Initialize module with context
+   * @param {object} context - Vue context with store and router
+   * @returns {boolean} Success status
    */
-  async loadConfig() {
   async init(context = {}) {
     if (!context || !context.router) {
       return false;
     }
-    
-    try {
-      // Load configuration
-      await this.loadConfig();
-      
-      this._context = context;
-      this.metadata.initialized = true;
 
-      if (context?.router?.beforeEach && !this._navigationGuard) {
-        this._navigationGuard = context.router.beforeEach((to, from, next) => {
-          this.lastRoute = to.fullPath;
-          next();
-        });
-      }
+    this._context = context;
+    this.metadata.initialized = true;
 
-      return true;
-    } catch (error) {
-      console.error('MainMenu init error:', error);
-      return false;
+    if (context?.router?.beforeEach && !this._navigationGuard) {
+      this._navigationGuard = context.router.beforeEach((to, from, next) => {
+        this.lastRoute = to.fullPath;
+        next();
+      });
     }
+
+    return true;
   },
 
   /**

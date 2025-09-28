@@ -170,6 +170,8 @@ npm run component:dev:appHeader      # Port 3002
 npm run component:dev:mainMenu       # Port 3003
 npm run component:dev:loginForm      # Port 3004
 npm run component:dev:jsonEditor     # Port 3009
+npm run component:dev:pressurePanel  # Port 3006
+npm run component:dev:componentEditor # Port 3011
 
 # Component management:
 npm run analyze                      # Health check

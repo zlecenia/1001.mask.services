@@ -6,7 +6,7 @@
  */
 
 import Component from './componentEditor.js';
-import { ConfigLoader } from '../../../shared/configLoader.js';
+import config from './config/config.json';
 import schema from './config/schema.json';
 import crud from './config/crud.json';
 

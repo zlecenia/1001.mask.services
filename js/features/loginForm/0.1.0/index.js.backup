@@ -1,9 +1,10 @@
+import config from './config/config.json';
+
 /**
  * Login Form Module 0.1.0
  * Formularz logowania z walidacją i wirtualną klawiaturą dla ekranu dotykowego 7.9"
  */
 import Component from './loginForm.js';
-import { ConfigLoader } from '../../../shared/configLoader.js';
 
 export default {
   name: 'loginForm',

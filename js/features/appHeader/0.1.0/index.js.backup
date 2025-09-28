@@ -1,5 +1,7 @@
 import appHeaderComponent from './appHeader.js';
-import { ConfigLoader } from '../../../shared/configLoader.js';
+import config from './config/config.json';
+
+
 export default {
   metadata: {
     name: 'appHeader',
@@ -10,23 +12,10 @@ export default {
   },
   
   component: appHeaderComponent,
-  config: null,
-  async loadConfig() {
-    const result = await ConfigLoader.loadConfig('./config/config.json', 'appHeader');
-    this.config = result.config;
-    return result;
-  },
   
   async init(context = {}) {
-    try {
-      // Load configuration
-      await this.loadConfig();
-      this.metadata.initialized = true;
-      return true;
-    } catch (error) {
-      console.error('AppHeader init error:', error);
-      return false;
-    }
+    this.metadata.initialized = true;
+    return true;
   },
   
   handle(request = {}) {

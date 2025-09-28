@@ -1,6 +1,6 @@
 {
-  "timestamp": "2025-09-27T09:12:07.859Z",
-  "successful": 15,
+  "timestamp": "2025-09-28T11:58:26.996Z",
+  "successful": 17,
   "failed": 0,
   "results": [
     {
@@ -52,6 +52,12 @@
       "status": "success"
     },
     {
+      "component": "mainMenu",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/mainMenu/0.1.0/mainMenu.png",
+      "status": "success"
+    },
+    {
       "component": "loginForm",
       "version": "0.1.0",
       "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/loginForm/0.1.0/loginForm.png",
@@ -73,6 +79,12 @@
       "component": "deviceData",
       "version": "0.1.0",
       "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/deviceData/0.1.0/deviceData.png",
+      "status": "success"
+    },
+    {
+      "component": "componentEditor",
+      "version": "0.1.0",
+      "screenshot": "/home/tom/github/zlecenia/1001.mask.services/js/features/componentEditor/0.1.0/componentEditor.png",
       "status": "success"
     },
     {

@@ -72,6 +72,39 @@ test: install
 	npm test
 	@echo "$(GREEN)✅ Wszystkie testy zakończone$(RESET)"
 
+# Analiza zdrowia komponentów
+.PHONY: analyze
+analyze: install
+	@echo "$(BLUE)Analiza zdrowia komponentów...$(RESET)"
+	npm run analyze
+	@echo "$(GREEN)✅ Analiza zakończona$(RESET)"
+
+# Generowanie screenshotów
+.PHONY: screenshots
+screenshots: install
+	@echo "$(BLUE)Generowanie screenshotów komponentów...$(RESET)"
+	npm run screenshots
+	@echo "$(GREEN)✅ Screenshoty wygenerowane$(RESET)"
+
+# Walidacja konfiguracji
+.PHONY: config-validate
+config-validate: install
+	@echo "$(BLUE)Walidacja konfiguracji komponentów...$(RESET)"
+	npm run config:validate
+	@echo "$(GREEN)✅ Konfiguracja zwalidowana$(RESET)"
+
+# JSON Editor development server
+.PHONY: json-editor
+json-editor: install
+	@echo "$(BLUE)Uruchamianie JSON Editor...$(RESET)"
+	npm run component:dev:jsonEditor
+
+# Playground - wybór komponentów
+.PHONY: playground
+playground: install
+	@echo "$(BLUE)Uruchamianie Playground...$(RESET)"
+	npm run playground
+
 # Testowanie z pokryciem kodu
 .PHONY: test-coverage
 test-coverage: install
@@ -208,6 +241,11 @@ help:
 	@echo "  $(GREEN)build$(RESET)            - Buduje aplikację do produkcji"
 	@echo "  $(GREEN)dev$(RESET)              - Uruchamia serwer deweloperski"
 	@echo "  $(GREEN)test$(RESET)             - Uruchamia wszystkie testy"
+	@echo "  $(GREEN)analyze$(RESET)          - Analiza zdrowia komponentów"
+	@echo "  $(GREEN)screenshots$(RESET)      - Generuje screenshoty komponentów"
+	@echo "  $(GREEN)config-validate$(RESET)  - Waliduje konfigurację komponentów"
+	@echo "  $(GREEN)json-editor$(RESET)      - Uruchamia JSON Editor (port 3009)"
+	@echo "  $(GREEN)playground$(RESET)       - Uruchamia wybór komponentów"
 	@echo "  $(GREEN)test-coverage$(RESET)    - Uruchamia testy z pokryciem kodu"
 	@echo "  $(GREEN)test-modules$(RESET)     - Testuje wszystkie moduły osobno"
 	@echo "  $(GREEN)test-module$(RESET)      - Testuje konkretny moduł (MODULE=nazwa)"

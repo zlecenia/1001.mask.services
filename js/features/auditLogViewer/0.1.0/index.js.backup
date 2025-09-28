@@ -1,10 +1,11 @@
+import config from './config/config.json';
+
 /**
  * AuditLogViewer Module Index 0.1.0
  * Entry point for the comprehensive security audit log viewer component
  */
 
 import AuditLogViewerComponent from './auditLogViewer.js';
-import { ConfigLoader } from '../../../shared/configLoader.js';
 
 // Load config dynamically to avoid import assertion issues
 const loadConfig = async () => {
@@ -20,13 +21,7 @@ const loadConfig = async () => {
 export default {
   name: 'auditLogViewer',
   version: '0.1.0',
-  component: auditLogViewerComponent,
-  config: null,
-  async loadConfig() {
-    const result = await ConfigLoader.loadConfig('./config/config.json', 'auditLogViewer');
-    this.config = result.config;
-    return result;
-  },
+  component: AuditLogViewerComponent,
   config: {}, // Will be loaded dynamically
   
   // Module metadata for FeatureRegistry

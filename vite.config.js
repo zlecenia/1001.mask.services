@@ -73,8 +73,10 @@ function consoleForwardPlugin() {
 export default defineConfig({
   resolve: {
     alias: {
+      '@': resolve(__dirname, 'js'),
       'vue': 'vue/dist/vue.esm-bundler.js',
-      '@': resolve(__dirname, './js')
+      'vue-i18n': 'vue-i18n/dist/vue-i18n.esm-bundler.js',
+      'vuex': 'vuex/dist/vuex.esm-browser.js'
     },
     extensions: ['.js', '.jsx', '.json', '.vue']
   },
@@ -91,6 +93,8 @@ export default defineConfig({
     consoleForwardPlugin()
   ],
   server: {
+    port: 8080,
+    host: true,
     fs: {
       // Allow serving files from one level up from the package root
       allow: ['..']
@@ -103,15 +107,6 @@ export default defineConfig({
       }
     }
   },
-  resolve: {
-    alias: {
-      // Add aliases for commonly used modules
-      '@': resolve(__dirname, 'js'),
-      'vue': 'vue/dist/vue.esm-bundler.js',
-      'vue-i18n': 'vue-i18n/dist/vue-i18n.esm-bundler.js',
-      'vuex': 'vuex/dist/vuex.esm-browser.js'
-    },
-  },
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -122,10 +117,6 @@ export default defineConfig({
         main: resolve(__dirname, 'index.html'),
       },
     },
-  },
-  server: {
-    port: 8080,
-    host: true,
   },
   define: {
     __VUE_OPTIONS_API__: true,
