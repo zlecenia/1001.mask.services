@@ -104,6 +104,8 @@
 .btn-warning { background: linear-gradient(135deg, #fa709a, #fee140); color: white; }
 .btn-info { background: linear-gradient(135deg, #a8edea, #fed6e3); color: #333; }
 .btn-secondary { background: #6c757d; color: white; }
+.btn-undo { background: linear-gradient(135deg, #ff7b7b, #667eea); color: white; }
+.btn-redo { background: linear-gradient(135deg, #667eea, #ff7b7b); color: white; }
 
 .btn:hover:not(:disabled) {
   transform: translateY(-1px);

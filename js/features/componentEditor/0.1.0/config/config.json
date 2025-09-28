@@ -1,0 +1,60 @@
+{
+  "component": {
+    "name": "componentEditor",
+    "displayName": "Visual Component Editor",
+    "type": "tool",
+    "category": "development"
+  },
+  "ui": {
+    "layout": {
+      "sidebarWidth": "280px",
+      "headerHeight": "48px",
+      "statusBarHeight": "32px",
+      "theme": "dark"
+    },
+    "editor": {
+      "fontSize": "13px",
+      "lineHeight": "1.5",
+      "tabSize": 2,
+      "wordWrap": true
+    },
+    "colors": {
+      "primary": "#e94560",
+      "secondary": "#0f3460",
+      "background": "#1a1a2e",
+      "surface": "#16213e",
+      "text": "#f0f0f0",
+      "success": "#22c55e",
+      "warning": "#f59e0b",
+      "error": "#ef4444"
+    }
+  },
+  "permissions": {
+    "allowFileCreation": false,
+    "allowFileDeletion": false,
+    "allowStructuralChanges": false,
+    "requireValidation": true,
+    "autoBackup": true
+  },
+  "validation": {
+    "enforceSchema": true,
+    "strictMode": true,
+    "allowAdditionalProperties": false,
+    "validateOnChange": true,
+    "validateOnSave": true
+  },
+  "fileSupport": {
+    "extensions": ["js", "vue", "json", "css", "ts", "tsx"],
+    "maxFileSize": "1MB",
+    "encoding": "utf-8"
+  },
+  "features": {
+    "visualEditor": true,
+    "codePreview": true,
+    "schemaValidation": true,
+    "crudPermissions": true,
+    "autoSave": false,
+    "versionControl": true,
+    "multiLanguage": false
+  }
+}

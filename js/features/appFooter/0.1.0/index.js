@@ -1,5 +1,5 @@
 import appFooterComponent from './appFooter.js';
-import config from './config/config.json';
+import { ConfigLoader } from '../../../shared/configLoader.js';
 
 
 export default {
@@ -14,10 +14,38 @@ export default {
   },
   
   component: appFooterComponent,
+  config: null,
+  
+  async loadConfig() {
+    const result = await ConfigLoader.loadConfig('./config/config.json', 'appFooter');
+    this.config = result.config;
+    return result;
+  },
   
   async init(context = {}) {
-    this.metadata.initialized = true;
-    return { success: true };
+    console.log('🚀 [appFooter] Initializing component...');
+    console.log('📋 [appFooter] Context received:', context);
+    
+    try {
+      // Load configuration
+      await this.loadConfig();
+      
+      this.metadata.initialized = true;
+      console.log('✅ [appFooter] Component initialized successfully');
+      
+      return { 
+        success: true, 
+        metadata: this.metadata,
+        config: this.config 
+      };
+    } catch (error) {
+      console.error('❌ [appFooter] Initialization failed:', error);
+      return { 
+        success: false, 
+        error: error.message,
+        metadata: this.metadata 
+      };
+    }
   },
   
   handle(request = {}) {
@@ -43,9 +71,18 @@ export default {
   
   // Method for rendering footer in different contexts
   render(container, context = {}) {
-    if (!container) return;
+    console.log('🎨 [appFooter] Starting render process...');
+    console.log('📦 [appFooter] Container:', container);
+    console.log('🔧 [appFooter] Render context:', context);
+    
+    if (!container) {
+      console.error('❌ [appFooter] No container provided for rendering');
+      return;
+    }
     
     const { systemInfo = {}, currentUser = {} } = context;
+    console.log('👤 [appFooter] User info:', currentUser);
+    console.log('⚙️ [appFooter] System info:', systemInfo);
     
     // Create Vue app instance for this component
     const { createApp } = Vue;

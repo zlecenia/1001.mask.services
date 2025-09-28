@@ -1,0 +1,27 @@
+{
+  "currentSession": {
+    "selectedComponent": null,
+    "activeTab": "visual",
+    "unsavedChanges": false,
+    "lastSaved": null,
+    "history": []
+  },
+  "preferences": {
+    "autoSave": false,
+    "autoValidate": true,
+    "showHints": true,
+    "expandedGroups": {},
+    "recentFiles": []
+  },
+  "cache": {
+    "components": [],
+    "schemas": {},
+    "crudRules": {}
+  },
+  "statistics": {
+    "totalEdits": 0,
+    "totalSaves": 0,
+    "totalValidations": 0,
+    "lastUsed": null
+  }
+}

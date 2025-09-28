@@ -48,8 +48,8 @@ const template = `
       <button @click="saveConfig" class="btn btn-warning" :disabled="!currentJSON || !selectedComponent">
         💾 Zapisz Config
       </button>
-      <button @click="undo" class="btn btn-undo" :disabled="!canUndo" title="Cofnij (Ctrl+Z)">↩️ Cofnij</button>
-      <button @click="redo" class="btn btn-redo" :disabled="!canRedo" title="Ponów (Ctrl+Y)">↪️ Ponów</button>
+      <button @click="undo" class="btn btn-secondary" :disabled="!canUndo">↩️ Cofnij</button>
+      <button @click="redo" class="btn btn-secondary" :disabled="!canRedo">↪️ Ponów</button>
       <button @click="resetEditor" class="btn btn-info">
         🔄 Reset
       </button>
@@ -386,14 +386,6 @@ const JsonEditor = {
   async mounted() {
     await this.loadAvailableComponents();
     this.statusMessage = 'Komponenty załadowane';
-    
-    // Add keyboard shortcuts for undo/redo
-    document.addEventListener('keydown', this.handleKeydown);
-  },
-  
-  beforeUnmount() {
-    // Remove keyboard event listener
-    document.removeEventListener('keydown', this.handleKeydown);
   },
   methods: {
     recordHistory() {
@@ -419,19 +411,6 @@ const JsonEditor = {
       }
     },
 
-    handleKeydown(event) {
-      // Handle Ctrl+Z (undo)
-      if (event.ctrlKey && event.key === 'z' && !event.shiftKey) {
-        event.preventDefault();
-        this.undo();
-      }
-      // Handle Ctrl+Y or Ctrl+Shift+Z (redo)
-      else if ((event.ctrlKey && event.key === 'y') || (event.ctrlKey && event.shiftKey && event.key === 'Z')) {
-        event.preventDefault();
-        this.redo();
-      }
-    },
-
     async loadAvailableComponents() {
       try {
         // In a real environment, this would fetch from API
@@ -453,14 +432,14 @@ const JsonEditor = {
       }
       
       try {
-        // Simulate API call to list config files
-        this.configFiles = ['config.json', 'data.json', 'schema.json'];
+        // Simulate loading config files for component
+        this.configFiles = ['config.json', 'data.json', 'schema.json', 'crud.json'];
         this.statusMessage = `Załadowano pliki dla ${this.selectedComponent}`;
       } catch (error) {
-        this.showError(`Błąd wczytywania plików dla ${this.selectedComponent}`);
+        this.showError('Błąd wczytywania plików konfiguracyjnych');
       }
     },
-
+    
     async loadConfigFile() {
       if (!this.selectedConfigFile) {
         this.currentJSON = null;
@@ -470,6 +449,9 @@ const JsonEditor = {
         // Simulate API call
         const path = `js/features/${this.selectedComponent}/0.1.0/config/${this.selectedConfigFile}`;
         this.statusMessage = `Wczytywanie ${path}...`;
+        // In a real app, use fetch() here. For now, we'll use a placeholder.
+        // const response = await fetch(path);
+        // const data = await response.json();
         const data = { sample: "data for " + this.selectedConfigFile }; // Placeholder
         
         this.currentJSON = data;
@@ -482,16 +464,14 @@ const JsonEditor = {
         this.currentJSON = null;
       }
     },
-
+    
     applySchema() {
-      if (!this.selectedSchema) {
-        this.currentSchema = null;
-        return;
+      if (this.selectedSchema && this.schemas[this.selectedSchema]) {
+        this.currentSchema = this.schemas[this.selectedSchema];
+        this.statusMessage = `Schema ${this.selectedSchema} zastosowana`;
       }
-      this.currentSchema = this.schemas[this.selectedSchema];
-      this.validateJSON();
     },
-
+    
     loadSampleData() {
       if (!this.selectedSchema || !this.sampleData[this.selectedSchema]) {
         this.showError('Brak przykładowych danych dla wybranego schematu');
@@ -503,43 +483,59 @@ const JsonEditor = {
       this.historyIndex = 0;
       this.showSuccess('Załadowano przykładowe dane');
     },
-
+    
     validateJSON() {
-      if (!this.currentJSON || !this.currentSchema) {
-        this.showError('Brak danych JSON lub schematu do walidacji');
+      if (!this.currentSchema || !this.currentJSON) {
+        this.showError('Brak schematu lub danych do walidacji');
         return;
       }
-      const isValid = this.validateAgainstSchema(this.currentJSON, this.currentSchema);
-      if (isValid) {
-        this.showSuccess('JSON jest poprawny');
-      } else {
-        this.showError('JSON jest niepoprawny');
+      
+      try {
+        const isValid = this.validateAgainstSchema(this.currentJSON, this.currentSchema);
+        if (isValid) {
+          this.showSuccess('JSON jest prawidłowy według schematu');
+          this.statusMessage = 'Walidacja pomyślna';
+        }
+      } catch (error) {
+        this.showError('Błąd walidacji: ' + error.message);
       }
     },
-
+    
     async saveConfig() {
       if (!this.currentJSON || !this.selectedComponent || !this.selectedConfigFile) {
-        this.showError('Brak danych do zapisania');
+        this.showError('Wybierz komponent i plik do zapisania');
         return;
       }
+      
       try {
-        // Simulate API call to save file
-        this.statusMessage = 'Zapisywanie...';
-        await new Promise(resolve => setTimeout(resolve, 1000)); // Fake delay
-        this.showSuccess('Plik zapisany pomyślnie');
+        // In real environment, this would save to:
+        // js/features/${this.selectedComponent}/0.1.0/config/${this.selectedConfigFile}
+        
+        const jsonString = JSON.stringify(this.currentJSON, null, 2);
+        
+        // For demo, just show success
+        this.showSuccess(`Zapisano ${this.selectedConfigFile} dla ${this.selectedComponent}`);
+        this.statusMessage = 'Konfiguracja zapisana';
         this.originalJSON = JSON.parse(JSON.stringify(this.currentJSON));
+        
       } catch (error) {
-        this.showError('Błąd zapisu pliku');
+        this.showError('Błąd zapisywania: ' + error.message);
       }
     },
-
+    
     resetEditor() {
-      this.currentJSON = JSON.parse(JSON.stringify(this.originalJSON));
-      this.history = [JSON.parse(JSON.stringify(this.originalJSON))];
-      this.historyIndex = 0;
-      this.showSuccess('Przywrócono oryginalną wersję');
+      if (confirm('Czy na pewno chcesz zresetować edytor? Niezapisane zmiany zostaną utracone.')) {
+        this.currentJSON = null;
+        this.originalJSON = null;
+        this.selectedComponent = '';
+        this.selectedConfigFile = '';
+        this.selectedSchema = '';
+        this.currentSchema = null;
+        this.configFiles = [];
+        this.statusMessage = 'Edytor zresetowany';
+      }
     },
-
+    
     // JSON manipulation methods
     updateValue(event) {
       if (event.type === 'key') {
@@ -550,90 +546,120 @@ const JsonEditor = {
       this.recordHistory();
       this.statusMessage = 'Wartość zaktualizowana';
     },
-
+    
     updateJSONKey(path, oldKey, newKey) {
       const pathParts = path.split('/');
-      let current = this.currentJSON;
-      for (let i = 0; i < pathParts.length - 1; i++) {
-        current = current[pathParts[i]];
+      pathParts.pop(); // Remove old key
+      let target = this.currentJSON;
+      
+      // Navigate to parent
+      for (const part of pathParts) {
+        target = target[part];
       }
-      const value = current[oldKey];
-      delete current[oldKey];
-      current[newKey] = value;
+      
+      // Update key
+      if (target && typeof target === 'object' && oldKey in target) {
+        target[newKey] = target[oldKey];
+        delete target[oldKey];
+      }
+      this.recordHistory();
     },
-
+    
     updateJSONValue(path, newValue) {
       const pathParts = path.split('/');
-      let current = this.currentJSON;
-      for (let i = 0; i < pathParts.length - 1; i++) {
-        current = current[pathParts[i]];
-      }
-      const key = pathParts[pathParts.length - 1];
-      if (Array.isArray(current) && !isNaN(key)) {
-        current[parseInt(key)] = newValue;
-      } else {
-        current[key] = newValue;
-      }
-    },
-
-    deleteNode(event) {
-      const pathParts = event.path.split('/');
-      if (pathParts.length === 1) {
-        delete this.currentJSON[pathParts[0]];
-      } else {
-        let current = this.currentJSON;
-        for (let i = 0; i < pathParts.length - 1; i++) {
-          current = current[pathParts[i]];
-        }
-        const keyToDelete = pathParts[pathParts.length - 1];
-        if (Array.isArray(current)) {
-          current.splice(parseInt(keyToDelete), 1);
+      const key = pathParts.pop();
+      let target = this.currentJSON;
+      
+      // Navigate to parent
+      for (const part of pathParts) {
+        if (Array.isArray(target)) {
+          target = target[parseInt(part)];
         } else {
-          delete current[keyToDelete];
+          target = target[part];
         }
+      }
+      
+      // Set new value
+      if (Array.isArray(target)) {
+        target[parseInt(key)] = newValue;
+      } else {
+        target[key] = newValue;
+      }
+      this.recordHistory();
+    },
+    
+    deleteNode(event) {
+      if (!confirm('Czy na pewno chcesz usunąć ten element?')) return;
+      
+      const pathParts = event.path.split('/');
+      const key = pathParts.pop();
+      let target = this.currentJSON;
+      
+      // Navigate to parent
+      for (const part of pathParts) {
+        if (Array.isArray(target)) {
+          target = target[parseInt(part)];
+        } else {
+          target = target[part];
+        }
+      }
+      
+      // Delete element
+      if (Array.isArray(target)) {
+        target.splice(parseInt(key), 1);
+      } else {
+        delete target[key];
       }
       this.showSuccess('Element usunięty: ' + event.path);
       this.recordHistory();
     },
-
+    
     addNode(event) {
-      this.showAddModal(event.path);
+      this.newElementPath = event.path;
+      this.showModal = true;
     },
-
+    
     showAddModal(path) {
       this.newElementPath = path;
       this.showModal = true;
     },
-
+    
     closeModal() {
       this.showModal = false;
       this.newElementKey = '';
-      this.newElementType = 'string';
       this.newElementValue = '';
+      this.newElementType = 'string';
+      this.newElementPath = '';
     },
-
+    
     addNewElement() {
-      if (!this.newElementKey && this.newElementPath) {
-        const pathParts = this.newElementPath.split('/');
-        let current = this.currentJSON;
-        for (const part of pathParts) {
-          current = current[part];
-        }
-        if (!Array.isArray(current)) {
-           this.showError('Klucz jest wymagany dla obiektów');
-           return;
-        }
+      if (!this.newElementKey.trim()) {
+        alert('Podaj nazwę klucza');
+        return;
       }
-
-      let value;
+      
+      let value = this.newElementValue.trim();
+      
+      // Convert value to appropriate type
       switch (this.newElementType) {
-        case 'number': value = Number(this.newElementValue); break;
-        case 'boolean': value = this.newElementValue === 'true'; break;
-        case 'array': value = []; break;
-        case 'object': value = {}; break;
-        default: value = this.newElementValue;
+        case 'number':
+          value = Number(value) || 0;
+          break;
+        case 'boolean':
+          value = value === 'true';
+          break;
+        case 'array':
+          value = [];
+          break;
+        case 'object':
+          value = {};
+          break;
+        default:
+          // Keep as string
+          break;
       }
-
+      
+      // Add element to JSON
       let target = this.currentJSON;
       if (this.newElementPath) {
         const pathParts = this.newElementPath.split('/');
@@ -641,40 +667,45 @@ const JsonEditor = {
           target = target[part];
         }
       }
-
-      if (Array.isArray(target)) {
-        target.push(value);
-      } else {
-        target[this.newElementKey] = value;
-      }
       
-      this.showSuccess('Nowy element dodany do ' + (this.newElementPath || 'root'));
+      target[this.newElementKey] = value;
       this.closeModal();
+      this.showSuccess('Nowy element dodany do ' + (this.newElementPath || 'root'));
       this.recordHistory();
     },
-
+    
     // Helper methods
     validateAgainstSchema(data, schema) {
-      // Basic validation logic placeholder
-      if (!schema) return true;
-      for (const key in schema.properties) {
-        if (schema.required && schema.required.includes(key) && !data.hasOwnProperty(key)) {
-          return false;
+      if (schema.type === 'object') {
+        if (typeof data !== 'object' || Array.isArray(data) || data === null) {
+          throw new Error('Oczekiwano obiektu');
+        }
+        
+        if (schema.required) {
+          for (const field of schema.required) {
+            if (!(field in data)) {
+              throw new Error(`Brak wymaganego pola: ${field}`);
+            }
+          }
         }
       }
       return true;
     },
-
+    
     showError(message) {
       this.errorMessage = message;
       this.successMessage = '';
-      setTimeout(() => this.errorMessage = '', 3000);
+      setTimeout(() => {
+        this.errorMessage = '';
+      }, 5000);
     },
-
+    
     showSuccess(message) {
       this.successMessage = message;
       this.errorMessage = '';
-      setTimeout(() => this.successMessage = '', 3000);
+      setTimeout(() => {
+        this.successMessage = '';
+      }, 3000);
     }
   }
 };

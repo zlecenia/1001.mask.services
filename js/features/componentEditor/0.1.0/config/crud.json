@@ -1,0 +1,96 @@
+{
+  "name": "componentEditor",
+  "title": "Component Editor CRUD Rules",
+  "description": "Permission rules for Component Editor",
+  "_generated": true,
+  "_generated_at": "2025-01-09T12:00:00.000Z",
+  "rules": {
+    "editable": [
+      "ui",
+      "validation",
+      "features",
+      "fileSupport.maxFileSize",
+      "permissions.autoBackup"
+    ],
+    "readonly": [
+      "component.name",
+      "component.type",
+      "fileSupport.extensions",
+      "fileSupport.encoding"
+    ],
+    "protected": [
+      "permissions.allowFileCreation",
+      "permissions.allowFileDeletion",
+      "permissions.allowStructuralChanges",
+      "validation.enforceSchema",
+      "validation.strictMode"
+    ],
+    "addable": false,
+    "deletable": false,
+    "structural_changes": false
+  },
+  "field_types": {
+    "component": "object",
+    "ui": "object",
+    "permissions": "object",
+    "validation": "object",
+    "fileSupport": "object",
+    "features": "object"
+  },
+  "validation_rules": {
+    "component.name": {
+      "required": true,
+      "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+    },
+    "ui.layout.theme": {
+      "enum": ["light", "dark", "auto"]
+    },
+    "permissions": {
+      "all_boolean": true
+    },
+    "validation": {
+      "all_boolean": true
+    }
+  },
+  "ui_hints": {
+    "component": {
+      "label": "Component Settings",
+      "description": "Basic component configuration"
+    },
+    "ui": {
+      "label": "UI Settings",
+      "description": "Visual appearance configuration"
+    },
+    "permissions": {
+      "label": "Permission Settings",
+      "description": "File and editing permissions",
+      "warning": "⚠️ Changing these settings may affect system stability"
+    },
+    "validation": {
+      "label": "Validation Settings",
+      "description": "Data validation configuration"
+    },
+    "fileSupport": {
+      "label": "File Support",
+      "description": "Supported file types and limits"
+    },
+    "features": {
+      "label": "Features",
+      "description": "Enable or disable editor features"
+    }
+  },
+  "access_levels": {
+    "developer": {
+      "can_edit": ["ui", "validation", "features"],
+      "can_view": ["*"]
+    },
+    "admin": {
+      "can_edit": ["*"],
+      "can_view": ["*"]
+    },
+    "user": {
+      "can_edit": ["ui.editor", "features"],
+      "can_view": ["component", "ui", "features"]
+    }
+  }
+}

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=400">
+    <title>JSON Editor - Test Undo/Redo</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link rel="stylesheet" href="./jsonEditor.css">
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .test-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .test-header {
+            background: #2c3e50;
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+        }
+        .test-instructions {
+            padding: 15px 20px;
+            background: #e8f4fd;
+            border-bottom: 1px solid #ddd;
+        }
+        .test-instructions h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+        }
+        .test-instructions ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .test-instructions li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🧪 Test Edytora JSON - Funkcjonalność Undo/Redo</h1>
+            <p>Testowanie przycisków cofnij/ponów oraz skrótów klawiszowych</p>
+        </div>
+        
+        <div class="test-instructions">
+            <h3>📋 Instrukcje testowania:</h3>
+            <ul>
+                <li><strong>Krok 1:</strong> Wybierz schemat "App Configuration" i kliknij "Załaduj Przykład"</li>
+                <li><strong>Krok 2:</strong> Edytuj wartości (kliknij na wartość i zmień ją)</li>
+                <li><strong>Krok 3:</strong> Przetestuj przyciski "↩️ Cofnij" i "↪️ Ponów"</li>
+                <li><strong>Krok 4:</strong> Przetestuj skróty klawiszowe: <kbd>Ctrl+Z</kbd> (cofnij) i <kbd>Ctrl+Y</kbd> (ponów)</li>
+                <li><strong>Krok 5:</strong> Dodaj nowe elementy i usuń istniejące, sprawdź historię zmian</li>
+            </ul>
+        </div>
+        
+        <div id="app"></div>
+    </div>
+
+    <script type="module">
+        import JsonEditor from './jsonEditor.js';
+        
+        const { createApp } = Vue;
+        
+        // Rozszerzone dane testowe
+        const testData = {
+            "API_URL": "http://localhost:3000",
+            "WS_URL": "ws://localhost:3000", 
+            "MOCK_MODE": true,
+            "UPDATE_INTERVAL": 5000,
+            "FEATURES": {
+                "validation": true,
+                "export": true,
+                "import": false
+            },
+            "UI_CONFIG": {
+                "theme": "light",
+                "animations": true,
+                "compactMode": false
+            },
+            "PERMISSIONS": [
+                "read",
+                "write",
+                "delete"
+            ]
+        };
+        
+        const app = createApp({
+            components: { 
+                'json-editor': JsonEditor 
+            },
+            template: '<json-editor ref="editor" />',
+            
+            mounted() {
+                console.log('🧪 Test app mounted');
+                
+                // Auto-load test data after a short delay
+                setTimeout(() => {
+                    const editor = this.$refs.editor;
+                    if (editor) {
+                        // Pre-configure editor for testing
+                        editor.selectedSchema = 'app';
+                        editor.currentJSON = JSON.parse(JSON.stringify(testData));
+                        editor.originalJSON = JSON.parse(JSON.stringify(testData));
+                        editor.history = [JSON.parse(JSON.stringify(testData))];
+                        editor.historyIndex = 0;
+                        editor.showSuccess('Załadowano dane testowe - gotowy do testowania undo/redo!');
+                        
+                        console.log('📂 Test data loaded');
+                        console.log('🎯 Ready for undo/redo testing');
+                        console.log('💡 Try editing values, then use Ctrl+Z and Ctrl+Y');
+                    }
+                }, 1000);
+            }
+        });
+        
+        app.mount('#app');
+    </script>
+</body>
+</html>

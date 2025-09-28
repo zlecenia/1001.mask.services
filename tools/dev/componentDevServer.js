@@ -99,6 +99,12 @@ class ComponentDevServer {
   }
 
   setupMiddleware() {
+    // Request logging
+    this.app.use((req, res, next) => {
+      console.log(chalk.cyan(`📡 [${new Date().toISOString()}] ${req.method} ${req.url}`));
+      next();
+    });
+
     // CORS
     this.app.use((req, res, next) => {
       res.header('Access-Control-Allow-Origin', '*');
@@ -110,13 +116,39 @@ class ComponentDevServer {
     // JSON parsing
     this.app.use(express.json());
     
+    // Custom MIME type handling for JavaScript modules
+    this.app.use((req, res, next) => {
+      if (req.url.endsWith('.js')) {
+        res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        console.log(chalk.green(`🔧 [MIME] Setting JS content-type for: ${req.url}`));
+      } else if (req.url.endsWith('.json')) {
+        res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        console.log(chalk.blue(`📋 [MIME] Setting JSON content-type for: ${req.url}`));
+      }
+      next();
+    });
+    
     // Static files from component directory
-    this.app.use('/component', express.static(this.componentPath));
+    this.app.use('/component', express.static(this.componentPath, {
+      setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+          res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        }
+      }
+    }));
     
     // Static files from project root (for shared assets)
     const projectRoot = path.resolve(this.componentPath, '../../../..');
     this.app.use('/assets', express.static(path.join(projectRoot, 'assets')));
-    this.app.use('/js/shared', express.static(path.join(projectRoot, 'js/shared')));
+    this.app.use('/js/shared', express.static(path.join(projectRoot, 'js/shared'), {
+      setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+          res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        }
+      }
+    }));
+    
+    console.log(chalk.green('✅ Middleware configured with proper MIME types'));
   }
 
   setupRoutes() {

@@ -1,0 +1,48 @@
+{
+  "component": {
+    "name": "testComponent",
+    "version": "1.0.0",
+    "description": "Przykładowy komponent do testowania edytora JSON",
+    "enabled": true
+  },
+  "settings": {
+    "theme": "dark",
+    "autoSave": false,
+    "timeout": 5000,
+    "features": [
+      "validation",
+      "export",
+      "import"
+    ]
+  },
+  "ui": {
+    "showToolbar": true,
+    "compactMode": false,
+    "animations": {
+      "enabled": true,
+      "duration": 300,
+      "easing": "ease-in-out"
+    }
+  },
+  "data": {
+    "items": [
+      {
+        "id": 1,
+        "name": "Element 1",
+        "active": true,
+        "priority": "high"
+      },
+      {
+        "id": 2,
+        "name": "Element 2",
+        "active": false,
+        "priority": "medium"
+      }
+    ],
+    "metadata": {
+      "created": "2025-09-28T10:00:00Z",
+      "lastModified": null,
+      "author": "System"
+    }
+  }
+}

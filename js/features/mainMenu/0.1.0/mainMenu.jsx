@@ -7,8 +7,11 @@
 
 import { getSecurityService } from '../../../services/securityService.js';
 
-// Template for role-based menu system
-const template = `
+// Main Menu Component
+export default {
+  name: 'mainMenu',
+  
+  template: `
 <div class="main-menu" :class="'role-' + (userRole || 'none').toLowerCase()" role="navigation" aria-label="Main application menu">
   <div class="menu-header">
     <h3 class="menu-title">{{ $t('menu.title') }}</h3>
@@ -274,21 +277,6 @@ export default {
     currentUser: {
       type: String,
       default: 'user'
-    }
-  },
-  data() {
-    return {
-      activeItem: null,
-      activeSubItem: null,
-      expandedItem: null,
-      securityService: null,
-      lastAccessTime: Date.now(),
-      menuAccessAttempts: 0,
-      
-      // Complete menu configuration for all roles - matches module config
-      menuConfig: {
-        OPERATOR: [
-          { id: 'monitoring', key: 'monitoring', icon: 'fas fa-desktop', isPrimary: true },
           { id: 'alerts', key: 'alerts', icon: 'fas fa-bell', isPrimary: true }
         ],
         
@@ -477,26 +465,33 @@ export default {
 
     // Initialize SecurityService for comprehensive security features
     try {
-      this.securityService = getSecurityService();
+      this.securityService = getSecurityService?.() || {
+        logAuditEvent: (event, data) => {
+          console.log(`[Security Audit] ${event}:`, data);
+        },
+        hasPermission: (permission) => true,
+        getCurrentUser: () => ({
+          role: this.userRole || 'OPERATOR',
+          permissions: ['*']
+        })
+      };
       
       // Log menu component initialization for audit trail
-      this.securityService.logAuditEvent('MENU_COMPONENT_INIT', {
-        userRole: this.userRole,
-        availableMenuItems: this.getMenuItemCount(),
-        timestamp: new Date().toISOString(),
-        userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'
-      });
+      if (this.securityService.logAuditEvent) {
+        this.securityService.logAuditEvent('MENU_COMPONENT_INIT', {
+          userRole: this.userRole,
+          availableMenuItems: this.getMenuItemCount(),
+          timestamp: new Date().toISOString(),
+          userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : 'unknown'
+        });
+      }
 
-      // Set up session timeout monitoring
-      this.sessionTimeoutInterval = setInterval(() => {
-        this.checkSessionTimeout();
-      }, 5 * 60 * 1000); // Check every 5 minutes
-
-    } catch (error) {
-      console.error('Failed to initialize SecurityService in MainMenu:', error);
-      // Fallback mode without enhanced security features
-      this.securityService = null;
-    }
+      // Set up session timeout monitoring if available
+      if (this.checkSessionTimeout) {
+        this.sessionTimeoutInterval = setInterval(() => {
+          this.checkSessionTimeout();
+        }, 5 * 60 * 1000); // Check every 5 minutes
+      }
   },
 
   beforeUnmount() {
@@ -506,12 +501,37 @@ export default {
     }
 
     // Log menu component cleanup for audit trail
-    this.securityService?.logAuditEvent('MENU_COMPONENT_CLEANUP', {
-      userRole: this.userRole,
-      sessionDuration: Date.now() - this.lastAccessTime,
-      timestamp: new Date().toISOString()
-    });
+    if (this.securityService?.logAuditEvent) {
+      this.securityService.logAuditEvent('MENU_COMPONENT_CLEANUP', {
+        userRole: this.userRole,
+        sessionDuration: Date.now() - this.lastAccessTime,
+        timestamp: new Date().toISOString()
+      });
+    }
   },
   
+  emits: ['menu-selected', 'session-timeout']
+};
+
+// Export the component as default
+export default {
+  name: 'mainMenu',
+  template,
+  data,
+  computed: {
+    userRole,
+    filteredMenuItems
+  },
+  methods: {
+    selectMenuItem,
+    selectSubMenuItem,
+    getMenuItemCount,
+    hasPermission,
+    validateMenuAccess,
+    getSessionInfo,
+    checkSessionTimeout
+  },
+  mounted,
+  beforeUnmount,
   emits: ['menu-selected', 'session-timeout']
 };

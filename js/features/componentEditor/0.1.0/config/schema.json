@@ -1,0 +1,141 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Component Editor Schema",
+  "description": "Schema for Visual Component Editor configuration",
+  "required": ["component", "ui", "permissions"],
+  "properties": {
+    "component": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^[a-zA-Z][a-zA-Z0-9]*$"
+        },
+        "displayName": {
+          "type": "string",
+          "minLength": 1
+        },
+        "type": {
+          "type": "string",
+          "enum": ["tool", "component", "service", "utility"]
+        },
+        "category": {
+          "type": "string",
+          "enum": ["development", "ui-component", "system", "utility"]
+        }
+      },
+      "required": ["name", "type", "category"]
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "layout": {
+          "type": "object",
+          "properties": {
+            "sidebarWidth": {
+              "type": "string",
+              "pattern": "^[0-9]+px$"
+            },
+            "headerHeight": {
+              "type": "string",
+              "pattern": "^[0-9]+px$"
+            },
+            "theme": {
+              "type": "string",
+              "enum": ["light", "dark", "auto"]
+            }
+          }
+        },
+        "editor": {
+          "type": "object",
+          "properties": {
+            "fontSize": {
+              "type": "string",
+              "pattern": "^[0-9]+px$"
+            },
+            "tabSize": {
+              "type": "number",
+              "minimum": 1,
+              "maximum": 8
+            },
+            "wordWrap": {
+              "type": "boolean"
+            }
+          }
+        },
+        "colors": {
+          "type": "object",
+          "patternProperties": {
+            "^.*$": {
+              "type": "string",
+              "pattern": "^#[0-9a-fA-F]{6}$"
+            }
+          }
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "properties": {
+        "allowFileCreation": {
+          "type": "boolean"
+        },
+        "allowFileDeletion": {
+          "type": "boolean"
+        },
+        "allowStructuralChanges": {
+          "type": "boolean"
+        },
+        "requireValidation": {
+          "type": "boolean"
+        },
+        "autoBackup": {
+          "type": "boolean"
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "enforceSchema": {
+          "type": "boolean"
+        },
+        "strictMode": {
+          "type": "boolean"
+        },
+        "validateOnChange": {
+          "type": "boolean"
+        },
+        "validateOnSave": {
+          "type": "boolean"
+        }
+      }
+    },
+    "fileSupport": {
+      "type": "object",
+      "properties": {
+        "extensions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "maxFileSize": {
+          "type": "string"
+        },
+        "encoding": {
+          "type": "string",
+          "enum": ["utf-8", "ascii", "utf-16"]
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "boolean"
+      }
+    }
+  }
+}

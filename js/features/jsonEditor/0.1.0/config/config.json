@@ -50,7 +50,7 @@
     "componentSelection": true,
     "schemaSupport": true,
     "exportImport": true,
-    "undoRedo": false
+    "undoRedo": true
   },
   "schemas": {
     "supported": [

@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=400">
+    <title>Visual Component Editor - 7.9" Display</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #app {
+            width: 100%;
+            max-width: 1280px;
+            height: 100vh;
+            max-height: 400px;
+            background: #1a1a2e;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* Sidebar z listą komponentów */
+        .sidebar {
+            width: 280px;
+            background: #16213e;
+            border-right: 1px solid #0f3460;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 12px;
+            background: #0f3460;
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .component-filter {
+            padding: 8px;
+            background: #1a1a2e;
+        }
+
+        .filter-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0f3460;
+            border: 1px solid #e94560;
+            border-radius: 6px;
+            color: white;
+            font-size: 13px;
+        }
+
+        .component-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 8px;
+        }
+
+        .component-group {
+            margin-bottom: 12px;
+        }
+
+        .group-header {
+            padding: 6px 8px;
+            background: #0f3460;
+            color: #e94560;
+            font-size: 12px;
+            font-weight: 600;
+            border-radius: 4px;
+            margin-bottom: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .component-item {
+            padding: 8px 12px;
+            background: #1a1a2e;
+            color: #f0f0f0;
+            border-radius: 4px;
+            margin: 2px 0;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .component-item:hover {
+            background: #e94560;
+            transform: translateX(4px);
+        }
+
+        .component-item.active {
+            background: #e94560;
+            font-weight: 600;
+        }
+
+        .file-icon {
+            font-size: 12px;
+            opacity: 0.7;
+        }
+
+        /* Main editor area */
+        .editor-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .editor-header {
+            padding: 12px 16px;
+            background: #0f3460;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e94560;
+        }
+
+        .editor-title {
+            font-size: 14px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            background: #e94560;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .action-btn:hover:not(:disabled) {
+            background: #f05070;
+            transform: translateY(-1px);
+        }
+
+        .action-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .action-btn.save {
+            background: #22c55e;
+        }
+
+        .action-btn.save:hover {
+            background: #16a34a;
+        }
+
+        /* Editor tabs */
+        .editor-tabs {
+            display: flex;
+            background: #16213e;
+            border-bottom: 1px solid #0f3460;
+            padding: 0 16px;
+        }
+
+        .editor-tab {
+            padding: 8px 16px;
+            background: transparent;
+            border: none;
+            color: #94a3b8;
+            font-size: 13px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .editor-tab:hover {
+            color: white;
+        }
+
+        .editor-tab.active {
+            color: #e94560;
+            border-bottom-color: #e94560;
+            font-weight: 600;
+        }
+
+        /* Editor content area */
+        .editor-content {
+            flex: 1;
+            overflow: auto;
+            padding: 16px;
+            background: #1a1a2e;
+        }
+
+        /* Visual editor styles */
+        .visual-editor {
+            display: grid;
+            gap: 16px;
+        }
+
+        .field-group {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #0f3460;
+        }
+
+        .field-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: #e94560;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .field-path {
+            font-size: 10px;
+            color: #64748b;
+            font-weight: normal;
+        }
+
+        .field-input {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0f3460;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            color: white;
+            font-size: 13px;
+        }
+
+        .field-input:focus {
+            outline: none;
+            border-color: #e94560;
+            box-shadow: 0 0 0 3px rgba(233, 69, 96, 0.1);
+        }
+
+        .field-input:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        textarea.field-input {
+            min-height: 80px;
+            resize: vertical;
+            font-family: 'Monaco', 'Courier New', monospace;
+        }
+
+        .field-select {
+            width: 100%;
+            padding: 8px 12px;
+            background: #0f3460;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .field-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        .field-row {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .field-hint {
+            font-size: 11px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .permission-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            background: #0f3460;
+            border-radius: 12px;
+            font-size: 10px;
+            color: #94a3b8;
+        }
+
+        .permission-badge.editable {
+            background: #22c55e20;
+            color: #22c55e;
+        }
+
+        .permission-badge.readonly {
+            background: #f59e0b20;
+            color: #f59e0b;
+        }
+
+        .permission-badge.protected {
+            background: #ef444420;
+            color: #ef4444;
+        }
+
+        /* Array/Object editor */
+        .array-editor {
+            border: 1px solid #334155;
+            border-radius: 4px;
+            padding: 8px;
+            background: #0f3460;
+        }
+
+        .array-item {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .array-item-input {
+            flex: 1;
+        }
+
+        .array-item-remove {
+            padding: 4px 8px;
+            background: #ef4444;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .add-item-btn {
+            padding: 6px 12px;
+            background: #22c55e;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 8px;
+        }
+
+        /* Code preview */
+        .code-preview {
+            background: #0d1117;
+            border-radius: 8px;
+            padding: 16px;
+            overflow: auto;
+        }
+
+        .code-preview pre {
+            margin: 0;
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        /* Status messages */
+        .status-bar {
+            padding: 8px 16px;
+            background: #16213e;
+            border-top: 1px solid #0f3460;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .status-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #64748b;
+        }
+
+        .status-indicator.success {
+            background: #22c55e;
+        }
+
+        .status-indicator.error {
+            background: #ef4444;
+        }
+
+        .status-indicator.warning {
+            background: #f59e0b;
+        }
+
+        /* Loading overlay */
+        .loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid #334155;
+            border-top-color: #e94560;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f3460;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #e94560;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #f05070;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <visual-component-editor></visual-component-editor>
+</div>
+
+<script>
+    const { createApp } = Vue;
+
+    const VisualComponentEditor = {
+        template: `
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <span>📦</span>
+                        <span>Component Explorer</span>
+                    </div>
+
+                    <div class="component-filter">
+                        <input
+                            type="text"
+                            class="filter-input"
+                            v-model="filterText"
+                            placeholder="Search components..."
+                        />
+                    </div>
+
+                    <div class="component-list">
+                        <div v-for="group in filteredComponents" :key="group.name" class="component-group">
+                            <div class="group-header" @click="toggleGroup(group.name)">
+                                <span>{{ group.name }}</span>
+                                <span>{{ group.expanded ? '▼' : '▶' }}</span>
+                            </div>
+                            <div v-if="group.expanded">
+                                <div
+                                    v-for="comp in group.components"
+                                    :key="comp.path"
+                                    class="component-item"
+                                    :class="{ active: selectedComponent?.path === comp.path }"
+                                    @click="selectComponent(comp)"
+                                >
+                                    <span class="file-icon">{{ getFileIcon(comp.type) }}</span>
+                                    <span>{{ comp.name }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="editor-container">
+                    <div class="editor-header">
+                        <div class="editor-title">
+                            <span v-if="selectedComponent">
+                                {{ selectedComponent.name }}
+                                <span style="color: #64748b; font-weight: normal;">
+                                    ({{ selectedComponent.type }})
+                                </span>
+                            </span>
+                            <span v-else style="color: #64748b;">
+                                Select a component to edit
+                            </span>
+                        </div>
+
+                        <div class="editor-actions">
+                            <button
+                                class="action-btn"
+                                @click="validateComponent"
+                                :disabled="!selectedComponent || !hasChanges"
+                            >
+                                Validate
+                            </button>
+                            <button
+                                class="action-btn save"
+                                @click="saveComponent"
+                                :disabled="!selectedComponent || !hasChanges"
+                            >
+                                Save Changes
+                            </button>
+                            <button
+                                class="action-btn"
+                                @click="revertChanges"
+                                :disabled="!selectedComponent || !hasChanges"
+                            >
+                                Revert
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-if="selectedComponent" class="editor-tabs">
+                        <button
+                            class="editor-tab"
+                            :class="{ active: activeTab === 'visual' }"
+                            @click="activeTab = 'visual'"
+                        >
+                            Visual Editor
+                        </button>
+                        <button
+                            class="editor-tab"
+                            :class="{ active: activeTab === 'schema' }"
+                            @click="activeTab = 'schema'"
+                        >
+                            Schema
+                        </button>
+                        <button
+                            class="editor-tab"
+                            :class="{ active: activeTab === 'preview' }"
+                            @click="activeTab = 'preview'"
+                        >
+                            Code Preview
+                        </button>
+                        <button
+                            class="editor-tab"
+                            :class="{ active: activeTab === 'permissions' }"
+                            @click="activeTab = 'permissions'"
+                        >
+                            Permissions
+                        </button>
+                    </div>
+
+                    <div v-if="selectedComponent" class="editor-content">
+                        <!-- Visual Editor Tab -->
+                        <div v-if="activeTab === 'visual'" class="visual-editor">
+                            <div v-for="field in editableFields" :key="field.path" class="field-group">
+                                <label class="field-label">
+                                    <span>{{ field.label }}</span>
+                                    <span class="field-path">[{{ field.path }}]</span>
+                                    <span
+                                        class="permission-badge"
+                                        :class="field.permission"
+                                    >
+                                        {{ field.permission }}
+                                    </span>
+                                </label>
+
+                                <div v-if="field.type === 'text' || field.type === 'string'">
+                                    <input
+                                        type="text"
+                                        class="field-input"
+                                        v-model="field.value"
+                                        :disabled="field.permission === 'readonly'"
+                                        @input="markAsChanged"
+                                    />
+                                </div>
+
+                                <div v-else-if="field.type === 'number'">
+                                    <input
+                                        type="number"
+                                        class="field-input"
+                                        v-model.number="field.value"
+                                        :disabled="field.permission === 'readonly'"
+                                        @input="markAsChanged"
+                                    />
+                                </div>
+
+                                <div v-else-if="field.type === 'boolean'">
+                                    <div class="field-row">
+                                        <input
+                                            type="checkbox"
+                                            class="field-checkbox"
+                                            v-model="field.value"
+                                            :disabled="field.permission === 'readonly'"
+                                            @change="markAsChanged"
+                                        />
+                                        <span style="color: #94a3b8;">{{ field.value ? 'Enabled' : 'Disabled' }}</span>
+                                    </div>
+                                </div>
+
+                                <div v-else-if="field.type === 'select'">
+                                    <select
+                                        class="field-select"
+                                        v-model="field.value"
+                                        :disabled="field.permission === 'readonly'"
+                                        @change="markAsChanged"
+                                    >
+                                        <option v-for="opt in field.options" :key="opt" :value="opt">
+                                            {{ opt }}
+                                        </option>
+                                    </select>
+                                </div>
+
+                                <div v-else-if="field.type === 'array'">
+                                    <div class="array-editor">
+                                        <div v-for="(item, index) in field.value" :key="index" class="array-item">
+                                            <input
+                                                type="text"
+                                                class="field-input array-item-input"
+                                                v-model="field.value[index]"
+                                                :disabled="field.permission === 'readonly'"
+                                                @input="markAsChanged"
+                                            />
+                                            <button
+                                                v-if="field.permission === 'editable'"
+                                                class="array-item-remove"
+                                                @click="removeArrayItem(field, index)"
+                                            >
+                                                ✕
+                                            </button>
+                                        </div>
+                                        <button
+                                            v-if="field.permission === 'editable'"
+                                            class="add-item-btn"
+                                            @click="addArrayItem(field)"
+                                        >
+                                            + Add Item
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div v-else-if="field.type === 'textarea'">
+                                    <textarea
+                                        class="field-input"
+                                        v-model="field.value"
+                                        :disabled="field.permission === 'readonly'"
+                                        @input="markAsChanged"
+                                    ></textarea>
+                                </div>
+
+                                <div v-if="field.hint" class="field-hint">
+                                    {{ field.hint }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Schema Tab -->
+                        <div v-if="activeTab === 'schema'" class="code-preview">
+                            <pre><code>{{ JSON.stringify(currentSchema, null, 2) }}</code></pre>
+                        </div>
+
+                        <!-- Preview Tab -->
+                        <div v-if="activeTab === 'preview'" class="code-preview">
+                            <pre><code>{{ getCodePreview() }}</code></pre>
+                        </div>
+
+                        <!-- Permissions Tab -->
+                        <div v-if="activeTab === 'permissions'" class="visual-editor">
+                            <div class="field-group">
+                                <label class="field-label">CRUD Permissions</label>
+                                <div style="display: grid; gap: 8px;">
+                                    <div class="field-row">
+                                        <span style="color: #94a3b8; width: 120px;">Editable Fields:</span>
+                                        <span style="color: #22c55e;">{{ crudRules.editable.join(', ') || 'None' }}</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span style="color: #94a3b8; width: 120px;">Readonly Fields:</span>
+                                        <span style="color: #f59e0b;">{{ crudRules.readonly.join(', ') || 'None' }}</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span style="color: #94a3b8; width: 120px;">Protected Fields:</span>
+                                        <span style="color: #ef4444;">{{ crudRules.protected.join(', ') || 'None' }}</span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span style="color: #94a3b8; width: 120px;">Can Add Items:</span>
+                                        <span :style="{ color: crudRules.addable ? '#22c55e' : '#ef4444' }">
+                                            {{ crudRules.addable ? 'Yes' : 'No' }}
+                                        </span>
+                                    </div>
+                                    <div class="field-row">
+                                        <span style="color: #94a3b8; width: 120px;">Can Delete:</span>
+                                        <span :style="{ color: crudRules.deletable ? '#22c55e' : '#ef4444' }">
+                                            {{ crudRules.deletable ? 'Yes' : 'No' }}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else class="editor-content" style="display: flex; align-items: center; justify-content: center;">
+                        <div style="text-align: center; color: #64748b;">
+                            <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
+                            <div style="font-size: 16px;">Select a component from the sidebar to start editing</div>
+                            <div style="font-size: 14px; margin-top: 8px;">Visual editing with schema validation</div>
+                        </div>
+                    </div>
+
+                    <div class="status-bar">
+                        <div class="status-message">
+                            <div class="status-indicator" :class="statusType"></div>
+                            <span>{{ statusMessage }}</span>
+                        </div>
+                        <div style="display: flex; gap: 16px;">
+                            <span v-if="selectedComponent">{{ selectedComponent.path }}</span>
+                            <span v-if="hasChanges" style="color: #f59e0b;">● Unsaved changes</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div v-if="loading" class="loading-overlay">
+                    <div class="loading-spinner"></div>
+                </div>
+            `,
+
+        data() {
+            return {
+                components: [],
+                expandedGroups: {},
+                selectedComponent: null,
+                activeTab: 'visual',
+                filterText: '',
+                editableFields: [],
+                currentSchema: {},
+                crudRules: {
+                    editable: [],
+                    readonly: [],
+                    protected: [],
+                    addable: false,
+                    deletable: false
+                },
+                hasChanges: false,
+                statusMessage: 'Ready',
+                statusType: '',
+                loading: false,
+                originalData: null
+            };
+        },
+
+        computed: {
+            filteredComponents() {
+                const filter = this.filterText.toLowerCase();
+                return this.components.map(group => ({
+                    ...group,
+                    components: group.components.filter(comp =>
+                        comp.name.toLowerCase().includes(filter) ||
+                        comp.path.toLowerCase().includes(filter)
+                    )
+                })).filter(group => group.components.length > 0);
+            }
+        },
+
+        methods: {
+            loadComponents() {
+                // Symulacja ładowania komponentów
+                this.components = [
+                    {
+                        name: 'loginForm',
+                        expanded: true,
+                        components: [
+                            { name: 'loginForm.js', type: 'js', path: 'js/features/loginForm/0.1.0/loginForm.js' },
+                            { name: 'config.json', type: 'json', path: 'js/features/loginForm/0.1.0/config/config.json' },
+                            { name: 'schema.json', type: 'json', path: 'js/features/loginForm/0.1.0/config/schema.json' },
+                            { name: 'crud.json', type: 'json', path: 'js/features/loginForm/0.1.0/config/crud.json' }
+                        ]
+                    },
+                    {
+                        name: 'appHeader',
+                        expanded: false,
+                        components: [
+                            { name: 'appHeader.js', type: 'js', path: 'js/features/appHeader/0.1.0/appHeader.js' },
+                            { name: 'config.json', type: 'json', path: 'js/features/appHeader/0.1.0/config.json' }
+                        ]
+                    },
+                    {
+                        name: 'mainMenu',
+                        expanded: false,
+                        components: [
+                            { name: 'mainMenu.js', type: 'js', path: 'js/features/mainMenu/0.1.0/mainMenu.js' },
+                            { name: 'config.json', type: 'json', path: 'js/features/mainMenu/0.1.0/config.json' }
+                        ]
+                    },
+                    {
+                        name: 'pressurePanel',
+                        expanded: false,
+                        components: [
+                            { name: 'pressurePanel.js', type: 'js', path: 'js/features/pressurePanel/0.1.0/pressurePanel.js' },
+                            { name: 'config.json', type: 'json', path: 'js/features/pressurePanel/0.1.0/config.json' }
+                        ]
+                    }
+                ];
+            },
+
+            toggleGroup(groupName) {
+                this.expandedGroups[groupName] = !this.expandedGroups[groupName];
+                const group = this.components.find(g => g.name === groupName);
+                if (group) {
+                    group.expanded = !group.expanded;
+                }
+            },
+
+            getFileIcon(type) {
+                const icons = {
+                    'js': '📜',
+                    'vue': '💚',
+                    'json': '📋',
+                    'css': '🎨',
+                    'ts': '📘',
+                    'tsx': '⚛️'
+                };
+                return icons[type] || '📄';
+            },
+
+            async selectComponent(comp) {
+                this.loading = true;
+                this.selectedComponent = comp;
+                this.activeTab = 'visual';
+
+                // Symulacja ładowania danych komponentu
+                await new Promise(resolve => setTimeout(resolve, 500));
+
+                // Ładowanie schematu i reguł CRUD
+                this.loadComponentData(comp);
+
+                this.loading = false;
+                this.setStatus('Component loaded successfully', 'success');
+            },
+
+            loadComponentData(comp) {
+                // Przykładowe dane dla loginForm config.json
+                if (comp.path.includes('loginForm') && comp.path.includes('config.json')) {
+                    this.currentSchema = {
+                        type: 'object',
+                        properties: {
+                            component: { type: 'object' },
+                            ui: { type: 'object' },
+                            authentication: { type: 'object' },
+                            virtualKeyboard: { type: 'object' }
+                        }
+                    };
+
+                    this.crudRules = {
+                        editable: ['ui', 'authentication', 'virtualKeyboard'],
+                        readonly: ['component'],
+                        protected: [],
+                        addable: true,
+                        deletable: false
+                    };
+
+                    const componentData = {
+                        component: {
+                            name: 'loginForm',
+                            displayName: 'Login Form',
+                            version: '0.1.0'
+                        },
+                        ui: {
+                            layout: {
+                                maxWidth: '400px',
+                                background: '#ffffff'
+                            },
+                            virtualKeyboard: {
+                                enabled: true,
+                                layout: 'qwerty'
+                            }
+                        },
+                        authentication: {
+                            roles: ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'],
+                            minPasswordLength: 8,
+                            maxAttempts: 3
+                        }
+                    };
+
+                    this.originalData = JSON.parse(JSON.stringify(componentData));
+                    this.generateEditableFields(componentData);
+                } else {
+                    // Default data for other components
+                    this.generateDefaultFields();
+                }
+
+                this.hasChanges = false;
+            },
+
+            generateEditableFields(data, path = '', permission = 'editable') {
+                const fields = [];
+
+                const processObject = (obj, currentPath, currentPermission) => {
+                    for (const key in obj) {
+                        const fullPath = currentPath ? `${currentPath}.${key}` : key;
+                        const value = obj[key];
+
+                        // Determine permission based on CRUD rules
+                        let fieldPermission = currentPermission;
+                        const topLevelKey = fullPath.split('.')[0];
+
+                        if (this.crudRules.readonly.includes(topLevelKey)) {
+                            fieldPermission = 'readonly';
+                        } else if (this.crudRules.protected.includes(topLevelKey)) {
+                            fieldPermission = 'protected';
+                        } else if (this.crudRules.editable.includes(topLevelKey)) {
+                            fieldPermission = 'editable';
+                        }
+
+                        if (typeof value === 'object' && !Array.isArray(value)) {
+                            processObject(value, fullPath, fieldPermission);
+                        } else {
+                            fields.push(this.createField(fullPath, value, fieldPermission));
+                        }
+                    }
+                };
+
+                processObject(data, path, permission);
+                this.editableFields = fields;
+            },
+
+            generateDefaultFields() {
+                this.editableFields = [
+                    {
+                        path: 'name',
+                        label: 'Component Name',
+                        type: 'text',
+                        value: this.selectedComponent?.name || '',
+                        permission: 'readonly',
+                        hint: 'Component identifier'
+                    },
+                    {
+                        path: 'version',
+                        label: 'Version',
+                        type: 'text',
+                        value: '0.1.0',
+                        permission: 'editable',
+                        hint: 'Semantic version'
+                    },
+                    {
+                        path: 'enabled',
+                        label: 'Enabled',
+                        type: 'boolean',
+                        value: true,
+                        permission: 'editable'
+                    },
+                    {
+                        path: 'description',
+                        label: 'Description',
+                        type: 'textarea',
+                        value: '',
+                        permission: 'editable',
+                        hint: 'Component description'
+                    }
+                ];
+            },
+
+            createField(path, value, permission) {
+                const field = {
+                    path,
+                    label: this.formatLabel(path),
+                    value,
+                    permission,
+                    hint: ''
+                };
+
+                // Determine field type
+                if (typeof value === 'boolean') {
+                    field.type = 'boolean';
+                } else if (typeof value === 'number') {
+                    field.type = 'number';
+                } else if (Array.isArray(value)) {
+                    field.type = 'array';
+                } else if (path.includes('color') || path.includes('Color')) {
+                    field.type = 'text';
+                    field.hint = 'Hex color code (e.g., #ffffff)';
+                } else if (path.includes('role')) {
+                    field.type = 'select';
+                    field.options = ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'];
+                } else if (value && value.length > 50) {
+                    field.type = 'textarea';
+                } else {
+                    field.type = 'text';
+                }
+
+                return field;
+            },
+
+            formatLabel(path) {
+                const parts = path.split('.');
+                const label = parts[parts.length - 1];
+                return label.replace(/([A-Z])/g, ' $1')
+                    .replace(/^./, str => str.toUpperCase())
+                    .replace(/_/g, ' ')
+                    .trim();
+            },
+
+            markAsChanged() {
+                this.hasChanges = true;
+            },
+
+            removeArrayItem(field, index) {
+                field.value.splice(index, 1);
+                this.markAsChanged();
+            },
+
+            addArrayItem(field) {
+                field.value.push('');
+                this.markAsChanged();
+            },
+
+            validateComponent() {
+                this.setStatus('Validating component...', 'warning');
+
+                // Symulacja walidacji
+                setTimeout(() => {
+                    const isValid = Math.random() > 0.3;
+                    if (isValid) {
+                        this.setStatus('Validation passed', 'success');
+                    } else {
+                        this.setStatus('Validation failed: Check required fields', 'error');
+                    }
+                }, 1000);
+            },
+
+            async saveComponent() {
+                this.loading = true;
+                this.setStatus('Saving component...', 'warning');
+
+                // Symulacja zapisu
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                this.hasChanges = false;
+                this.loading = false;
+                this.setStatus('Component saved successfully', 'success');
+
+                // Update original data
+                this.originalData = this.getCurrentData();
+            },
+
+            revertChanges() {
+                if (this.originalData) {
+                    this.generateEditableFields(JSON.parse(JSON.stringify(this.originalData)));
+                    this.hasChanges = false;
+                    this.setStatus('Changes reverted', 'warning');
+                }
+            },
+
+            getCurrentData() {
+                const data = {};
+                this.editableFields.forEach(field => {
+                    const keys = field.path.split('.');
+                    let current = data;
+                    for (let i = 0; i < keys.length - 1; i++) {
+                        if (!current[keys[i]]) {
+                            current[keys[i]] = {};
+                        }
+                        current = current[keys[i]];
+                    }
+                    current[keys[keys.length - 1]] = field.value;
+                });
+                return data;
+            },
+
+            getCodePreview() {
+                const data = this.getCurrentData();
+                return JSON.stringify(data, null, 2);
+            },
+
+            setStatus(message, type = '') {
+                this.statusMessage = message;
+                this.statusType = type;
+
+                // Auto-clear after 3 seconds
+                if (type) {
+                    setTimeout(() => {
+                        this.statusMessage = 'Ready';
+                        this.statusType = '';
+                    }, 3000);
+                }
+            }
+        },
+
+        mounted() {
+            this.loadComponents();
+            this.setStatus('Editor initialized', 'success');
+        }
+    };
+
+    createApp({
+        components: {
+            'visual-component-editor': VisualComponentEditor
+        }
+    }).mount('#app');
+</script>
+</body>
+</html>
