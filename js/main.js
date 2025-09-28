@@ -333,16 +333,27 @@ const app = createApp({
     },
 
     async loadPressurePanel() {
+      console.log('🔍 [Main] Starting loadPressurePanel...');
+      
       try {
+        console.log('📦 [Main] Loading pressurePanel module from registry...');
         const pressurePanelModule = await this.registry.load('pressurePanel', 'latest');
+        
+        console.log('📦 [Main] Module loaded:', !!pressurePanelModule);
+        
         if (pressurePanelModule) {
+          console.log('🚀 [Main] Initializing pressure panel...');
           // Initialize the pressure panel
           const context = { user: this.currentUser };
-          await pressurePanelModule.init(context);
+          const initResult = await pressurePanelModule.init(context);
+          console.log('🚀 [Main] Init result:', initResult);
           
           // Render pressure panel in the container
           const container = document.getElementById('pressure-panel-container');
+          console.log('📦 [Main] Container found:', !!container);
+          
           if (container && pressurePanelModule.render) {
+            console.log('🎨 [Main] Rendering pressure panel...');
             pressurePanelModule.render(container, {
               pressureData: {
                 low: { value: 12.5, unit: 'mbar', status: 'normal' },
@@ -350,13 +361,19 @@ const app = createApp({
                 high: { value: 18.7, unit: 'bar', status: 'warning' }
               }
             });
+          } else {
+            console.warn('⚠️ [Main] No container or render method available');
           }
           
           this.componentsLoaded.pressurePanel = true;
           console.log('✅ PressurePanel loaded successfully');
+        } else {
+          console.error('❌ [Main] No pressurePanel module received from registry');
+          this.componentsLoaded.pressurePanel = false;
         }
       } catch (error) {
         console.error('❌ Error loading PressurePanel:', error);
+        console.error('❌ Stack:', error.stack);
         this.componentsLoaded.pressurePanel = false;
       }
     },

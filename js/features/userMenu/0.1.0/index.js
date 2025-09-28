@@ -394,10 +394,25 @@ const createUserMenuModule = () => {
         moduleConfig: null,
         
         async loadConfig() {
-            const result = await ConfigLoader.loadConfig('./config/config.json', 'userMenu');
-            this.moduleConfig = result.config;
-            return result;
-        },
+    const possiblePaths = [
+      'js/features/userMenu/0.1.0/config/config.json',  // Correct component path
+      './js/features/userMenu/0.1.0/config/config.json', // Alternative
+      '/js/features/userMenu/0.1.0/config/config.json'   // Absolute from web root
+    ];
+    
+    let result;
+    for (const configPath of possiblePaths) {
+      try {
+        result = await ConfigLoader.loadConfig(configPath, 'userMenu');
+        if (result.success) break;
+      } catch (error) {
+        continue; // Try next path
+      }
+    }
+    
+    this.config = result?.config || {};
+    return result || { success: false, config: {} };
+  },
         
         // Lifecycle hooks
         init: async function(params = {}) {

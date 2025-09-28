@@ -17,9 +17,24 @@ const moduleInfo = {
   config: null,
   
   async loadConfig() {
-    const result = await ConfigLoader.loadConfig('./config/config.json', 'realtimeSensors');
-    this.config = result.config;
-    return result;
+    const possiblePaths = [
+      'js/features/realtimeSensors/0.1.0/config/config.json',  // Correct component path
+      './js/features/realtimeSensors/0.1.0/config/config.json', // Alternative
+      '/js/features/realtimeSensors/0.1.0/config/config.json'   // Absolute from web root
+    ];
+    
+    let result;
+    for (const configPath of possiblePaths) {
+      try {
+        result = await ConfigLoader.loadConfig(configPath, 'realtimeSensors');
+        if (result.success) break;
+      } catch (error) {
+        continue; // Try next path
+      }
+    }
+    
+    this.config = result?.config || {};
+    return result || { success: false, config: {} };
   },
   
   async init(context = {}) {
@@ -263,3 +278,6 @@ export const devTools = {
     }));
   }
 };
+
+// Export module for FeatureRegistry integration
+export default moduleInfo;

@@ -1,7 +1,7 @@
 // PressurePanel component for real-time sensor monitoring with 7.9" display optimization
 // Enhanced with comprehensive security features based on components.md
-import WebSocketService from '../../../services/websocketService.js';
-import { getSecurityService } from '../../../services/securityService.js';
+
+// Dynamic imports will be handled in mounted() lifecycle
 const template = `
 <div class="pressure-panel" :class="deviceClass">
   <h3 class="panel-title">{{ $t('sensors.pressure_monitoring') || 'Monitoring Ciśnienia' }}</h3>
@@ -491,6 +491,10 @@ export default {
       try {
         console.log('🔌 Initializing WebSocket connection for pressure monitoring...');
         
+        // Dynamic import WebSocketService
+        const WebSocketServiceModule = await import('../../../services/websocketService.js');
+        const WebSocketService = WebSocketServiceModule.default;
+        
         // Connect to WebSocket service (fallback URL for development)
         await WebSocketService.connect({
           url: process.env.WEBSOCKET_URL || 'ws://localhost:8080/sensor-data',
@@ -511,7 +515,8 @@ export default {
       } catch (error) {
         console.error('❌ WebSocket initialization failed:', error);
         this.connectionStatus = 'error';
-        this.$emit('websocket-error', error);
+        // Fallback mode - continue without websocket
+        console.warn('⚠️ Running in fallback mode without WebSocket');
       }
     },
     
@@ -710,11 +715,12 @@ export default {
   },
   
   async mounted() {
-    console.log('PressurePanel component mounted successfully');
+    console.log('🚀 PressurePanel component mounted successfully');
     this.updateTime();
 
     // Initialize SecurityService for comprehensive security features
     try {
+      const { getSecurityService } = await import('../../../services/securityService.js');
       this.securityService = getSecurityService();
       
       // Log pressure panel component initialization for audit trail
@@ -731,7 +737,7 @@ export default {
       }, 3 * 60 * 1000); // Check every 3 minutes
 
     } catch (error) {
-      console.error('Failed to initialize SecurityService in PressurePanel:', error);
+      console.error('❌ Failed to initialize SecurityService in PressurePanel:', error);
       // Fallback mode without enhanced security features
       this.securityService = null;
     }
@@ -741,6 +747,8 @@ export default {
     
     // Update time every 5 seconds
     this.timeInterval = setInterval(this.updateTime, 5000);
+    
+    console.log('✅ PressurePanel initialization completed');
   },
   
   beforeUnmount() {

@@ -21,7 +21,7 @@ export class OptimizedFeatureRegistry extends FeatureRegistry {
     // Check if already cached
     const cached = this.performanceService.getCachedComponent(cacheKey);
     if (cached) {
-      this.modules.set(cacheKey, cached);
+      this.features.set(cacheKey, cached);
       return true;
     }
     

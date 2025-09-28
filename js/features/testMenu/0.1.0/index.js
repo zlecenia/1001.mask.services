@@ -171,10 +171,25 @@ export default {
     config: null,
     
     async loadConfig() {
-        const result = await ConfigLoader.loadConfig('./config/config.json', 'testMenu');
-        this.config = result.config;
-        return result;
-    },
+    const possiblePaths = [
+      'js/features/testMenu/0.1.0/config/config.json',  // Correct component path
+      './js/features/testMenu/0.1.0/config/config.json', // Alternative
+      '/js/features/testMenu/0.1.0/config/config.json'   // Absolute from web root
+    ];
+    
+    let result;
+    for (const configPath of possiblePaths) {
+      try {
+        result = await ConfigLoader.loadConfig(configPath, 'testMenu');
+        if (result.success) break;
+      } catch (error) {
+        continue; // Try next path
+      }
+    }
+    
+    this.config = result?.config || {};
+    return result || { success: false, config: {} };
+  },
     
     async init(context) {
         console.log('🔶 TestMenu Module: Initializing...');

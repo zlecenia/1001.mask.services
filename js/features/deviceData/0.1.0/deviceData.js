@@ -471,7 +471,7 @@ const styles = `
 
 export default {
   name: 'DeviceDataComponent',
-  template: template + styles,
+  template: template,
   
   props: {
     user: {

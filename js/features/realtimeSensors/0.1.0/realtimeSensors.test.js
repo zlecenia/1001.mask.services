@@ -9,6 +9,23 @@ import { mount } from '@vue/test-utils';
 import { createStore } from 'vuex';
 import { RealtimeSensorsComponent } from './realtimeSensors.js';
 
+// Mock getSecurityService function - MUST be at the top before any variable usage
+vi.mock('../../../services/securityService.js', () => ({
+  getSecurityService: vi.fn().mockResolvedValue({
+    logAuditEvent: vi.fn().mockResolvedValue(true),
+    sanitizeInput: vi.fn((input) => input),
+    validateInput: vi.fn(() => ({ isValid: true, errors: [] })),
+    getAuditLogs: vi.fn().mockReturnValue([
+      {
+        timestamp: '2024-12-19T10:30:00Z',
+        event: 'sensors_component_init',
+        user: 'testuser',
+        data: { sensorCount: 3 }
+      }
+    ])
+  })
+}));
+
 // Sample sensor data for testing
 const mockSensorData = [
   {
@@ -46,25 +63,15 @@ const mockSensorData = [
   }
 ];
 
-// Mock SecurityService with proper lifecycle handling
-const mockSecurityService = {
-  logAuditEvent: vi.fn().mockResolvedValue(true),
-  sanitizeInput: vi.fn((input) => input),
-  validateInput: vi.fn(() => ({ isValid: true, errors: [] })),
-  getAuditLogs: vi.fn().mockReturnValue([
-    {
-      timestamp: '2024-12-19T10:30:00Z',
-      event: 'sensors_component_init',
-      user: 'testuser',
-      data: { sensorCount: 3 }
-    }
-  ])
-};
+// Mock SecurityService reference for test assertions
+let mockSecurityService;
 
-// Mock getSecurityService function
-vi.mock('../../../services/securityService.js', () => ({
-  getSecurityService: vi.fn().mockResolvedValue(mockSecurityService)
-}));
+beforeEach(async () => {
+  // Get the mocked security service for assertions
+  const { getSecurityService } = await import('../../../services/securityService.js');
+  mockSecurityService = await getSecurityService();
+  vi.clearAllMocks();
+});
 
 // Mock i18n service
 const mockI18n = {

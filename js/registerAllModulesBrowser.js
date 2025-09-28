@@ -102,7 +102,7 @@ async function registerRealModules(registry) {
       const module = moduleExport.default || moduleExport;
       
       if (module && typeof module === 'object') {
-        await registry.register(name, version, module);
+        registry.register(name, version, module);
         console.log(`✅ Registered real ${name}@${version} module`);
       } else {
         throw new Error(`Invalid module export for ${name}`);
@@ -128,7 +128,7 @@ async function registerMockModules(registry) {
   for (const { name, version } of mockModules) {
     try {
       const mockModule = createMockModule(name);
-      await registry.register(name, version, mockModule);
+      registry.register(name, version, mockModule);
       console.log(`Registered mock ${name} module`);
     } catch (error) {
       console.warn(`Failed to register mock ${name} module:`, error);

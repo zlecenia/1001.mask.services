@@ -8,7 +8,7 @@ import { SystemSettingsComponent } from './systemSettings.js';
 import { ConfigLoader } from '../../../shared/configLoader.js';
 
 // FeatureRegistry integration metadata
-export const metadata = {
+const metadata = {
   name: 'systemSettings',
   version: '0.1.0',
   displayName: 'System Settings',
@@ -463,9 +463,24 @@ export default {
   config: null,
   
   async loadConfig() {
-    const result = await ConfigLoader.loadConfig('./config/config.json', 'systemSettings');
-    this.config = result.config;
-    return result;
+    const possiblePaths = [
+      'js/features/systemSettings/0.1.0/config/config.json',  // Correct component path
+      './js/features/systemSettings/0.1.0/config/config.json', // Alternative
+      '/js/features/systemSettings/0.1.0/config/config.json'   // Absolute from web root
+    ];
+    
+    let result;
+    for (const configPath of possiblePaths) {
+      try {
+        result = await ConfigLoader.loadConfig(configPath, 'systemSettings');
+        if (result.success) break;
+      } catch (error) {
+        continue; // Try next path
+      }
+    }
+    
+    this.config = result?.config || {};
+    return result || { success: false, config: {} };
   },
   
   async init(context = {}) {

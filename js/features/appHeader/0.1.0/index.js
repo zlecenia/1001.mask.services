@@ -12,9 +12,24 @@ export default {
   component: appHeaderComponent,
   config: null,
   async loadConfig() {
-    const result = await ConfigLoader.loadConfig('./config/config.json', 'appHeader');
-    this.config = result.config;
-    return result;
+    const possiblePaths = [
+      'js/features/appHeader/0.1.0/config/config.json',  // Correct component path
+      './js/features/appHeader/0.1.0/config/config.json', // Alternative
+      '/js/features/appHeader/0.1.0/config/config.json'   // Absolute from web root
+    ];
+    
+    let result;
+    for (const configPath of possiblePaths) {
+      try {
+        result = await ConfigLoader.loadConfig(configPath, 'appHeader');
+        if (result.success) break;
+      } catch (error) {
+        continue; // Try next path
+      }
+    }
+    
+    this.config = result?.config || {};
+    return result || { success: false, config: {} };
   },
   
   async init(context = {}) {

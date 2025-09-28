@@ -7,7 +7,24 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { mount } from '@vue/test-utils';
 import { createStore } from 'vuex';
-import { DeviceDataComponent } from './deviceData.js';
+import DeviceDataComponent from './deviceData.js';
+
+// Mock getSecurityService function - MUST be at the top before any variable usage
+vi.mock('../../../services/securityService.js', () => ({
+  getSecurityService: vi.fn().mockResolvedValue({
+    logAuditEvent: vi.fn().mockResolvedValue(true),
+    sanitizeInput: vi.fn((input) => input),
+    validateInput: vi.fn(() => ({ isValid: true, errors: [] })),
+    getAuditLogs: vi.fn().mockReturnValue([
+      {
+        timestamp: '2024-12-19T10:30:00Z',
+        event: 'device_data_component_init',
+        user: 'testuser',
+        data: { deviceId: 'MASKTRONIC-001' }
+      }
+    ])
+  })
+}));
 
 // Sample device data for testing
 const mockDeviceData = {
@@ -48,26 +65,15 @@ const mockDeviceData = {
   ]
 };
 
-// Mock SecurityService with proper lifecycle handling
-const mockSecurityService = {
-  logAuditEvent: vi.fn().mockResolvedValue(true),
-  sanitizeInput: vi.fn((input) => input),
-  validateInput: vi.fn(() => ({ isValid: true, errors: [] })),
-  // Add audit data to prevent lifecycle issues
-  getAuditLogs: vi.fn().mockReturnValue([
-    {
-      timestamp: '2024-12-19T10:30:00Z',
-      event: 'device_data_component_init',
-      user: 'testuser',
-      data: { deviceId: 'MASKTRONIC-001' }
-    }
-  ])
-};
+// Mock SecurityService reference for test assertions
+let mockSecurityService;
 
-// Mock getSecurityService function
-vi.mock('../../../services/securityService.js', () => ({
-  getSecurityService: vi.fn().mockResolvedValue(mockSecurityService)
-}));
+beforeEach(async () => {
+  // Get the mocked security service for assertions
+  const { getSecurityService } = await import('../../../services/securityService.js');
+  mockSecurityService = await getSecurityService();
+  vi.clearAllMocks();
+});
 
 // Mock i18n service
 const mockI18n = {

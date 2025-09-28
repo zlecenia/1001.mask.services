@@ -235,24 +235,24 @@ export default {
    * @returns {object} Configuration object
    */
   async loadConfig() {
-    try {
-      const result = await ConfigLoader.loadConfig('./config/config.json', 'mainMenu');
-      this.config = result.config;
-      return result;
-    } catch (error) {
-      console.warn('MainMenu: Using default config', error);
-      this.config = {
-        component: {
-          name: 'mainMenu',
-          version: '0.1.0'
-        },
-        settings: {}
-      };
-      return {
-        success: false,
-        config: this.config
-      };
+    const possiblePaths = [
+      'js/features/mainMenu/0.1.0/config/config.json',  // Correct component path
+      './js/features/mainMenu/0.1.0/config/config.json', // Alternative
+      '/js/features/mainMenu/0.1.0/config/config.json'   // Absolute from web root
+    ];
+    
+    let result;
+    for (const configPath of possiblePaths) {
+      try {
+        result = await ConfigLoader.loadConfig(configPath, 'mainMenu');
+        if (result.success) break;
+      } catch (error) {
+        continue; // Try next path
+      }
     }
+    
+    this.config = result?.config || {};
+    return result || { success: false, config: {} };
   },
 
   /**
