@@ -5,14 +5,58 @@
 ### **CRITICAL: Before ANY Code Modification**
 
 ```bash
-# 1. Create backup
-cp -r js/features/[component] js/features/[component].backup
+# 1. Create new version (semantic versioning - NOT .backup directory)
+# ✅ POPRAWNIE: js/features/deviceData/0.1.0/ → js/features/deviceData/0.1.1/
+# ❌ NIEPOPRAWNIE: js/features/deviceData/ → js/features/deviceData.backup/
+cp -r js/features/[component]/0.1.0 js/features/[component]/0.1.1
 
-# 2. Run pre-modification tests
+# 2. Update version in new directory
+# Edit js/features/[component]/0.1.1/package.json -> "version": "0.1.1"
+# Edit js/features/[component]/0.1.1/index.js -> metadata: { version: '0.1.1' }
+
+# 3. Run pre-modification tests
 npm run test:component [component]
 
-# 3. Document current state
+# 4. Document current state
 npm run analyze > pre-modification-report.json
+```
+
+### **📝 Why Version Directories Instead of .backup?**
+- **✅ Semantic Versioning**: Follows industry standards (0.1.0 → 0.1.1)
+- **✅ Clear History**: Easy to track component evolution
+- **✅ Production Ready**: Can deploy specific versions independently
+- **✅ Rollback Safety**: Easy to revert to previous working version
+- **✅ Parallel Testing**: Can test old and new versions simultaneously
+- **❌ .backup directories**: Not versioned, hard to track, clutters filesystem
+
+### **🔄 Practical Versioning Examples**
+
+#### **Minor Updates (0.1.0 → 0.1.1)**
+```bash
+# Bug fixes, small improvements, config updates
+cp -r js/features/deviceData/0.1.0 js/features/deviceData/0.1.1
+# Edit version numbers in new directory
+```
+
+#### **Feature Updates (0.1.x → 0.2.0)**
+```bash
+# New functionality, API changes (backwards compatible)
+cp -r js/features/deviceData/0.1.0 js/features/deviceData/0.2.0
+```
+
+#### **Major Changes (0.x.x → 1.0.0)**
+```bash
+# Breaking changes, complete rewrites
+cp -r js/features/deviceData/0.2.0 js/features/deviceData/1.0.0
+```
+
+#### **Version Structure**
+```
+js/features/deviceData/
+├── 0.1.0/           # Original stable version
+├── 0.1.1/           # Bug fixes & improvements
+├── 0.2.0/           # New features
+└── 1.0.0/           # Major rewrite
 ```
 
 ### **CRITICAL: Vue Import Pattern**
@@ -554,7 +598,8 @@ npm run test:regression
 ## 📋 **Safe Modification Checklist**
 
 ### **Before modifying ANY component:**
-- [ ] Create backup: `cp -r component component.backup`
+- [ ] Create new version: `cp -r js/features/[component]/0.1.0 js/features/[component]/0.1.1`
+- [ ] Update version numbers in package.json and index.js metadata
 - [ ] Run current tests: `npm run test:component [name]`
 - [ ] Check dependencies: `grep -r "componentName" js/`
 - [ ] Review component lock file
@@ -1074,8 +1119,12 @@ if (!exportsInstance) {
   console.warn('Component exports factory - needs fix');
 }
 
-// 3. Create backup
-fs.copyFileSync('index.js', 'index.js.backup');
+// 3. Create new version (semantic versioning)
+// cp -r js/features/[component]/0.1.0 js/features/[component]/0.1.1
+// Update version in package.json and index.js metadata
+const currentVersion = '0.1.0';
+const newVersion = '0.1.1';
+console.log(`Creating new version: ${currentVersion} → ${newVersion}`);
 ```
 
 ### **After Making Changes:**

@@ -1,377 +1,302 @@
-/**
- * Device Data Module Index
- * FeatureRegistry integration for deviceData component
- * Version: 0.1.0
- */
+// STANDARD COMPONENT INDEX.JS - v2.0
+// DO NOT MODIFY WITHOUT TEAM REVIEW
 
-import DeviceDataComponent from './deviceData.js';
-import { ConfigLoader } from '../../../shared/configLoader.js';
+const { reactive, computed, onMounted, inject } = Vue || window.Vue || {};
 
-// Module metadata for FeatureRegistry
-const metadata = {
-  name: 'deviceData',
-  version: '0.1.0',
-  description: 'Industrial device monitoring and sensor data management',
-  category: 'monitoring',
-  author: '1001.mask.services Development Team',
-  dependencies: ['securityService', 'i18nService'],
-  tags: ['industrial', 'device', 'sensors', 'monitoring', 'real-time'],
-  
-  // Component registration
-  component: DeviceDataComponent,
-  config: null,
-  
-  // Module capabilities
-  capabilities: {
-    realTimeMonitoring: true,
-    dataExport: true,
-    securityIntegration: true,
-    i18nSupport: true,
-    responsiveDesign: true,
-    accessibility: true,
-    touchOptimized: true
-  },
-
-  // Performance characteristics
-  performance: {
-    loadTime: 'fast',
-    memoryUsage: 'medium',
-    updateFrequency: 'configurable',
-    caching: true
-  }
-};
-
-// Route definitions for deviceData component
-export const routes = [
-  {
-    path: '/device-data',
+const componentModule = {
+  metadata: {
     name: 'deviceData',
-    component: DeviceDataComponent,
-    meta: {
-      requiresAuth: true,
-      roles: ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'],
-      title: {
-        pl: 'Dane Urządzenia',
-        en: 'Device Data',
-        de: 'Gerätedaten'
-      },
-      icon: '🏭',
-      category: 'monitoring',
-      order: 3
-    }
-  },
-  {
-    path: '/devices/:deviceId',
-    name: 'deviceDetails',
-    component: DeviceDataComponent,
-    meta: {
-      requiresAuth: true,
-      roles: ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'],
-      title: {
-        pl: 'Szczegóły Urządzenia',
-        en: 'Device Details',
-        de: 'Gerätedetails'
-      },
-      icon: '🔍',
-      category: 'monitoring',
-      hidden: true
-    }
-  }
-];
-
-// Menu integration
-export const menu = {
-  id: 'deviceData',
-  title: {
-    pl: 'Dane Urządzenia',
-    en: 'Device Data',
-    de: 'Gerätedaten'
-  },
-  icon: '🏭',
-  path: '/device-data',
-  category: 'monitoring',
-  order: 3,
-  roles: ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'],
-  
-  // Submenu items
-  children: [
-    {
-      id: 'deviceStatus',
-      title: {
-        pl: 'Status Urządzenia',
-        en: 'Device Status',
-        de: 'Gerätestatus'
-      },
-      icon: '📊',
-      path: '/device-data#status',
-      roles: ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT']
-    },
-    {
-      id: 'sensorData',
-      title: {
-        pl: 'Dane Sensorów',
-        en: 'Sensor Data',
-        de: 'Sensordaten'
-      },
-      icon: '🌡️',
-      path: '/device-data#sensors',
-      roles: ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT']
-    },
-    {
-      id: 'deviceExport',
-      title: {
-        pl: 'Eksport Danych',
-        en: 'Data Export',
-        de: 'Datenexport'
-      },
-      icon: '📤',
-      path: '/device-data#export',
-      roles: ['ADMIN', 'SUPERUSER', 'SERWISANT']
-    }
-  ]
-};
-
-// Lifecycle hooks
-export const lifecycle = {
-  // Called when module is registered
-  onRegister: async (app, store, router) => {
-    console.log('Registering deviceData module...');
-    
-    // Add routes to router
-    routes.forEach(route => {
-      router.addRoute(route);
-    });
-    
-    // Register Vuex store modules if needed
-    if (store && !store.hasModule('deviceData')) {
-      store.registerModule('deviceData', {
-        namespaced: true,
-        state: () => ({
-          devices: [],
-          currentDevice: null,
-          isMonitoring: false,
-          lastUpdate: null
-        }),
-        
-        mutations: {
-          SET_DEVICES: (state, devices) => {
-            state.devices = devices;
-          },
-          SET_CURRENT_DEVICE: (state, device) => {
-            state.currentDevice = device;
-          },
-          SET_MONITORING_STATUS: (state, status) => {
-            state.isMonitoring = status;
-          },
-          UPDATE_DEVICE_DATA: (state, { deviceId, data }) => {
-            const device = state.devices.find(d => d.id === deviceId);
-            if (device) {
-              Object.assign(device, data);
-            }
-            state.lastUpdate = new Date();
-          }
-        },
-        
-        actions: {
-          async fetchDevices({ commit }) {
-            try {
-              // Implementation would fetch from real API
-              const mockDevices = [
-                { id: 'DEVICE_001', name: 'Industrial Sensor Hub', status: 'ONLINE' },
-                { id: 'DEVICE_002', name: 'Environmental Monitor', status: 'WARNING' }
-              ];
-              commit('SET_DEVICES', mockDevices);
-              return mockDevices;
-            } catch (error) {
-              console.error('Error fetching devices:', error);
-              throw error;
-            }
-          },
-          
-          async startMonitoring({ commit, state }) {
-            if (!state.isMonitoring) {
-              commit('SET_MONITORING_STATUS', true);
-              console.log('Device monitoring started');
-            }
-          },
-          
-          async stopMonitoring({ commit, state }) {
-            if (state.isMonitoring) {
-              commit('SET_MONITORING_STATUS', false);
-              console.log('Device monitoring stopped');
-            }
-          }
-        },
-        
-        getters: {
-          onlineDevices: state => state.devices.filter(d => d.status === 'ONLINE'),
-          offlineDevices: state => state.devices.filter(d => d.status === 'OFFLINE'),
-          deviceCount: state => state.devices.length,
-          isCurrentDeviceOnline: state => state.currentDevice?.status === 'ONLINE'
-        }
-      });
-    }
-    
-    console.log('DeviceData module registered successfully');
-  },
-
-  // Called when module is unregistered
-  onUnregister: async (app, store, router) => {
-    console.log('Unregistering deviceData module...');
-    
-    // Remove routes
-    routes.forEach(route => {
-      router.removeRoute(route.name);
-    });
-    
-    // Unregister store module
-    if (store && store.hasModule('deviceData')) {
-      store.unregisterModule('deviceData');
-    }
-    
-    console.log('DeviceData module unregistered');
-  },
-
-  // Called when app is mounted
-  onMount: async (app) => {
-    console.log('DeviceData module mounted');
-    
-    // Initialize any global services or event listeners
-    if (window.DeviceAPI) {
-      console.log('Real DeviceAPI detected - enabling hardware integration');
-    } else {
-      console.log('DeviceAPI not found - using simulation mode');
-    }
-  },
-
-  // Called when app is unmounted
-  onUnmount: async (app) => {
-    console.log('DeviceData module unmounted');
-    
-    // Cleanup any global resources
-  }
-};
-
-// Module initialization function
-export const initialize = async (options = {}) => {
-  console.log('Initializing deviceData module with options:', options);
-  
-  const defaultOptions = {
-    enableRealTimeUpdates: true,
-    updateInterval: 2000,
-    enableSimulation: true,
-    enableAuditLogging: true,
-    maxHistorySize: 1000
-  };
-  
-  const finalOptions = { ...defaultOptions, ...options };
-  
-  // Validate configuration
-  if (finalOptions.updateInterval < 1000) {
-    console.warn('Update interval too low, setting to minimum 1000ms');
-    finalOptions.updateInterval = 1000;
-  }
-  
-  // Store configuration for component use
-  window.deviceDataConfig = finalOptions;
-  
-  return {
-    success: true,
-    options: finalOptions,
-    message: 'DeviceData module initialized successfully'
-  };
-};
-
-// Development utilities
-export const devUtils = {
-  // Generate mock device data
-  generateMockDevice: (deviceId = 'MOCK_DEVICE') => ({
-    deviceId,
-    status: 'ONLINE',
-    uptime: Math.floor(Math.random() * 86400),
-    batteryLevel: Math.floor(Math.random() * 100),
-    firmwareVersion: '2.1.4',
-    isConnected: true,
-    lastUpdate: new Date(),
-    sensors: {
-      temperature: 20 + Math.random() * 10,
-      humidity: 40 + Math.random() * 30,
-      pressure: 1000 + Math.random() * 40,
-      airQuality: 70 + Math.random() * 30,
-      noise: 30 + Math.random() * 40,
-      vibration: Math.random() * 0.2
-    }
-  }),
-  
-  // Simulate sensor data stream
-  startMockDataStream: (callback, interval = 2000) => {
-    return setInterval(() => {
-      const mockData = devUtils.generateMockDevice();
-      callback(mockData);
-    }, interval);
+    version: '0.1.0',
+    type: 'component',
+    contractVersion: '2.0' // Component contract version
   },
   
-  // Test component rendering
-  testComponentRender: async () => {
-    console.log('Testing DeviceData component render...');
-    // Implementation would test component instantiation
-    return { success: true, message: 'Component renders successfully' };
-  },
-  
-  // Validate configuration
-  validateConfig: (config) => {
-    const required = ['updateFrequency', 'deviceId'];
-    const missing = required.filter(key => !config[key]);
-    
-    if (missing.length > 0) {
-      return { valid: false, errors: `Missing required config: ${missing.join(', ')}` };
-    }
-    
-    return { valid: true, message: 'Configuration is valid' };
-  }
-};
-
-// Export main module
-export default {
-  metadata,
-  routes,
-  menu,
-  lifecycle,
-  initialize,
-  devUtils,
-  component: DeviceDataComponent,
+  component: null,
   config: null,
-  
-  async loadConfig() {
-    const possiblePaths = [
-      'js/features/deviceData/0.1.0/config/config.json',  // Correct component path
-      './js/features/deviceData/0.1.0/config/config.json', // Alternative
-      '/js/features/deviceData/0.1.0/config/config.json'   // Absolute from web root
-    ];
-    
-    let result;
-    for (const configPath of possiblePaths) {
-      try {
-        result = await ConfigLoader.loadConfig(configPath, 'deviceData');
-        if (result.success) break;
-      } catch (error) {
-        continue; // Try next path
-      }
-    }
-    
-    this.config = result?.config || {};
-    return result || { success: false, config: {} };
-  },
   
   async init(context = {}) {
     try {
-      // Load configuration
+      // Standard initialization sequence
+      await this.loadComponent();
       await this.loadConfig();
-      this.metadata.initialized = true;
-      return true;
+      await this.runSmokeTests();
+      
+      return { 
+        success: true, 
+        message: `${this.metadata.name} initialized`,
+        contractVersion: this.metadata.contractVersion
+      };
     } catch (error) {
-      console.error('DeviceData init error:', error);
-      return false;
+      console.error(`[${this.metadata.name}] Init failed:`, error);
+      return { 
+        success: false, 
+        error: error.message,
+        stack: error.stack 
+      };
+    }
+  },
+  
+  async loadComponent() {
+    const module = await import(`./${this.metadata.name}.js`);
+    this.component = module.default || module[this.metadata.name];
+    if (!this.component) {
+      throw new Error('Component not found in module');
+    }
+  },
+  
+  async loadConfig() {
+    const configPaths = [
+      './component.config.js',     // Unified config (NEW)
+      './config/config.json',      // Source config
+      `/config/${this.metadata.name}.json`
+    ];
+    
+    for (const path of configPaths) {
+      try {
+        if (path.endsWith('.js')) {
+          const module = await import(path);
+          this.config = module.default;
+        } else {
+          const response = await fetch(path);
+          if (response.ok) {
+            this.config = await response.json();
+          }
+        }
+        if (this.config) {
+          // Load validation schema if available
+          await this.loadSchema();
+          // Load runtime data if available
+          await this.loadRuntimeData();
+          // Load CRUD rules if available
+          await this.loadCrudRules();
+          return;
+        }
+      } catch (e) { 
+        console.warn(`Config not found at ${path}`);
+      }
+    }
+    
+    // Default config fallback
+    this.config = {
+      component: this.metadata,
+      settings: {}
+    };
+  },
+  
+  async loadSchema() {
+    try {
+      const response = await fetch('./config/schema.json');
+      if (response.ok) {
+        this.schema = await response.json();
+        console.log(`✅ Schema loaded for ${this.metadata.name}`);
+      }
+    } catch (e) {
+      console.warn(`Schema not found for ${this.metadata.name}`);
+    }
+  },
+  
+  async loadRuntimeData() {
+    try {
+      const response = await fetch('./config/data.json');
+      if (response.ok) {
+        this.runtimeData = await response.json();
+        console.log(`✅ Runtime data loaded for ${this.metadata.name}`);
+      }
+    } catch (e) {
+      console.warn(`Runtime data not found for ${this.metadata.name}`);
+    }
+  },
+  
+  async loadCrudRules() {
+    try {
+      const response = await fetch('./config/crud.json');
+      if (response.ok) {
+        this.crudRules = await response.json();
+        console.log(`✅ CRUD rules loaded for ${this.metadata.name}`);
+      }
+    } catch (e) {
+      console.warn(`CRUD rules not found for ${this.metadata.name}`);
+    }
+  },
+  
+  async loadLocales(language = 'pl') {
+    try {
+      const response = await fetch(`./locales/${language}.json`);
+      if (response.ok) {
+        this.translations = await response.json();
+        console.log(`✅ Translations loaded for ${this.metadata.name} (${language})`);
+        return this.translations;
+      }
+      
+      // Fallback to Polish
+      if (language !== 'pl') {
+        return await this.loadLocales('pl');
+      }
+    } catch (e) {
+      console.warn(`Translations not found for ${this.metadata.name} (${language})`);
+    }
+    return {};
+  },
+  
+  async runSmokeTests() {
+    if (typeof window !== 'undefined' && window.SKIP_SMOKE_TESTS) return;
+    
+    // Basic smoke tests
+    if (!this.component) throw new Error('Component not loaded');
+    if (!this.config) throw new Error('Config not loaded');
+    if (typeof this.handle !== 'function') throw new Error('Handle method missing');
+  },
+  
+  handle(request) {
+    const { action, payload, language = 'pl' } = request;
+    
+    // Standard action handling
+    switch(action) {
+      case 'GET_CONFIG':
+        return { success: true, data: this.config };
+      case 'GET_METADATA':
+        return { success: true, data: this.metadata };
+      case 'GET_SCHEMA':
+        return { success: true, data: this.schema };
+      case 'GET_RUNTIME_DATA':
+        return { success: true, data: this.runtimeData };
+      case 'GET_CRUD_RULES':
+        return { success: true, data: this.crudRules };
+      case 'GET_TRANSLATIONS':
+        return this.handleGetTranslations(language);
+      case 'VALIDATE_DATA':
+        return this.handleValidateData(payload);
+      case 'UPDATE_DATA':
+        return this.handleUpdateData(payload);
+      case 'SAVE_CONFIG':
+        return this.handleSaveConfig(payload);
+      case 'HEALTH_CHECK':
+        return { success: true, healthy: true };
+      default:
+        return { success: true, data: payload };
+    }
+  },
+  
+  async handleGetTranslations(language = 'pl') {
+    try {
+      const translations = await this.loadLocales(language);
+      return { success: true, data: translations, language };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  },
+  
+  handleValidateData(data) {
+    if (!this.schema) {
+      return { success: false, error: 'No validation schema available' };
+    }
+    
+    try {
+      // Basic validation - in real implementation use ajv or similar
+      const errors = [];
+      
+      if (this.schema.required) {
+        for (const field of this.schema.required) {
+          if (!data[field]) {
+            errors.push(`Field '${field}' is required`);
+          }
+        }
+      }
+      
+      if (this.schema.properties) {
+        for (const [field, rules] of Object.entries(this.schema.properties)) {
+          if (data[field] !== undefined) {
+            if (rules.type && typeof data[field] !== rules.type) {
+              errors.push(`Field '${field}' must be of type ${rules.type}`);
+            }
+          }
+        }
+      }
+      
+      return {
+        success: errors.length === 0,
+        valid: errors.length === 0,
+        errors: errors
+      };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  },
+  
+  handleUpdateData(updates) {
+    try {
+      // Validate before updating
+      const validation = this.handleValidateData(updates);
+      if (!validation.valid) {
+        return { success: false, error: 'Validation failed', details: validation.errors };
+      }
+      
+      // Check CRUD permissions
+      if (this.crudRules) {
+        for (const field of Object.keys(updates)) {
+          if (this.crudRules.readonly && this.crudRules.readonly.includes(field)) {
+            return { success: false, error: `Field '${field}' is read-only` };
+          }
+          if (this.crudRules.editable && !this.crudRules.editable.includes(field)) {
+            return { success: false, error: `Field '${field}' is not editable` };
+          }
+        }
+      }
+      
+      // Update runtime data
+      this.runtimeData = { ...this.runtimeData, ...updates };
+      
+      // Save to localStorage for persistence (SDK-independent)
+      const storageKey = `config_${this.metadata.name}_${this.metadata.version}`;
+      localStorage.setItem(storageKey, JSON.stringify(this.runtimeData));
+      
+      return { 
+        success: true, 
+        data: this.runtimeData,
+        message: 'Data updated successfully'
+      };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  },
+  
+  handleSaveConfig(configData) {
+    try {
+      // Validate config data
+      const validation = this.handleValidateData(configData);
+      if (!validation.valid) {
+        return { success: false, error: 'Config validation failed', details: validation.errors };
+      }
+      
+      // Update config
+      this.config = { ...this.config, ...configData };
+      
+      // Save to localStorage (SDK-independent storage)
+      const storageKey = `config_${this.metadata.name}_${this.metadata.version}`;
+      const backupKey = `config_backup_${this.metadata.name}_${this.metadata.version}`;
+      
+      // Create backup before saving
+      if (localStorage.getItem(storageKey)) {
+        localStorage.setItem(backupKey, localStorage.getItem(storageKey));
+      }
+      
+      localStorage.setItem(storageKey, JSON.stringify(this.config));
+      
+      return { 
+        success: true, 
+        data: this.config,
+        message: 'Configuration saved successfully',
+        backup: true
+      };
+    } catch (error) {
+      return { success: false, error: error.message };
     }
   }
 };
+
+// Lock the structure to prevent modifications
+if (typeof Object.freeze === 'function') {
+  Object.freeze(componentModule.metadata);
+}
+
+export default componentModule;

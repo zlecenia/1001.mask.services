@@ -4,6 +4,9 @@
  * Migrated from c201001.mask.services to 1001.mask.services modular structure
  */
 
+// ✅ CRITICAL: Use global Vue pattern (components.md v2.0)
+const { reactive, computed, onMounted, inject } = Vue || window.Vue || {};
+
 import { getSecurityService } from '../../../services/securityService.js';
 
 const template = `

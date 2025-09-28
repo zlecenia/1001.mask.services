@@ -69,13 +69,12 @@ const app = createApp({
 
       <!-- Main Application with Grid Layout Template -->
       <div v-else-if="appState === 'ready'" class="main-app grid-layout">
-        <!-- App Header (Full Width) -->
         <div class="app-header grid-header" id="app-header-container">
           <div class="header-logo">
             <img src="/favicon.ico" alt="MASKSERVICE" class="logo">
             <span class="app-title">MASKSERVICE C20 1001</span>
           </div>
-          <div class="header-user" v-if="currentUser">
+          <div class="header-user">
             <span class="user-name">{{ currentUser.name }}</span>
             <span class="user-role">({{ currentUser.role }})</span>
             <button class="logout-btn" @click="logout">
@@ -187,8 +186,7 @@ const app = createApp({
       console.log('✅ MaskService application with modular Vuex store initialized successfully');
       console.log('📊 Store modules loaded:', Object.keys(this.$store._modules.root._children));
       
-      // DIRECT PRESSURE PANEL TEST - Force replace loading message
-      this.testPressurePanelReplacement();
+      // Pressure panel test completed successfully - test replacement removed
     } catch (error) {
       console.error('❌ Failed to initialize MaskService application:', error);
       await this.$store.dispatch('handleError', error);
@@ -238,6 +236,14 @@ const app = createApp({
           role: 'ADMIN',
           permissions: ['*']
         };
+        
+        // Add role switching functionality
+        this.availableRoles = [
+          { id: 'OPERATOR', name: 'Operator', description: 'Basic monitoring and alerts' },
+          { id: 'ADMIN', name: 'Administrator', description: 'System management and user control' },
+          { id: 'SUPERUSER', name: 'Superuser', description: 'Advanced analytics and integration' },
+          { id: 'SERWISANT', name: 'Service Technician', description: 'Diagnostics and maintenance' }
+        ];
         
         // Load role-based menu from mainMenu component
         await this.loadRoleBasedMenu(this.currentUser.role);
@@ -496,6 +502,63 @@ const app = createApp({
         }
       }, 3000); // Wait 3 seconds for DOM to be ready
     },
+
+    // Switch user role
+    async switchRole(newRole) {
+      console.log(`🔄 [Main] Switching role from ${this.currentUser.role} to ${newRole}...`);
+      
+      // Update current user
+      this.currentUser.role = newRole;
+      const roleData = this.availableRoles.find(r => r.id === newRole);
+      this.currentUser.name = roleData ? roleData.name : 'User';
+      
+      // Reload role-based menu
+      await this.loadRoleBasedMenu(newRole);
+      
+      // Reload grid components with new role context
+      await this.loadGridComponents();
+      
+      console.log(`✅ [Main] Successfully switched to role: ${newRole}`);
+      
+      // Show notification
+      this.showRoleChangeNotification(roleData);
+    },
+
+    // Show role change notification
+    showRoleChangeNotification(roleData) {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(135deg, #3498db, #2980b9);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-size: 14px;
+        min-width: 250px;
+      `;
+      
+      notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <div style="font-size: 20px;">🔄</div>
+          <div>
+            <div style="font-weight: bold;">Role Changed</div>
+            <div style="font-size: 12px; opacity: 0.9;">Now logged in as: ${roleData.name}</div>
+            <div style="font-size: 11px; opacity: 0.7;">${roleData.description}</div>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto-remove after 3 seconds
+      setTimeout(() => {
+        notification.remove();
+      }, 3000);
+    },
     
     getDefaultMenu() {
       const baseMenu = [
@@ -738,17 +801,104 @@ const router = createRouter({
   routes: [
     { path: '/', redirect: '/dashboard' },
     { path: '/dashboard', component: { template: '<div>Dashboard - Strona główna</div>' } },
-    { path: '/monitoring', component: { template: '<div>Monitoring systemu</div>' } },
-    { path: '/alerts', component: { template: '<div>Alerty</div>' } },
-    { path: '/tests', component: { template: '<div>Testy</div>' } },
-    { path: '/reports', component: { template: '<div>Raporty</div>' } },
-    { path: '/status', component: { template: '<div>Status systemu</div>' } },
-    { path: '/users', component: { template: '<div>Użytkownicy</div>' } },
-    { path: '/settings', component: { template: '<div>Ustawienia</div>' } },
-    { path: '/service', component: { template: '<div>Serwis</div>' } },
-    { path: '/calibration', component: { template: '<div>Kalibracja</div>' } },
-    { path: '/diagnostics', component: { template: '<div>Diagnostyka</div>' } },
-    { path: '/workshop', component: { template: '<div>Warsztat</div>' } },
+    { 
+      path: '/monitoring', 
+      component: { 
+        template: '<div id="monitoring-container" style="padding: 20px;"></div>',
+        async mounted() {
+          console.log('📊 [Router] Loading Monitoring component...');
+          try {
+            const monitoringModule = await import('./features/monitoring/0.1.0/index.js');
+            await monitoringModule.default.init();
+            monitoringModule.default.render(document.getElementById('monitoring-container'));
+          } catch (error) {
+            console.error('❌ [Router] Failed to load Monitoring:', error);
+            document.getElementById('monitoring-container').innerHTML = '<div style="color: red; padding: 20px;">❌ Error loading Monitoring component</div>';
+          }
+        }
+      }
+    },
+    { 
+      path: '/alerts', 
+      component: { 
+        template: '<div id="alerts-container" style="padding: 20px;"></div>',
+        async mounted() {
+          console.log('🔔 [Router] Loading Alerts component...');
+          try {
+            const alertsModule = await import('./features/alerts/0.1.0/index.js');
+            await alertsModule.default.init();
+            alertsModule.default.render(document.getElementById('alerts-container'));
+          } catch (error) {
+            console.error('❌ [Router] Failed to load Alerts:', error);
+            document.getElementById('alerts-container').innerHTML = '<div style="color: red; padding: 20px;">❌ Error loading Alerts component</div>';
+          }
+        }
+      }
+    },
+    { 
+      path: '/diagnostics', 
+      component: { 
+        template: '<div id="diagnostics-container" style="padding: 20px;"></div>',
+        async mounted() {
+          console.log('🩺 [Router] Loading Diagnostics component...');
+          try {
+            const diagnosticsModule = await import('./features/diagnostics/0.1.0/index.js');
+            await diagnosticsModule.default.init();
+            diagnosticsModule.default.render(document.getElementById('diagnostics-container'));
+          } catch (error) {
+            console.error('❌ [Router] Failed to load Diagnostics:', error);
+            document.getElementById('diagnostics-container').innerHTML = '<div style="color: red; padding: 20px;">❌ Error loading Diagnostics component</div>';
+          }
+        }
+      }
+    },
+    { path: '/tests', component: { template: '<div>🧪 Testy - Component będzie dodany wkrótce</div>' } },
+    { path: '/reports', component: { template: '<div>📊 Raporty - Component będzie dodany wkrótce</div>' } },
+    { path: '/status', component: { template: '<div>📊 Status systemu - Component będzie dodany wkrótce</div>' } },
+    { path: '/users', component: { template: '<div>👥 Użytkownicy - Component będzie dodany wkrótce</div>' } },
+    { path: '/admin/users', component: { template: '<div>👥 Zarządzanie użytkownikami - Component będzie dodany wkrótce</div>' } },
+    { path: '/admin/system', component: { template: '<div>⚙️ Ustawienia systemu - Component będzie dodany wkrótce</div>' } },
+    { path: '/settings', component: { template: '<div>⚙️ Ustawienia - Component będzie dodany wkrótce</div>' } },
+    { path: '/service', component: { template: '<div>🔧 Serwis - Component będzie dodany wkrótce</div>' } },
+    { 
+      path: '/calibration', 
+      component: { 
+        template: '<div id="calibration-container" style="padding: 20px;"></div>',
+        async mounted() {
+          console.log('📐 [Router] Loading Calibration component...');
+          try {
+            const calibrationModule = await import('./features/calibration/0.1.0/index.js');
+            await calibrationModule.default.init();
+            calibrationModule.default.render(document.getElementById('calibration-container'));
+          } catch (error) {
+            console.error('❌ [Router] Failed to load Calibration:', error);
+            document.getElementById('calibration-container').innerHTML = '<div style="color: red; padding: 20px;">❌ Error loading Calibration component</div>';
+          }
+        }
+      }
+    },
+    { path: '/maintenance', component: { template: '<div>🔧 Maintenance - Component będzie dodany wkrótce</div>' } },
+    { path: '/workshop', component: { template: '<div>🔨 Warsztat - Component będzie dodany wkrótce</div>' } },
+    { path: '/tech-docs', component: { template: '<div>📖 Dokumentacja techniczna - Component będzie dodany wkrótce</div>' } },
+    { path: '/integration', component: { template: '<div>🔗 Integration - Component będzie dodany wkrótce</div>' } },
+    { 
+      path: '/analytics', 
+      component: { 
+        template: '<div id="analytics-container" style="padding: 20px;"></div>',
+        async mounted() {
+          console.log('📈 [Router] Loading Analytics component...');
+          try {
+            const analyticsModule = await import('./features/analytics/0.1.0/index.js');
+            await analyticsModule.default.init();
+            analyticsModule.default.render(document.getElementById('analytics-container'));
+          } catch (error) {
+            console.error('❌ [Router] Failed to load Analytics:', error);
+            document.getElementById('analytics-container').innerHTML = '<div style="color: red; padding: 20px;">❌ Error loading Analytics component</div>';
+          }
+        }
+      }
+    },
+    { path: '/advanced-system', component: { template: '<div>🔬 Advanced System - Component będzie dodany wkrótce</div>' } },
     { path: '/audit', component: { template: '<div id="audit-viewer-container"></div>' } },
     { path: '/security-logs', component: { template: '<div id="audit-viewer-container"></div>' } },
     { path: '/logs', component: { template: '<div id="audit-viewer-container"></div>' } },

@@ -1,0 +1,71 @@
+{
+  "component": {
+    "name": "monitoring",
+    "displayName": "System Monitoring",
+    "type": "dashboard",
+    "category": "operational",
+    "refreshInterval": 5000
+  },
+  "ui": {
+    "layout": "grid",
+    "theme": "light",
+    "widgets": [
+      "systemHealth",
+      "sensors",
+      "equipment",
+      "alerts"
+    ],
+    "colors": {
+      "normal": "#27ae60",
+      "warning": "#f39c12",
+      "critical": "#e74c3c",
+      "offline": "#95a5a6"
+    },
+    "grid": {
+      "columns": "repeat(auto-fit, minmax(300px, 1fr))",
+      "gap": "20px"
+    }
+  },
+  "data": {
+    "updateInterval": 2000,
+    "maxDataPoints": 100,
+    "retentionHours": 24,
+    "autoRefresh": true
+  },
+  "permissions": {
+    "canViewDetails": true,
+    "canExport": false,
+    "canConfigure": false,
+    "allowedRoles": [
+      "OPERATOR",
+      "ADMIN", 
+      "SUPERUSER"
+    ]
+  },
+  "monitoring": {
+    "systemHealth": {
+      "enabled": true,
+      "metrics": [
+        "cpu",
+        "memory",
+        "disk",
+        "network"
+      ],
+      "thresholds": {
+        "cpu": { "warning": 70, "critical": 85 },
+        "memory": { "warning": 80, "critical": 90 },
+        "disk": { "warning": 85, "critical": 95 }
+      }
+    },
+    "sensors": {
+      "enabled": true,
+      "autoDiscovery": true,
+      "refreshRate": 2000
+    },
+    "equipment": {
+      "enabled": true,
+      "statusCheck": true,
+      "performanceMonitoring": true
+    }
+  }
+}
