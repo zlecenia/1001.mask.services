@@ -1,4 +1,5 @@
-import { reactive, computed, onMounted, inject } from 'vue';
+// Use global Vue from CDN (for component dev server)
+const { reactive, computed, onMounted, inject } = Vue || window.Vue || {};
 
 /**
  * MASKTRONIC C20 - Reports Viewer Module

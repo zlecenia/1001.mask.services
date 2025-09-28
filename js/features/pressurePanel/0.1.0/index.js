@@ -12,9 +12,26 @@ export default {
   component: pressurePanelComponent,
   config: null,
   async loadConfig() {
-    const result = await ConfigLoader.loadConfig('./config/config.json', 'pressurePanel');
-    this.config = result.config;
-    return result;
+    // Try multiple possible paths for config
+    const possiblePaths = [
+      '/config/config.json',               // From component server root
+      './config/config.json',              // Relative to component  
+      '/component/config/config.json',     // From component server
+      'config/config.json'                 // Direct path
+    ];
+    
+    let result;
+    for (const configPath of possiblePaths) {
+      try {
+        result = await ConfigLoader.loadConfig(configPath, 'pressurePanel');
+        if (result.success) break;
+      } catch (error) {
+        continue; // Try next path
+      }
+    }
+    
+    this.config = result?.config || {};
+    return result || { success: false, config: {} };
   },
   
   async init(context = {}) {
@@ -22,10 +39,10 @@ export default {
       // Load configuration
       await this.loadConfig();
       this.metadata.initialized = true;
-      return true;
+      return { success: true, message: 'PressurePanel initialized successfully' };
     } catch (error) {
       console.error('PressurePanel init error:', error);
-      return false;
+      return { success: false, error: error.message };
     }
   },
   

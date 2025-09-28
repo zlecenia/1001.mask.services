@@ -157,6 +157,24 @@ class ComponentDevServer {
       }
     }));
     
+    // Alias for services to support /services/ paths from components
+    this.app.use('/services', express.static(path.join(projectRoot, 'js/services'), {
+      setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+          res.setHeader('Content-Type', 'application/javascript; charset=utf-8');
+        }
+      }
+    }));
+    
+    // Alias for component config files to support /config/ paths  
+    this.app.use('/config', express.static(path.join(this.componentPath, 'config'), {
+      setHeaders: (res, path) => {
+        if (path.endsWith('.json')) {
+          res.setHeader('Content-Type', 'application/json; charset=utf-8');
+        }
+      }
+    }));
+    
     console.log(chalk.green('✅ Middleware configured with proper MIME types'));
   }
 

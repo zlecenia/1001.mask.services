@@ -55,7 +55,7 @@ export default {
   },
 
   // Module initialization
-  async initialize() {
+  async init(context = {}) {
     console.log('✓ AuditLogViewer module initialized v0.1.0');
     return true;
   },

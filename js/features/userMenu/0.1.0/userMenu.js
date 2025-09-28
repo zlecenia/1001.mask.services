@@ -12,7 +12,8 @@
  * - Session timeout and activity monitoring
  */
 
-import { reactive, computed, onMounted, onUnmounted, inject } from 'vue';
+// Use global Vue from CDN (for component dev server)
+const { reactive, computed, onMounted, onUnmounted, inject } = Vue || window.Vue || {};
 
 const UserMenu = {
     name: 'UserMenu',

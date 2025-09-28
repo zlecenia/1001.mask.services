@@ -4,7 +4,8 @@
  * Migrated from c201001.mask.services to 1001.mask.services modular structure
  */
 
-import { reactive, computed, onMounted, onUnmounted } from 'vue';
+// Use global Vue from CDN (for component dev server)
+const { reactive, computed, onMounted, inject } = Vue || window.Vue || {};
 
 export default {
     name: 'DeviceHistory',

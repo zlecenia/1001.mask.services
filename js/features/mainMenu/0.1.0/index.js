@@ -231,22 +231,26 @@ export default {
   },
 
   /**
-   * Load component configuration
+   * Load component configuration using ConfigLoader
    * @returns {object} Configuration object
    */
   async loadConfig() {
     try {
-      const response = await fetch('./js/features/mainMenu/0.1.0/config/config.json');
-      const config = await response.json();
-      return config;
+      const result = await ConfigLoader.loadConfig('./config/config.json', 'mainMenu');
+      this.config = result.config;
+      return result;
     } catch (error) {
       console.warn('MainMenu: Using default config', error);
-      return {
+      this.config = {
         component: {
           name: 'mainMenu',
           version: '0.1.0'
         },
         settings: {}
+      };
+      return {
+        success: false,
+        config: this.config
       };
     }
   },

@@ -521,6 +521,9 @@ const createUserMenuModule = () => {
     };
 };
 
-// Export module factory and metadata
-export default createUserMenuModule;
+// Create and export module instance directly (for component dev server)
+const userMenuModule = createUserMenuModule();
+
+// Export module instance and metadata
+export default userMenuModule;
 export { metadata, UserMenu };

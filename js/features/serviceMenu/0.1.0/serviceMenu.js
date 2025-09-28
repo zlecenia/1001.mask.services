@@ -14,7 +14,8 @@
  * - Multi-language support (PL/EN/DE)
  */
 
-import { reactive, computed, onMounted, onUnmounted, inject } from 'vue';
+// Use global Vue from CDN (for component dev server)
+const { reactive, computed, onMounted, inject } = Vue || window.Vue || {};
 
 const ServiceMenu = {
     name: 'ServiceMenu',
