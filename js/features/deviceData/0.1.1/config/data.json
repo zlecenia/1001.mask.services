@@ -1,0 +1,59 @@
+{
+  "defaults": {
+    "deviceId": "DEVICE_001",
+    "status": "ONLINE",
+    "batteryLevel": 85,
+    "firmwareVersion": "2.1.4",
+    "updateFrequency": 2,
+    "sensorThresholds": {
+      "temperature": {
+        "min": 18,
+        "max": 25,
+        "unit": "°C"
+      },
+      "humidity": {
+        "min": 40,
+        "max": 70,
+        "unit": "%"
+      },
+      "pressure": {
+        "min": 1000,
+        "max": 1020,
+        "unit": "hPa"
+      },
+      "airQuality": {
+        "min": 70,
+        "max": 100,
+        "unit": "%"
+      },
+      "noise": {
+        "min": 0,
+        "max": 50,
+        "unit": "dB"
+      },
+      "vibration": {
+        "min": 0,
+        "max": 0.1,
+        "unit": "g"
+      }
+    }
+  },
+  "validation": {
+    "deviceId": {
+      "required": true,
+      "type": "string",
+      "pattern": "^[A-Z0-9_]+$",
+      "maxLength": 20
+    },
+    "batteryLevel": {
+      "type": "number",
+      "min": 0,
+      "max": 100
+    },
+    "updateFrequency": {
+      "type": "number",
+      "min": 1,
+      "max": 60
+    }
+  }
+}

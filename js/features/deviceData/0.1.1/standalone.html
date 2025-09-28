@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1280, height=400">
+    <title>deviceData - Preview</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuex@4/dist/vuex.global.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            width: 1280px;
+            height: 400px;
+            background: #1a1a1a;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            overflow: hidden;
+        }
+        
+        #app {
+            width: 100%;
+            height: 100%;
+            background: #2c3e50;
+        }
+        
+        /* Component-specific styles */
+        .app-footer {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 30px;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 16px;
+            font-size: 12px;
+        }
+        
+        .app-header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 40px;
+            background: linear-gradient(135deg, #34495e 0%, #2c3e50 100%);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            font-size: 14px;
+        }
+        
+        .main-menu {
+            width: 180px;
+            height: 100%;
+            background: #34495e;
+            color: white;
+            padding: 10px;
+        }
+        
+        .main-menu-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .main-menu-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+        }
+        
+        .pressure-panel {
+            width: 120px;
+            height: 100%;
+            background: #2c3e50;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .pressure-gauge {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .page-template {
+            display: grid;
+            grid-template-rows: 40px 1fr 30px;
+            grid-template-columns: 180px 1fr 120px;
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div id="app"></div>
+    
+    <script type="module">
+        const { createApp } = Vue;
+        const { createStore } = Vuex;
+        
+        // Mock store
+        const store = createStore({
+          state: {
+            auth: {
+              isAuthenticated: true,
+              currentUser: { name: 'Test User', role: 'OPERATOR' }
+            },
+            system: {
+              deviceStatus: 'ONLINE',
+              language: 'pl'
+            },
+            navigation: {
+              currentRoute: '/dashboard'
+            },
+            sensors: {
+              pressure1: { value: 5.2, status: 'normal' },
+              pressure2: { value: 2.1, status: 'normal' },
+              pressure3: { value: 450, status: 'normal' }
+            }
+          }
+        });
+        
+        // Load component
+        import('/js/features/deviceData/0.1.0/index.js').then(async (module) => {
+            const Component = module.default;
+            
+            // Initialize component
+            if (Component.init) {
+                await Component.init({ store });
+            }
+            
+            // Create app
+            const app = createApp({
+                components: {
+                    'deviceData': Component.component
+                },
+                template: '<deviceData />'
+            });
+            
+            app.use(store);
+            app.mount('#app');
+        }).catch(error => {
+            console.error('Failed to load component:', error);
+            document.getElementById('app').innerHTML = 
+                '<div style="color: red; padding: 20px;">Failed to load component: ' + error.message + '</div>';
+        });
+    </script>
+</body>
+</html>

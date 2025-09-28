@@ -1,0 +1,54 @@
+{
+  "deviceData": {
+    "version": "0.1.0",
+    "contractVersion": "2.0",
+    "criticalExports": [
+      "init",
+      "handle",
+      "metadata",
+      "loadComponent",
+      "loadConfig",
+      "handleValidateData",
+      "handleUpdateData",
+      "handleSaveConfig"
+    ],
+    "vueImportPattern": "global",
+    "exportPattern": "instance",
+    "lastValidated": "2024-12-28T16:03:17Z",
+    "checksum": "sha256:deviceData-v0.1.0-contract2.0",
+    "safetyChecks": {
+      "noESImportsForVue": true,
+      "exportsComponentInstance": true,
+      "hasStandardizedIndex": true,
+      "hasSmokeTests": true,
+      "hasUnifiedConfig": true,
+      "usesGlobalVuePattern": true
+    },
+    "breakingChangeProtection": {
+      "lockVueImportPattern": true,
+      "lockExportStructure": true,
+      "lockCriticalMethods": true,
+      "preventFactoryExports": true
+    },
+    "dependencies": {
+      "securityService": ">=1.0.0",
+      "Vue": ">=3.0.0"
+    },
+    "refactoringHistory": [
+      {
+        "date": "2024-12-28T16:03:17Z",
+        "action": "migrate_to_contract_v2.0",
+        "changes": [
+          "Updated index.js to standardized v2.0 contract pattern",
+          "Fixed Vue import pattern to use global Vue",
+          "Created component.config.js unified config file",
+          "Added deviceData.smoke.js regression tests",
+          "Added .component-lock.json safety system"
+        ],
+        "riskLevel": "low",
+        "testsPassed": true,
+        "backupCreated": true
+      }
+    ]
+  }
+}

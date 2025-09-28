@@ -89,7 +89,16 @@ const app = createApp({
           <div class="main-menu grid-sidebar" id="main-menu-container">
             <div class="menu-header">
               <h3>GŁÓWNE MENU</h3>
-              <span class="user-role-badge">{{ currentUser?.role || 'OPERATOR' }}</span>
+              <div class="role-switcher" style="margin-top: 10px;">
+                <select @change="switchRole($event.target.value)" :value="currentUser.role" 
+                        style="width: 100%; padding: 8px 10px; border: 1px solid #ddd; background: #fff; color: #2c3e50; border-radius: 4px; font-size: 12px;">
+                  <option v-for="role in availableRoles" :key="role.id" :value="role.id" 
+                          style="background: #fff; color: #2c3e50;">
+                    {{ role.name }}
+                  </option>
+                </select>
+              </div>
+              <span class="user-role-badge" style="margin-top: 8px; display: inline-block;">{{ currentUser?.role || 'OPERATOR' }}</span>
             </div>
             <div v-for="menuItem in roleBasedMenuItems" :key="menuItem.id" class="menu-item-role"
                  :class="{ active: currentRoute === menuItem.route }"

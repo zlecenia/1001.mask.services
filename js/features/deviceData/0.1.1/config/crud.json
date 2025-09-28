@@ -1,0 +1,39 @@
+{
+  "name": "deviceData",
+  "title": "DeviceData",
+  "description": "CRUD rules for deviceData component",
+  "_generated": true,
+  "_generated_at": "2025-09-27T07:00:20.030Z",
+  "rules": {
+    "editable": [
+      "ui",
+      "data",
+      "performance"
+    ],
+    "readonly": [
+      "component"
+    ],
+    "protected": [],
+    "addable": true,
+    "deletable": false
+  },
+  "field_types": {
+    "ui": "object",
+    "data": "object",
+    "api": "object",
+    "performance": "object"
+  },
+  "validation_rules": {},
+  "ui_hints": {
+    "ui": {
+      "type": "object",
+      "label": "UI Settings",
+      "description": "User interface configuration"
+    },
+    "data": {
+      "type": "object",
+      "label": "Data Settings",
+      "description": "Runtime data configuration"
+    }
+  }
+}
