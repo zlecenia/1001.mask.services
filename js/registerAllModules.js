@@ -152,14 +152,14 @@ export async function registerExistingModules() {
     const modulePath = path.join(FEATURES_DIR, moduleName);
     console.log(`\n📦 Processing module: ${moduleName}`);
     
-    // Get all version directories
+    // Get all version directories (semantic versioning: 0.1.0, 0.1.1, etc.)
     const versions = fs.readdirSync(modulePath, { withFileTypes: true })
-      .filter(dirent => dirent.isDirectory() && dirent.name.startsWith('v'))
+      .filter(dirent => dirent.isDirectory() && /^\d+\.\d+\.\d+$/.test(dirent.name))
       .map(dirent => dirent.name)
       .sort((a, b) => {
-        const aNum = parseInt(a.replace('v', ''));
-        const bNum = parseInt(b.replace('v', ''));
-        return aNum - bNum;
+        const [aMajor, aMinor, aPatch] = a.split('.').map(Number);
+        const [bMajor, bMinor, bPatch] = b.split('.').map(Number);
+        return (aMajor - bMajor) || (aMinor - bMinor) || (aPatch - bPatch);
       });
     
     if (versions.length === 0) {

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test MainMenu v0.1.1 - Components v2.0 Contract</title>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-header {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 20px;
+            margin-bottom: 30px;
+        }
+        .test-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+        .test-results {
+            margin-top: 20px;
+        }
+        .result-item {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+        }
+        .result-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .result-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .result-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        .menu-test-area {
+            border: 2px dashed #ccc;
+            min-height: 300px;
+            padding: 20px;
+            margin: 20px 0;
+            background: white;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .code-block {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        .test-log {
+            height: 200px;
+            overflow-y: auto;
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🧪 Test MainMenu v0.1.1 - Components v2.0 Contract</h1>
+            <p><strong>Cel:</strong> Weryfikacja funkcjonalności mainMenu po refaktoryzacji do kontraktu v2.0</p>
+            <p><strong>Serwer:</strong> <a href="http://localhost:8090/" target="_blank">http://localhost:8090/</a></p>
+        </div>
+
+        <div class="test-section">
+            <h2>📋 Test Controls</h2>
+            <button onclick="runContractTests()">🔧 Test v2.0 Contract</button>
+            <button onclick="runSmokeTests()">🧪 Run Smoke Tests</button>
+            <button onclick="testRoleMenus()">👥 Test Role Menus</button>
+            <button onclick="testVueIntegration()">⚡ Test Vue Integration</button>
+            <button onclick="clearResults()">🧹 Clear Results</button>
+        </div>
+
+        <div class="test-section">
+            <h2>📊 Test Results</h2>
+            <div id="testResults" class="test-results">
+                <div class="result-info">Click test buttons above to run mainMenu v0.1.1 tests...</div>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>🎯 MainMenu Component Test Area</h2>
+            <div id="menuTestArea" class="menu-test-area">
+                <p>Menu component will be rendered here...</p>
+            </div>
+        </div>
+
+        <div class="test-section">
+            <h2>📝 Test Log</h2>
+            <div id="testLog" class="test-log">
+Test log will appear here...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = [];
+        let testLog = [];
+
+        function log(message, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            testLog.push(`[${timestamp}] ${message}`);
+            updateLogDisplay();
+            console.log(message);
+        }
+
+        function updateLogDisplay() {
+            const logDiv = document.getElementById('testLog');
+            logDiv.textContent = testLog.slice(-50).join('\n');
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        function addResult(test, success, message, details = null) {
+            testResults.push({ test, success, message, details, timestamp: new Date() });
+            updateResultsDisplay();
+        }
+
+        function updateResultsDisplay() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = testResults.map(result => `
+                <div class="result-item result-${result.success ? 'success' : 'error'}">
+                    <strong>${result.test}</strong>: ${result.message}
+                    ${result.details ? `<div class="code-block">${JSON.stringify(result.details, null, 2)}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function clearResults() {
+            testResults = [];
+            testLog = [];
+            updateResultsDisplay();
+            updateLogDisplay();
+            document.getElementById('menuTestArea').innerHTML = '<p>Menu component will be rendered here...</p>';
+        }
+
+        async function runContractTests() {
+            log('🔧 Starting v2.0 Contract Tests...');
+            
+            try {
+                // Test 1: Import mainMenu component
+                log('Testing mainMenu module import...');
+                const moduleResponse = await import('./js/features/mainMenu/0.1.1/index.js');
+                const mainMenuModule = moduleResponse.default;
+                
+                if (!mainMenuModule) {
+                    throw new Error('MainMenu module not exported');
+                }
+                
+                addResult('Module Import', true, 'MainMenu module imported successfully');
+                log('✅ Module import successful');
+
+                // Test 2: Check v2.0 contract methods
+                log('Testing v2.0 contract methods...');
+                const requiredMethods = ['init', 'handle', 'loadComponent', 'loadConfig', 'runSmokeTests'];
+                const missingMethods = requiredMethods.filter(method => typeof mainMenuModule[method] !== 'function');
+                
+                if (missingMethods.length > 0) {
+                    throw new Error(`Missing v2.0 methods: ${missingMethods.join(', ')}`);
+                }
+                
+                addResult('v2.0 Contract Methods', true, 'All required methods present', { methods: requiredMethods });
+                log('✅ All v2.0 contract methods found');
+
+                // Test 3: Check metadata
+                log('Testing component metadata...');
+                if (!mainMenuModule.metadata || mainMenuModule.metadata.contractVersion !== '2.0') {
+                    throw new Error('Invalid or missing v2.0 contract metadata');
+                }
+                
+                addResult('Metadata Validation', true, 'Valid v2.0 metadata found', mainMenuModule.metadata);
+                log('✅ Metadata validation passed');
+
+                // Test 4: Initialize component
+                log('Testing component initialization...');
+                const initResult = await mainMenuModule.init();
+                
+                if (!initResult || !initResult.success) {
+                    throw new Error(`Initialization failed: ${initResult?.error || 'Unknown error'}`);
+                }
+                
+                addResult('Component Init', true, 'Component initialized successfully', initResult);
+                log('✅ Component initialization successful');
+
+                // Test 5: Test handle method
+                log('Testing handle method...');
+                const handleResult = mainMenuModule.handle({ action: 'GET_METADATA' });
+                
+                if (!handleResult || !handleResult.success) {
+                    throw new Error('Handle method failed');
+                }
+                
+                addResult('Handle Method', true, 'Handle method working correctly', handleResult);
+                log('✅ Handle method test passed');
+
+                log('🎉 All v2.0 Contract Tests PASSED!');
+
+            } catch (error) {
+                log(`❌ Contract test failed: ${error.message}`);
+                addResult('Contract Tests', false, error.message);
+            }
+        }
+
+        async function runSmokeTests() {
+            log('🧪 Starting MainMenu Smoke Tests...');
+            
+            try {
+                log('Importing smoke test module...');
+                const smokeResponse = await import('./js/features/mainMenu/0.1.1/mainMenu.smoke.js');
+                const MainMenuSmokeTests = smokeResponse.default;
+                
+                if (!MainMenuSmokeTests) {
+                    throw new Error('Smoke tests module not found');
+                }
+                
+                log('Running smoke tests...');
+                const smokeTestInstance = new MainMenuSmokeTests();
+                const smokeResult = await smokeTestInstance.runAll();
+                
+                if (smokeResult.success) {
+                    addResult('Smoke Tests', true, `All tests passed: ${smokeResult.passed}/${smokeResult.total} in ${smokeResult.duration}ms`, smokeResult);
+                    log(`🎉 Smoke tests PASSED: ${smokeResult.passed}/${smokeResult.total} in ${smokeResult.duration}ms`);
+                } else {
+                    addResult('Smoke Tests', false, `Tests failed: ${smokeResult.passed}/${smokeResult.total} in ${smokeResult.duration}ms`, smokeResult);
+                    log(`❌ Smoke tests FAILED: ${smokeResult.passed}/${smokeResult.total}`);
+                }
+
+            } catch (error) {
+                log(`❌ Smoke tests error: ${error.message}`);
+                addResult('Smoke Tests', false, error.message);
+            }
+        }
+
+        async function testRoleMenus() {
+            log('👥 Testing Role-Based Menus...');
+            
+            try {
+                log('Loading component configuration...');
+                const configResponse = await import('./js/features/mainMenu/0.1.1/component.config.js');
+                const config = configResponse.default;
+                
+                if (!config || !config.menus || !config.menus.roleMenus) {
+                    throw new Error('Menu configuration not found');
+                }
+                
+                const roles = ['OPERATOR', 'ADMIN', 'SUPERUSER', 'SERWISANT'];
+                const roleResults = {};
+                
+                for (const role of roles) {
+                    log(`Testing ${role} menu...`);
+                    const roleMenu = config.menus.roleMenus[role];
+                    
+                    if (!roleMenu || !Array.isArray(roleMenu)) {
+                        throw new Error(`Invalid menu for role: ${role}`);
+                    }
+                    
+                    roleResults[role] = {
+                        itemCount: roleMenu.length,
+                        items: roleMenu.map(item => ({ id: item.id, label: item.label, route: item.route }))
+                    };
+                    
+                    log(`✅ ${role} menu valid: ${roleMenu.length} items`);
+                }
+                
+                addResult('Role Menus', true, 'All role menus validated', roleResults);
+                log('🎉 All role menus validation PASSED!');
+
+            } catch (error) {
+                log(`❌ Role menu test failed: ${error.message}`);
+                addResult('Role Menus', false, error.message);
+            }
+        }
+
+        async function testVueIntegration() {
+            log('⚡ Testing Vue Integration...');
+            
+            try {
+                // Test Vue availability
+                if (typeof Vue === 'undefined') {
+                    throw new Error('Vue not available globally');
+                }
+                
+                log('Vue is available globally');
+                
+                // Test Vue composition API
+                const { reactive, computed, onMounted } = Vue;
+                if (!reactive || !computed || !onMounted) {
+                    throw new Error('Vue Composition API methods not available');
+                }
+                
+                log('Vue Composition API methods available');
+                
+                // Test reactive state creation
+                const testState = reactive({ test: true });
+                if (!testState || typeof testState !== 'object') {
+                    throw new Error('Reactive state creation failed');
+                }
+                
+                log('Vue reactive state creation successful');
+                
+                addResult('Vue Integration', true, 'Vue integration working correctly', {
+                    vueVersion: Vue.version || 'Unknown',
+                    compositionAPI: true,
+                    reactive: true
+                });
+                
+                log('🎉 Vue Integration test PASSED!');
+
+            } catch (error) {
+                log(`❌ Vue integration test failed: ${error.message}`);
+                addResult('Vue Integration', false, error.message);
+            }
+        }
+
+        // Initialize page
+        window.addEventListener('DOMContentLoaded', function() {
+            log('🚀 MainMenu v0.1.1 Test Page Ready');
+            log('Vue version: ' + (Vue.version || 'Unknown'));
+            log('Ready for testing...');
+        });
+    </script>
+</body>
+</html>

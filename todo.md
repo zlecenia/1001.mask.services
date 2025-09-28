@@ -29,3 +29,7 @@ Stworz nowy component w js/features/*/*
 wedle załaczonego pliku, to edytor kodu config.json na podstawie plikow w components  js/features/*/*/config/* odpowiednio go dopasuj, aby dzialal z kazdym innym component, ktory zawiera pliki w folderze config/
 
 Jak to uruchomic, aby np komponent edytora json, byl zaladowany jako pierwszy w celu edycji danych js/features/*/*/config/config.json innego komponentu, stworz przyklad uzycia
+
+## migracja komponentów
+usun wszystkie Mock pageTemplate content for Service Technician i wstaw docelowe rpodukcyjne wersje na bazie aktualnych komponentow w js/feature/*/*
+jeśli brakuje implementacji konkretnego komponentu to znajdz wczesniejsza wersje tutaj: /home/tom/github/zlecenia/c201001.mask.services/js

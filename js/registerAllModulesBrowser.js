@@ -69,7 +69,7 @@ async function registerRealModules(registry) {
   const modules = [
     // Core application modules
     { name: 'pageTemplate', version: '0.1.0' },
-    { name: 'mainMenu', version: '0.1.0' },
+    { name: 'mainMenu', version: '0.1.1' },
     { name: 'loginForm', version: '0.1.0' },
     
     // UI layout components
@@ -80,17 +80,25 @@ async function registerRealModules(registry) {
     { name: 'pressurePanel', version: '0.1.0' },
     
     // Data components (v2.0 contract compliant)
-    { name: 'deviceData', version: '0.1.1' }
+    { name: 'deviceData', version: '0.1.1' },
+    
+    // Service Technician components
+    { name: 'diagnostics', version: '0.1.0' },
+    { name: 'calibration', version: '0.1.0' },
+    { name: 'maintenance', version: '0.1.0' }
   ];
 
   const moduleLoaders = {
     pageTemplate: () => import('./features/pageTemplate/0.1.0/index.js'),
-    mainMenu: () => import('./features/mainMenu/0.1.0/index.js'),
+    mainMenu: () => import('./features/mainMenu/0.1.1/index.js'),
     loginForm: () => import('./features/loginForm/0.1.0/index.js'),
     appHeader: () => import('./features/appHeader/0.1.0/index.js'),
     appFooter: () => import('./features/appFooter/0.1.0/index.js'),
     pressurePanel: () => import('./features/pressurePanel/0.1.0/index.js'),
-    deviceData: () => import('./features/deviceData/0.1.1/index.js')
+    deviceData: () => import('./features/deviceData/0.1.1/index.js'),
+    diagnostics: () => import('./features/diagnostics/0.1.0/index.js'),
+    calibration: () => import('./features/calibration/0.1.0/index.js'),
+    maintenance: () => import('./features/maintenance/0.1.0/index.js')
   };
   
   for (const { name, version } of modules) {
