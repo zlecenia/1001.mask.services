@@ -1,0 +1,37 @@
+{
+  "name": "@maskservice/device-select",
+  "version": "0.1.0",
+  "description": "Interactive device selection for testing - migrated from DeviceSelectTemplate.js",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite serve",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "serve": "node ./dev-server.js"
+  },
+  "dependencies": {
+    "vue": "^3.4.0"
+  },
+  "devDependencies": {
+    "vitest": "^1.0.0",
+    "vite": "^5.0.0"
+  },
+  "moduleMetadata": {
+    "contracts": [
+      "handle:GET_AVAILABLE_DEVICES",
+      "handle:SELECT_DEVICE", 
+      "handle:SEARCH_DEVICES"
+    ],
+    "rollbackConditions": {
+      "errorRate": ">10%",
+      "testFailures": ">2"
+    },
+    "migrated": {
+      "from": "c201001.mask.services/js/components/DeviceSelectTemplate.js",
+      "timestamp": "2025-01-27",
+      "legacyModule": false
+    }
+  }
+}
