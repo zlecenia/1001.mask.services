@@ -255,20 +255,14 @@ const JsonNodeComponent = {
         } else if (newValue === 'null') {
           newValue = null;
         }
-        // Otherwise keep as string
-        
-        this.$emit('update-value', {
-          path: this.path,
-          type: 'value',
-          value: newValue
-        });
-      } catch (error) {
-        // Reset to original value on error
-        event.target.textContent = this.displayValue;
+      } catch (e) {
+        // Keep as string if parsing fails
       }
-    },
-    cancelEdit(event) {
-      event.target.blur();
+      
+      this.$emit('value-changed', {
+        path: this.path,
+        value: newValue
+      });
     },
     deleteThis() {
       this.$emit('delete-node', { path: this.path });
@@ -449,37 +443,137 @@ const JsonEditor = {
     async loadComponentConfigs() {
       if (!this.selectedComponent) {
         this.configFiles = [];
+        this.selectedConfigFile = '';
+        this.currentJSON = null;
         return;
       }
       
       try {
-        // Simulate API call to list config files
-        this.configFiles = ['config.json', 'data.json', 'schema.json'];
+        // Standard config files for each component
+        this.configFiles = ['config.json', 'data.json', 'schema.json', 'crud.json'];
         this.statusMessage = `Załadowano pliki dla ${this.selectedComponent}`;
+        
+        // Auto-load config.json and schema.json
+        this.selectedConfigFile = 'config.json';
+        await this.loadConfigFile();
+        await this.loadComponentSchema();
+        
       } catch (error) {
         this.showError(`Błąd wczytywania plików dla ${this.selectedComponent}`);
       }
     },
 
     async loadConfigFile() {
-      if (!this.selectedConfigFile) {
+      if (!this.selectedConfigFile || !this.selectedComponent) {
         this.currentJSON = null;
         return;
       }
+      
       try {
-        // Simulate API call
         const path = `js/features/${this.selectedComponent}/0.1.0/config/${this.selectedConfigFile}`;
         this.statusMessage = `Wczytywanie ${path}...`;
-        const data = { sample: "data for " + this.selectedConfigFile }; // Placeholder
+        
+        const response = await fetch(path);
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        
+        const data = await response.json();
         
         this.currentJSON = data;
         this.originalJSON = JSON.parse(JSON.stringify(data));
         this.history = [JSON.parse(JSON.stringify(data))];
         this.historyIndex = 0;
-        this.showSuccess(`Załadowano ${this.selectedConfigFile}`);
+        this.showSuccess(`Załadowano ${this.selectedConfigFile} dla ${this.selectedComponent}`);
+        
       } catch (error) {
-        this.showError(`Błąd wczytywania pliku ${this.selectedConfigFile}`);
-        this.currentJSON = null;
+        console.warn(`Nie udało się załadować ${this.selectedConfigFile} dla ${this.selectedComponent}:`, error);
+        
+        // Fallback: create default structure based on file type
+        const defaultData = this.createDefaultConfig(this.selectedConfigFile, this.selectedComponent);
+        this.currentJSON = defaultData;
+        this.originalJSON = JSON.parse(JSON.stringify(defaultData));
+        this.history = [JSON.parse(JSON.stringify(defaultData))];
+        this.historyIndex = 0;
+        
+        this.showWarning(`Utworzono domyślną strukturę dla ${this.selectedConfigFile}`);
+      }
+    },
+
+    async loadComponentSchema() {
+      if (!this.selectedComponent) return;
+      
+      try {
+        const schemaPath = `js/features/${this.selectedComponent}/0.1.0/config/schema.json`;
+        const response = await fetch(schemaPath);
+        
+        if (response.ok) {
+          const schema = await response.json();
+          // Auto-apply schema if found
+          this.currentSchema = schema;
+          this.selectedSchema = 'component-schema';
+          this.showSuccess(`Załadowano schemat dla ${this.selectedComponent}`);
+        }
+      } catch (error) {
+        console.warn(`Schema nie znaleziona dla ${this.selectedComponent}:`, error);
+        // Use default schema based on config file type
+        this.autoSelectAppropriateSchema();
+      }
+    },
+
+    createDefaultConfig(fileName, componentName) {
+      switch (fileName) {
+        case 'config.json':
+          return {
+            component: {
+              name: componentName,
+              version: "0.1.0",
+              title: componentName.charAt(0).toUpperCase() + componentName.slice(1),
+              description: `${componentName} component configuration`
+            },
+            settings: {},
+            ui: {},
+            security: {
+              readOnly: [],
+              protected: [],
+              roles: ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"]
+            }
+          };
+        case 'data.json':
+          return {
+            sampleData: `data for ${componentName}`,
+            lastUpdated: new Date().toISOString()
+          };
+        case 'schema.json':
+          return {
+            type: "object",
+            properties: {
+              component: {
+                type: "object",
+                required: ["name", "version"]
+              },
+              settings: { type: "object" }
+            },
+            required: ["component"]
+          };
+        case 'crud.json':
+          return {
+            operations: {
+              create: { enabled: true, roles: ["ADMIN", "SUPERUSER"] },
+              read: { enabled: true, roles: ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"] },
+              update: { enabled: true, roles: ["ADMIN", "SUPERUSER"] },
+              delete: { enabled: false, roles: ["SUPERUSER"] }
+            }
+          };
+        default:
+          return { sample: `data for ${fileName}` };
+      }
+    },
+
+    autoSelectAppropriateSchema() {
+      if (this.selectedConfigFile === 'config.json') {
+        this.selectedSchema = 'app';
+        this.applySchema();
       }
     },
 
@@ -665,16 +759,22 @@ const JsonEditor = {
       return true;
     },
 
-    showError(message) {
-      this.errorMessage = message;
-      this.successMessage = '';
-      setTimeout(() => this.errorMessage = '', 3000);
-    },
-
     showSuccess(message) {
-      this.successMessage = message;
-      this.errorMessage = '';
-      setTimeout(() => this.successMessage = '', 3000);
+      this.message = { type: 'success', text: message };
+      this.statusMessage = message;
+      setTimeout(() => this.message = null, 3000);
+    },
+    
+    showWarning(message) {
+      this.message = { type: 'warning', text: message };
+      this.statusMessage = message;
+      setTimeout(() => this.message = null, 4000);
+    },
+    
+    showError(message) {
+      this.message = { type: 'error', text: message };
+      this.statusMessage = message;
+      setTimeout(() => this.message = null, 5000);
     }
   }
 };

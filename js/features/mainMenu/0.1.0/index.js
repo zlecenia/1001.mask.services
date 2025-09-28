@@ -235,6 +235,27 @@ export default {
    * @returns {object} Configuration object
    */
   async loadConfig() {
+    try {
+      const response = await fetch('./js/features/mainMenu/0.1.0/config/config.json');
+      const config = await response.json();
+      return config;
+    } catch (error) {
+      console.warn('MainMenu: Using default config', error);
+      return {
+        component: {
+          name: 'mainMenu',
+          version: '0.1.0'
+        },
+        settings: {}
+      };
+    }
+  },
+
+  /**
+   * Initialize module with context
+   * @param {object} context - Vue context with store and router
+   * @returns {boolean} Success status
+   */
   async init(context = {}) {
     if (!context || !context.router) {
       return false;

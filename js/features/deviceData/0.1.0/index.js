@@ -5,7 +5,7 @@
  */
 
 import DeviceDataComponent from './deviceData.js';
-import config from './config.json' assert { type: 'json' };
+import { ConfigLoader } from '../../../shared/configLoader.js';
 
 // Module metadata for FeatureRegistry
 export const metadata = {
@@ -19,7 +19,7 @@ export const metadata = {
   
   // Component registration
   component: DeviceDataComponent,
-  config: config,
+  config: null,
   
   // Module capabilities
   capabilities: {
@@ -340,5 +340,23 @@ export default {
   initialize,
   devUtils,
   component: DeviceDataComponent,
-  config
+  config: null,
+  
+  async loadConfig() {
+    const result = await ConfigLoader.loadConfig('./config/config.json', 'deviceData');
+    this.config = result.config;
+    return result;
+  },
+  
+  async init(context = {}) {
+    try {
+      // Load configuration
+      await this.loadConfig();
+      this.metadata.initialized = true;
+      return true;
+    } catch (error) {
+      console.error('DeviceData init error:', error);
+      return false;
+    }
+  }
 };

@@ -1,5 +1,5 @@
 import ReportsViewer from './reportsViewer.js';
-import config from './config.json';
+import { ConfigLoader } from '../../../shared/configLoader.js';
 
 /**
  * Reports Viewer Module - Entry Point
@@ -262,9 +262,21 @@ export default {
         `
     },
     
-    config: config,
+    config: null,
+    
+    async loadConfig() {
+        const result = await ConfigLoader.loadConfig('./config/config.json', 'reportsViewer');
+        this.config = result.config;
+        return result;
+    },
     
     async init(context) {
+        try {
+            // Load configuration first
+            await this.loadConfig();
+        } catch (error) {
+            console.error('ReportsViewer loadConfig error:', error);
+        }
         console.log('🔶 ReportsViewer Module: Initializing...');
         
         try {
@@ -278,7 +290,7 @@ export default {
             
             // Initialize module configuration
             if (context.moduleConfig) {
-                context.moduleConfig.reportsViewer = config;
+                context.moduleConfig.reportsViewer = this.config;
             }
             
             // Security check

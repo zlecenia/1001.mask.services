@@ -760,7 +760,7 @@ const styles = `
 </style>
 `;
 
-export default {
+const SystemSettingsComponent = {
   name: 'SystemSettingsComponent',
   template: template + styles,
   
@@ -1425,3 +1425,6 @@ export default {
     }
   }
 };
+
+// Also export as default
+export default SystemSettingsComponent;

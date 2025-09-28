@@ -5,7 +5,7 @@
  */
 
 import RealtimeSensorsComponent from './realtimeSensors.js';
-import config from './config.json' assert { type: 'json' };
+import { ConfigLoader } from '../../../shared/configLoader.js';
 
 // Module metadata for FeatureRegistry
 const moduleInfo = {
@@ -14,7 +14,25 @@ const moduleInfo = {
   displayName: 'Realtime Sensors Monitor',
   description: 'Advanced real-time industrial sensor monitoring dashboard',
   component: RealtimeSensorsComponent,
-  config: config,
+  config: null,
+  
+  async loadConfig() {
+    const result = await ConfigLoader.loadConfig('./config/config.json', 'realtimeSensors');
+    this.config = result.config;
+    return result;
+  },
+  
+  async init(context = {}) {
+    try {
+      // Load configuration
+      await this.loadConfig();
+      this.initialized = true;
+      return true;
+    } catch (error) {
+      console.error('RealtimeSensors init error:', error);
+      return false;
+    }
+  },
   
   // Feature flags
   features: {
@@ -109,7 +127,6 @@ export default moduleInfo;
 // Named exports for direct access
 export {
   RealtimeSensorsComponent,
-  config,
   moduleInfo
 };
 

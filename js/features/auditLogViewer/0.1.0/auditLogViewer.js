@@ -490,7 +490,7 @@ const styles = `
 }
 </style>`;
 
-export default {
+const AuditLogViewer = {
   name: 'AuditLogViewerComponent',
   template: template + styles,
   
@@ -779,3 +779,7 @@ export default {
     }
   }
 };
+
+// Export the component
+export const auditLogViewerComponent = AuditLogViewer;
+export default AuditLogViewer;
