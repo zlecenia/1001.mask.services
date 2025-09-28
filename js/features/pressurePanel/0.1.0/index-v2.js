@@ -321,12 +321,4 @@ if (typeof Object.freeze === 'function') {
   Object.freeze(componentModule.metadata);
 }
 
-// Add debug info for troubleshooting
-console.log('🔍 [PressurePanel] Module export check:', {
-  hasInit: typeof componentModule.init === 'function',
-  hasRender: typeof componentModule.render === 'function',
-  hasHandle: typeof componentModule.handle === 'function',
-  metadata: componentModule.metadata
-});
-
 export default componentModule;
