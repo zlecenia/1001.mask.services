@@ -67,10 +67,10 @@ const app = createApp({
         </button>
       </div>
 
-      <!-- Main Application -->
-      <div v-else-if="appState === 'ready'" class="main-app">
-        <!-- App Header -->
-        <div class="app-header">
+      <!-- Main Application with Grid Layout Template -->
+      <div v-else-if="appState === 'ready'" class="main-app grid-layout">
+        <!-- App Header (Full Width) -->
+        <div class="app-header grid-header" id="app-header-container">
           <div class="header-logo">
             <img src="/favicon.ico" alt="MASKSERVICE" class="logo">
             <span class="app-title">MASKSERVICE C20 1001</span>
@@ -84,38 +84,55 @@ const app = createApp({
           </div>
         </div>
 
-        <!-- App Body -->
-        <div class="app-body">
-          <!-- Main Menu -->
-          <div class="main-menu">
-            <div v-for="menuGroup in menuItems" :key="menuGroup.id" class="menu-group">
-              <div class="menu-group-title">{{ menuGroup.title }}</div>
-              <div class="menu-items">
-                <div 
-                  v-for="item in menuGroup.items" 
-                  :key="item.id"
-                  class="menu-item"
-                  :class="{ active: currentRoute === item.route }"
-                  @click="navigateTo(item.route)"
-                >
-                  <i :class="item.icon" class="menu-item-icon"></i>
-                  <span class="menu-item-text">{{ item.title }}</span>
+        <!-- App Body Grid: MainMenu + Content + PressurePanel -->
+        <div class="app-body grid-body">
+          <!-- Main Menu (Left Column) -->
+          <div class="main-menu grid-sidebar" id="main-menu-container">
+            <div class="menu-header">
+              <h3>GŁÓWNE MENU</h3>
+              <span class="user-role-badge">{{ currentUser?.role || 'OPERATOR' }}</span>
+            </div>
+            <div v-for="menuItem in roleBasedMenuItems" :key="menuItem.id" class="menu-item-role"
+                 :class="{ active: currentRoute === menuItem.route }"
+                 @click="navigateTo(menuItem.route)">
+              <i :class="menuItem.icon" class="menu-item-icon"></i>
+              <span class="menu-item-text">{{ menuItem.label }}</span>
+            </div>
+          </div>
+
+          <!-- Content Area (Center Column) -->
+          <div class="content-area grid-content" id="content-area">
+            <div class="content-placeholder">
+              <h2>Dashboard - MASKSERVICE C20 1001</h2>
+              <p>Rola: {{ currentUser?.role || 'OPERATOR' }}</p>
+              <p>Wybierz opcję z menu aby rozpocząć pracę.</p>
+              <div class="dashboard-stats">
+                <div class="stat-card">
+                  <h4>Status Systemu</h4>
+                  <span class="status online">ONLINE</span>
+                </div>
+                <div class="stat-card">
+                  <h4>Aktywne Komponenty</h4>
+                  <span class="count">{{ registeredComponents }}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Content Area -->
-          <div class="content-area" id="content-area">
-            <div class="content-placeholder">
-              <h2>Witamy w systemie MASKSERVICE</h2>
-              <p>Wybierz opcję z menu aby rozpocząć pracę.</p>
+          <!-- Pressure Panel (Right Column) -->
+          <div class="pressure-panel grid-pressure" id="pressure-panel-container">
+            <div class="panel-header">
+              <h3>PANEL CIŚNIEŃ</h3>
+              <span class="panel-status online">●</span>
+            </div>
+            <div class="panel-loading">
+              Ładowanie PressurePanel...
             </div>
           </div>
         </div>
 
-        <!-- App Footer -->
-        <div class="app-footer">
+        <!-- App Footer (Full Width) -->
+        <div class="app-footer grid-footer" id="app-footer-container">
           <div class="footer-info">
             <span>MASKSERVICE C20 1001 v3.0</span>
             <span class="separator">|</span>
@@ -143,6 +160,16 @@ const app = createApp({
       // Navigation
       currentRoute: '/',
       menuItems: [],
+      roleBasedMenuItems: [],
+      
+      // Component integration
+      registeredComponents: 0,
+      componentsLoaded: {
+        mainMenu: false,
+        pressurePanel: false,
+        appHeader: false,
+        appFooter: false
+      },
       
       // Feature registry
       registry: null,
@@ -205,12 +232,15 @@ const app = createApp({
         this.currentUser = {
           id: 1,
           name: 'Administrator',
-          role: 'admin',
+          role: 'ADMIN',
           permissions: ['*']
         };
         
-        // Load menu for user role
-        await this.loadMenuForRole(this.currentUser.role);
+        // Load role-based menu from mainMenu component
+        await this.loadRoleBasedMenu(this.currentUser.role);
+        
+        // Initialize and load all grid components
+        await this.loadGridComponents();
         
         // Load content for current route
         const currentRoute = this.$route?.path || '/dashboard';
@@ -257,6 +287,103 @@ const app = createApp({
         this.menuItems = this.getDefaultMenu();
       }
     },
+
+    async loadRoleBasedMenu(role) {
+      try {
+        console.log(`🔍 Loading role-based menu for: ${role}`);
+        const mainMenuModule = await this.registry.load('mainMenu', 'latest');
+        if (mainMenuModule && mainMenuModule.getMenuConfig) {
+          const menuConfig = mainMenuModule.getMenuConfig(role);
+          this.roleBasedMenuItems = menuConfig || this.getDefaultRoleMenu(role);
+          console.log(`✅ Role-based menu loaded:`, this.roleBasedMenuItems);
+        } else {
+          this.roleBasedMenuItems = this.getDefaultRoleMenu(role);
+          console.log(`⚠️ Using default role menu for: ${role}`);
+        }
+      } catch (error) {
+        console.warn('Błąd ładowania role-based menu:', error);
+        this.roleBasedMenuItems = this.getDefaultRoleMenu(role);
+      }
+    },
+
+    async loadGridComponents() {
+      console.log('🏗️ Loading grid layout components...');
+      
+      try {
+        // Load PressurePanel
+        await this.loadPressurePanel();
+        
+        // Load AppHeader
+        await this.loadAppHeader();
+        
+        // Load AppFooter  
+        await this.loadAppFooter();
+        
+        // Update registered components count
+        this.registeredComponents = Object.values(this.componentsLoaded).filter(loaded => loaded).length;
+        
+        console.log('✅ Grid components loaded successfully:', this.componentsLoaded);
+      } catch (error) {
+        console.error('❌ Error loading grid components:', error);
+      }
+    },
+
+    async loadPressurePanel() {
+      try {
+        const pressurePanelModule = await this.registry.load('pressurePanel', 'latest');
+        if (pressurePanelModule) {
+          // Initialize the pressure panel
+          const context = { user: this.currentUser };
+          await pressurePanelModule.init(context);
+          
+          // Render pressure panel in the container
+          const container = document.getElementById('pressure-panel-container');
+          if (container && pressurePanelModule.render) {
+            pressurePanelModule.render(container, {
+              pressureData: {
+                low: { value: 12.5, unit: 'mbar', status: 'normal' },
+                medium: { value: 2.3, unit: 'bar', status: 'normal' },
+                high: { value: 18.7, unit: 'bar', status: 'warning' }
+              }
+            });
+          }
+          
+          this.componentsLoaded.pressurePanel = true;
+          console.log('✅ PressurePanel loaded successfully');
+        }
+      } catch (error) {
+        console.error('❌ Error loading PressurePanel:', error);
+        this.componentsLoaded.pressurePanel = false;
+      }
+    },
+
+    async loadAppHeader() {
+      try {
+        const appHeaderModule = await this.registry.load('appHeader', 'latest');
+        if (appHeaderModule) {
+          await appHeaderModule.init({ user: this.currentUser });
+          this.componentsLoaded.appHeader = true;
+          console.log('✅ AppHeader loaded successfully');
+        }
+      } catch (error) {
+        console.error('❌ Error loading AppHeader:', error);
+        this.componentsLoaded.appHeader = false;
+      }
+    },
+
+    async loadAppFooter() {
+      try {
+        const appFooterModule = await this.registry.load('appFooter', 'latest');
+        if (appFooterModule) {
+          await appFooterModule.init({ user: this.currentUser });
+          this.componentsLoaded.appFooter = true;
+          console.log('✅ AppFooter loaded successfully');
+        }
+      } catch (error) {
+        console.error('❌ Error loading AppFooter:', error);
+        this.componentsLoaded.appFooter = false;
+      }
+    },
     
     getDefaultMenu() {
       const baseMenu = [
@@ -292,6 +419,36 @@ const app = createApp({
       }
       
       return baseMenu;
+    },
+
+    getDefaultRoleMenu(role) {
+      const roleMenus = {
+        OPERATOR: [
+          { id: 'monitoring', icon: 'fas fa-desktop', label: 'Monitoring', route: '/monitoring', order: 1 },
+          { id: 'alerts', icon: 'fas fa-bell', label: 'Alerty', route: '/alerts', order: 2 }
+        ],
+        ADMIN: [
+          { id: 'tests', icon: 'fas fa-vials', label: 'Testy', route: '/tests', order: 1 },
+          { id: 'reports', icon: 'fas fa-chart-line', label: 'Raporty', route: '/reports', order: 2 },
+          { id: 'users', icon: 'fas fa-users-cog', label: 'Użytkownicy', route: '/users', order: 3 },
+          { id: 'system', icon: 'fas fa-cogs', label: 'System', route: '/settings', order: 4 }
+        ],
+        SUPERUSER: [
+          { id: 'integration', icon: 'fas fa-project-diagram', label: 'Integracja', route: '/integration', order: 1 },
+          { id: 'analytics', icon: 'fas fa-chart-area', label: 'Analityka', route: '/analytics', order: 2 },
+          { id: 'advanced-system', icon: 'fas fa-microscope', label: 'System Zaawansowany', route: '/advanced-system', order: 3 },
+          { id: 'audit', icon: 'fas fa-shield-alt', label: 'Audyt', route: '/audit', order: 4 }
+        ],
+        SERWISANT: [
+          { id: 'diagnostics', icon: 'fas fa-stethoscope', label: 'Diagnostyka', route: '/diagnostics', order: 1 },
+          { id: 'calibration', icon: 'fas fa-drafting-compass', label: 'Kalibracja', route: '/calibration', order: 2 },
+          { id: 'maintenance', icon: 'fas fa-wrench', label: 'Konserwacja', route: '/maintenance', order: 3 },
+          { id: 'workshop', icon: 'fas fa-hammer', label: 'Warsztat', route: '/workshop', order: 4 },
+          { id: 'tech-docs', icon: 'fas fa-book-open', label: 'Dokumentacja', route: '/tech-docs', order: 5 }
+        ]
+      };
+      
+      return roleMenus[role] || roleMenus.OPERATOR;
     },
     
     navigateTo(route) {

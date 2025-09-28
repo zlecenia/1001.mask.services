@@ -70,6 +70,29 @@ function consoleForwardPlugin() {
   };
 }
 
+// Plugin to serve static files with proper aliases
+function staticFilesPlugin() {
+  return {
+    name: 'static-files-plugin',
+    configureServer(server) {
+      server.middlewares.use('/shared', (req, res, next) => {
+        req.url = '/js/shared' + req.url;
+        next();
+      });
+      
+      server.middlewares.use('/services', (req, res, next) => {
+        req.url = '/js/services' + req.url;
+        next();
+      });
+      
+      server.middlewares.use('/config', (req, res, next) => {
+        req.url = req.url;
+        next();
+      });
+    }
+  };
+}
+
 export default defineConfig({
   resolve: {
     alias: {
@@ -90,7 +113,8 @@ export default defineConfig({
         }
       }
     }), 
-    consoleForwardPlugin()
+    consoleForwardPlugin(),
+    staticFilesPlugin()
   ],
   server: {
     port: 8080,
