@@ -83,26 +83,22 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.55.1",
-    "@vitejs/plugin-vue": "^4.0.0",
     "@vue/test-utils": "^2.4.6",
     "chalk": "^5.3.0",
     "chokidar": "^3.5.3",
     "commander": "^11.0.0",
     "eslint": "^8.0.0",
     "fast-check": "^3.23.2",
-    "fs-extra": "^11.1.0",
-    "glob": "^10.3.0",
-    "happy-dom": "^18.0.1",
     "http-server": "^14.0.0",
     "inquirer": "^9.2.0",
-    "jsdom": "^27.0.0",
+    "jsdom": "^22.1.0",
     "json-schema-to-typescript": "^13.1.0",
     "playwright": "^1.55.1",
     "prettier": "^3.1.0",
-    "puppeteer": "^24.22.3",
     "terser": "^5.0.0",
     "vite": "^4.5.0",
-    "vitest": "^1.2.0"
+    "vitest": "^1.2.0",
+    "happy-dom": "^12.10.3"
   },
   "engines": {
     "node": ">=16.0.0"

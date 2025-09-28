@@ -68,7 +68,7 @@ function createMockModule(name) {
 async function registerRealModules(registry) {
   const modules = [
     // Core application modules
-    { name: 'pageTemplate', version: '0.1.0' },
+    { name: 'pageTemplate', version: '0.1.1' },
     { name: 'mainMenu', version: '0.1.1' },
     { name: 'loginForm', version: '0.1.0' },
     
@@ -89,7 +89,7 @@ async function registerRealModules(registry) {
   ];
 
   const moduleLoaders = {
-    pageTemplate: () => import('./features/pageTemplate/0.1.0/index.js'),
+    pageTemplate: () => import('./features/pageTemplate/0.1.1/index.js'),
     mainMenu: () => import('./features/mainMenu/0.1.1/index.js'),
     loginForm: () => import('./features/loginForm/0.1.0/index.js'),
     appHeader: () => import('./features/appHeader/0.1.0/index.js'),

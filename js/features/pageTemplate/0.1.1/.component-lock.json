@@ -1,0 +1,466 @@
+{
+  "name": "pageTemplate",
+  "version": "0.1.1",
+  "contractVersion": "2.0",
+  "lockVersion": "1.0.0",
+  "timestamp": "2024-12-19T11:00:00.000Z",
+  "description": "Component lock file to prevent breaking changes in pageTemplate base layout component",
+  
+  "critical": {
+    "exports": {
+      "locked": true,
+      "structure": {
+        "default": {
+          "type": "object",
+          "required": true,
+          "properties": {
+            "init": "function",
+            "handle": "function", 
+            "loadComponent": "function",
+            "loadConfig": "function",
+            "runSmokeTests": "function",
+            "render": "function",
+            "metadata": "object"
+          }
+        }
+      },
+      "hash": "pageTemplate-v0.1.1-exports-2024-12-19"
+    },
+    
+    "vuePattern": {
+      "locked": true,
+      "description": "Global Vue import pattern for CDN compatibility",
+      "pattern": "const { reactive, computed, onMounted, inject } = Vue || window.Vue || {};",
+      "forbidden": [
+        "import { reactive } from 'vue'",
+        "import Vue from 'vue'",
+        "require('vue')"
+      ],
+      "hash": "vue-global-pattern-v2.0"
+    },
+    
+    "contractMethods": {
+      "locked": true,
+      "required": [
+        {
+          "name": "init",
+          "signature": "async init(context = {})",
+          "returns": "Promise<{success: boolean, message?: string, error?: string}>"
+        },
+        {
+          "name": "handle", 
+          "signature": "handle(request = {})",
+          "returns": "{success: boolean, data?: any, error?: string}"
+        },
+        {
+          "name": "loadComponent",
+          "signature": "async loadComponent()",
+          "returns": "Promise<void>"
+        },
+        {
+          "name": "loadConfig",
+          "signature": "async loadConfig()",
+          "returns": "Promise<void>"
+        },
+        {
+          "name": "runSmokeTests",
+          "signature": "async runSmokeTests()",
+          "returns": "Promise<{success: boolean, details?: any}>"
+        },
+        {
+          "name": "render",
+          "signature": "render(container, options = {})",
+          "returns": "{success: boolean, error?: string}"
+        }
+      ],
+      "hash": "contract-v2.0-methods-pageTemplate"
+    }
+  },
+  
+  "displayOptimization": {
+    "locked": true,
+    "description": "7.9 inch landscape display optimization must be preserved",
+    "targetResolution": "1280x400",
+    "orientation": "landscape",
+    "touchOptimized": true,
+    "requirements": {
+      "headerHeight": 40,
+      "footerHeight": 30,
+      "sidebarWidth": 180,
+      "contentPadding": 10,
+      "touchTargetSize": 48,
+      "compactModeThreshold": 1000
+    },
+    "hash": "display-7.9inch-optimization-v0.1.1"
+  },
+  
+  "layoutSystem": {
+    "locked": true,
+    "description": "Layout grid system structure must be preserved",
+    "gridAreas": {
+      "required": ["default", "noSidebar", "noPressure", "contentOnly"],
+      "structure": "header-content-footer with optional sidebar/pressure"
+    },
+    "components": {
+      "header": {
+        "required": true,
+        "height": "40px"
+      },
+      "footer": {
+        "required": true,
+        "height": "30px"
+      },
+      "sidebar": {
+        "optional": true,
+        "width": "180px",
+        "collapsible": false
+      },
+      "content": {
+        "required": true,
+        "flex": "1fr"
+      },
+      "pressurePanel": {
+        "optional": true,
+        "width": "200px"
+      }
+    },
+    "hash": "layout-system-v0.1.1"
+  },
+  
+  "configuration": {
+    "locked": true,
+    "description": "Component configuration structure",
+    "requiredSections": [
+      "metadata",
+      "ui", 
+      "display",
+      "layout",
+      "data",
+      "roles",
+      "responsive",
+      "accessibility",
+      "performance",
+      "security",
+      "translations",
+      "animations"
+    ],
+    "criticalSettings": {
+      "display.width": 1280,
+      "display.height": 400,
+      "display.orientation": "landscape",
+      "display.touchOptimized": true,
+      "security.validation.enabled": true,
+      "accessibility.enabled": true,
+      "accessibility.touchTargets.minSize": 48,
+      "responsive.enabled": true
+    },
+    "hash": "config-structure-v0.1.1"
+  },
+  
+  "roleSystem": {
+    "locked": true,
+    "description": "Role-based template access system",
+    "validRoles": ["OPERATOR", "ADMIN", "SUPERUSER", "SERWISANT"],
+    "defaultRole": "OPERATOR",
+    "roleConfigurations": {
+      "OPERATOR": {
+        "level": 1,
+        "allowedTemplates": ["dashboard", "monitoring"],
+        "canCustomizeLayout": false
+      },
+      "ADMIN": {
+        "level": 2,
+        "allowedTemplates": ["dashboard", "monitoring", "minimal"],
+        "canCustomizeLayout": true
+      },
+      "SUPERUSER": {
+        "level": 3,
+        "allowedTemplates": ["dashboard", "monitoring", "minimal"],
+        "canCustomizeLayout": true,
+        "canModifySystem": true
+      },
+      "SERWISANT": {
+        "level": 4,
+        "allowedTemplates": ["dashboard", "monitoring", "minimal"],
+        "canCustomizeLayout": true,
+        "canServiceEquipment": true
+      }
+    },
+    "hash": "role-system-v0.1.1"
+  },
+  
+  "actionHandlers": {
+    "locked": true,
+    "description": "Required action handlers for template management",
+    "requiredActions": [
+      "GET_STATUS",
+      "GET_METADATA", 
+      "SHOW_PAGE",
+      "CONFIGURE_LAYOUT",
+      "GET_LAYOUT_CONFIG",
+      "VALIDATE_MENU_ITEMS",
+      "SET_USER_ROLE",
+      "UPDATE_CONTENT"
+    ],
+    "actionSignatures": {
+      "SHOW_PAGE": {
+        "input": "{ title?, showSidebar?, showPressurePanel?, menuItems?, currentUser?, deviceId?, layout? }",
+        "output": "{ success: boolean, data: PageConfig }"
+      },
+      "CONFIGURE_LAYOUT": {
+        "input": "{ settings: LayoutSettings }",
+        "output": "{ success: boolean, data: { settings, applied, timestamp } }"
+      },
+      "GET_LAYOUT_CONFIG": {
+        "input": "{ width?, height? }",
+        "output": "{ success: boolean, data: LayoutConfig }"
+      }
+    },
+    "hash": "action-handlers-v0.1.1"
+  },
+  
+  "security": {
+    "locked": true,
+    "description": "Security features that must remain enabled",
+    "requiredFeatures": {
+      "roleValidation": true,
+      "xssProtection": true,
+      "auditLogging": true,
+      "inputSanitization": true,
+      "contentSecurityPolicy": true
+    },
+    "validation": {
+      "strictMode": true,
+      "validateRoles": true,
+      "validatePermissions": true,
+      "sanitizeInput": true
+    },
+    "hash": "security-features-v0.1.1"
+  },
+  
+  "accessibility": {
+    "locked": true,
+    "description": "Accessibility features for 7.9\" industrial display",
+    "requiredFeatures": {
+      "keyboardNavigation": true,
+      "screenReader": true,
+      "focusIndicators": true,
+      "skipLinks": true,
+      "touchTargets": true
+    },
+    "ariaSupport": {
+      "labels": true,
+      "descriptions": true,
+      "roles": true,
+      "landmarks": true
+    },
+    "keyboardShortcuts": {
+      "Alt+H": "focusHeader",
+      "Alt+S": "focusSidebar", 
+      "Alt+C": "focusContent",
+      "Alt+F": "focusFooter",
+      "Escape": "closeDialogs"
+    },
+    "touchOptimization": {
+      "minTargetSize": 48,
+      "spacing": 8,
+      "feedback": true
+    },
+    "hash": "accessibility-v0.1.1"
+  },
+  
+  "performance": {
+    "locked": true,
+    "description": "Performance benchmarks that must be maintained",
+    "benchmarks": {
+      "initTime": {
+        "max": 1000,
+        "unit": "ms",
+        "description": "Component initialization"
+      },
+      "renderTime": {
+        "max": 200,
+        "unit": "ms", 
+        "description": "Component render time"
+      },
+      "layoutTime": {
+        "max": 100,
+        "unit": "ms",
+        "description": "Layout calculation time"
+      },
+      "interactionResponse": {
+        "max": 50,
+        "unit": "ms",
+        "description": "User interaction response time"
+      }
+    },
+    "optimization": {
+      "lazy": true,
+      "caching": true,
+      "debounceResize": 250,
+      "throttleScroll": 16
+    },
+    "hash": "performance-benchmarks-v0.1.1"
+  },
+  
+  "translations": {
+    "locked": true,
+    "description": "Multi-language support must be preserved",
+    "requiredLanguages": ["pl", "en", "de"],
+    "requiredKeys": [
+      "page.title",
+      "page.device",
+      "page.user",
+      "page.navigation",
+      "page.dashboard",
+      "page.monitoring",
+      "page.status",
+      "page.activity",
+      "page.userInfo",
+      "page.role",
+      "page.session",
+      "page.systemOk",
+      "page.noEvents",
+      "page.layout",
+      "page.optimizedFor"
+    ],
+    "hash": "translations-v0.1.1"
+  },
+  
+  "templates": {
+    "locked": true,
+    "description": "Template configurations must be preserved",
+    "requiredTemplates": {
+      "dashboard": {
+        "title": "Dashboard",
+        "showSidebar": true,
+        "showPressurePanel": false
+      },
+      "monitoring": {
+        "title": "Monitoring", 
+        "showSidebar": true,
+        "showPressurePanel": true
+      },
+      "minimal": {
+        "title": "Minimal View",
+        "showSidebar": false,
+        "showPressurePanel": false
+      }
+    },
+    "hash": "templates-v0.1.1"
+  },
+  
+  "testing": {
+    "locked": true,
+    "description": "Smoke tests requirements",
+    "maxDuration": 10000,
+    "requiredTests": [
+      "Vue Integration",
+      "Component Contract v2.0",
+      "Layout Configuration",
+      "Performance Benchmarks",
+      "Error Handling",
+      "Security Validation",
+      "Accessibility",
+      "Configuration Loading",
+      "Role-Based Features"
+    ],
+    "coverageRequirements": {
+      "contractMethods": "100%",
+      "actionHandlers": "100%",
+      "errorScenarios": "80%",
+      "configurationValidation": "100%"
+    },
+    "hash": "smoke-tests-v0.1.1"
+  },
+  
+  "refactoringHistory": {
+    "v0.1.0-to-v0.1.1": {
+      "date": "2024-12-19",
+      "changes": [
+        "Migrated from partial v2.0 compliance to full components.md v2.0 contract",
+        "Added missing contract methods: loadComponent(), loadConfig(), runSmokeTests()",
+        "Fixed Vue import pattern from ES modules to global CDN pattern",
+        "Created unified component.config.js with comprehensive 7.9\" display optimizations",
+        "Added comprehensive smoke tests for regression protection (9 tests)",
+        "Enhanced role-based template access system with 4 roles",
+        "Improved layout grid system with flexible configurations",
+        "Added multi-language support (Polish, English, German)",
+        "Enhanced security validation and audit logging",
+        "Optimized performance benchmarks for industrial use",
+        "Added accessibility features for touch displays",
+        "Fixed metadata version inconsistency (0.1.0 vs 1.0.0)"
+      ],
+      "breakingChanges": [
+        "Changed Vue import pattern from ES modules to global",
+        "Modified init() return format from boolean to {success, message/error}",
+        "Added required v2.0 contract methods",
+        "Changed component export structure to full v2.0 contract object",
+        "Enhanced handle() method with comprehensive action support"
+      ],
+      "migrations": [
+        "Update imports to use global Vue pattern",
+        "Update init() calls to handle Promise<Object> return",
+        "Update action handlers to use new comprehensive action set",
+        "Update configuration loading to use component.config.js",
+        "Update testing to include smoke tests validation"
+      ],
+      "hash": "refactor-v0.1.0-to-v0.1.1"
+    }
+  },
+  
+  "validation": {
+    "rules": [
+      {
+        "rule": "exports.default must be object with v2.0 contract methods",
+        "severity": "critical"
+      },
+      {
+        "rule": "Vue imports must use global pattern only",
+        "severity": "critical"
+      },
+      {
+        "rule": "7.9\" display optimization must be preserved",
+        "severity": "critical"
+      },
+      {
+        "rule": "Layout grid system must remain functional",
+        "severity": "high"
+      },
+      {
+        "rule": "Role-based template access must work",
+        "severity": "high"
+      },
+      {
+        "rule": "Security validation must remain enabled",
+        "severity": "high"
+      },
+      {
+        "rule": "Accessibility features must remain enabled",
+        "severity": "high"
+      },
+      {
+        "rule": "Performance benchmarks must be met",
+        "severity": "medium"
+      },
+      {
+        "rule": "All translations must be present",
+        "severity": "medium"
+      },
+      {
+        "rule": "Template configurations must be valid",
+        "severity": "medium"
+      }
+    ]
+  },
+  
+  "checksum": {
+    "algorithm": "SHA-256",
+    "files": {
+      "index.js": "pageTemplate-index-v0.1.1-contract-v2.0",
+      "component.config.js": "pageTemplate-config-unified-v0.1.1",
+      "pageTemplate.smoke.js": "pageTemplate-smoke-tests-v0.1.1"
+    },
+    "generated": "2024-12-19T11:00:00.000Z"
+  }
+}
