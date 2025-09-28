@@ -1,0 +1,18 @@
+{
+  "name": "maskservice-gui-tests",
+  "version": "1.0.0",
+  "description": "GUI tests for MaskService C20 1001",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report",
+    "install-browsers": "playwright install"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0"
+  },
+  "engines": {
+    "node": ">=16"
+  }
+}

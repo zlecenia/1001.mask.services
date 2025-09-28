@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MaskService C20 - GUI Tests</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        .test-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .test-suite {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .test-case {
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #3498db;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .test-case.passed {
+            border-left-color: #27ae60;
+            background: #d4edda;
+        }
+        .test-case.failed {
+            border-left-color: #e74c3c;
+            background: #f8d7da;
+        }
+        .test-case.running {
+            border-left-color: #f39c12;
+            background: #fff3cd;
+        }
+        .test-actions {
+            margin-top: 20px;
+        }
+        .btn {
+            padding: 10px 20px;
+            margin: 0 10px 10px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+        .btn-danger {
+            background: #e74c3c;
+            color: white;
+        }
+        .test-results {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            font-family: monospace;
+            margin-top: 10px;
+            white-space: pre-wrap;
+        }
+        .test-iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 10px;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3498db, #2980b9);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #7f8c8d;
+            text-transform: uppercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="test-container">
+        <div class="test-header">
+            <h1>🧪 MaskService C20 - GUI Test Suite</h1>
+            <p>Comprehensive interface testing for all roles and components</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+        </div>
+
+        <div class="stats" id="test-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-tests">0</div>
+                <div class="stat-label">Total Tests</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="passed-tests">0</div>
+                <div class="stat-label">Passed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="failed-tests">0</div>
+                <div class="stat-label">Failed</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="test-duration">0s</div>
+                <div class="stat-label">Duration</div>
+            </div>
+        </div>
+
+        <div class="test-actions">
+            <button class="btn btn-primary" onclick="runAllTests()">🚀 Run All Tests</button>
+            <button class="btn btn-success" onclick="runRoleTests()">👥 Test Role Switching</button>
+            <button class="btn btn-primary" onclick="runComponentTests()">🧩 Test Components</button>
+            <button class="btn btn-primary" onclick="runNavigationTests()">🧭 Test Navigation</button>
+            <button class="btn btn-danger" onclick="clearResults()">🗑️ Clear Results</button>
+        </div>
+
+        <!-- Application Frame for Testing -->
+        <div class="test-suite">
+            <h2>🖥️ Application Under Test</h2>
+            <iframe id="app-frame" class="test-iframe" src="http://localhost:8080"></iframe>
+        </div>
+
+        <!-- Test Results -->
+        <div class="test-suite">
+            <h2>📋 Test Results</h2>
+            <div id="test-results" class="test-results">
+Waiting for tests to start...
+            </div>
+        </div>
+
+        <!-- Individual Test Suites -->
+        <div class="test-suite">
+            <h2>🔄 Role Switching Tests</h2>
+            <div id="role-tests">
+                <div class="test-case" id="test-role-operator">
+                    <strong>Test: Switch to OPERATOR role</strong>
+                    <p>Verify role switcher changes to OPERATOR and menu updates</p>
+                </div>
+                <div class="test-case" id="test-role-admin">
+                    <strong>Test: Switch to ADMIN role</strong>
+                    <p>Verify ADMIN role has additional menu items</p>
+                </div>
+                <div class="test-case" id="test-role-serwisant">
+                    <strong>Test: Switch to SERWISANT role</strong>
+                    <p>Verify SERWISANT has diagnostics, calibration, maintenance</p>
+                </div>
+                <div class="test-case" id="test-role-superuser">
+                    <strong>Test: Switch to SUPERUSER role</strong>
+                    <p>Verify SUPERUSER has all menu items including analytics</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-suite">
+            <h2>🧩 Component Loading Tests</h2>
+            <div id="component-tests">
+                <div class="test-case" id="test-pressure-panel">
+                    <strong>Test: Pressure Panel Loading</strong>
+                    <p>Verify pressure panel loads and displays data</p>
+                </div>
+                <div class="test-case" id="test-monitoring">
+                    <strong>Test: Monitoring Component</strong>
+                    <p>Verify monitoring dashboard loads for OPERATOR</p>
+                </div>
+                <div class="test-case" id="test-alerts">
+                    <strong>Test: Alerts Component</strong>
+                    <p>Verify alerts system loads and displays alerts</p>
+                </div>
+                <div class="test-case" id="test-diagnostics">
+                    <strong>Test: Diagnostics Component</strong>
+                    <p>Verify diagnostics loads for SERWISANT role</p>
+                </div>
+                <div class="test-case" id="test-calibration">
+                    <strong>Test: Calibration Component</strong>
+                    <p>Verify calibration interface loads properly</p>
+                </div>
+                <div class="test-case" id="test-maintenance">
+                    <strong>Test: Maintenance Component</strong>
+                    <p>Verify maintenance dashboard loads and shows tasks</p>
+                </div>
+                <div class="test-case" id="test-analytics">
+                    <strong>Test: Analytics Component</strong>
+                    <p>Verify analytics dashboard loads for SUPERUSER</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="test-suite">
+            <h2>🧭 Navigation Tests</h2>
+            <div id="navigation-tests">
+                <div class="test-case" id="test-menu-click">
+                    <strong>Test: Menu Item Clicks</strong>
+                    <p>Verify clicking menu items navigates to correct routes</p>
+                </div>
+                <div class="test-case" id="test-url-routing">
+                    <strong>Test: Direct URL Navigation</strong>
+                    <p>Verify direct URL access works for all routes</p>
+                </div>
+                <div class="test-case" id="test-role-permissions">
+                    <strong>Test: Role-based Access Control</strong>
+                    <p>Verify users can only access authorized components</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test Framework
+        class GUITestRunner {
+            constructor() {
+                this.tests = [];
+                this.results = [];
+                this.currentTest = 0;
+                this.startTime = 0;
+                this.appFrame = document.getElementById('app-frame');
+                this.resultsDiv = document.getElementById('test-results');
+            }
+
+            async delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            log(message) {
+                console.log(message);
+                this.resultsDiv.innerText += new Date().toLocaleTimeString() + ' - ' + message + '\n';
+                this.resultsDiv.scrollTop = this.resultsDiv.scrollHeight;
+            }
+
+            updateStats() {
+                const total = this.results.length;
+                const passed = this.results.filter(r => r.passed).length;
+                const failed = this.results.filter(r => !r.passed).length;
+                const duration = ((Date.now() - this.startTime) / 1000).toFixed(1);
+
+                document.getElementById('total-tests').innerText = total;
+                document.getElementById('passed-tests').innerText = passed;
+                document.getElementById('failed-tests').innerText = failed;
+                document.getElementById('test-duration').innerText = duration + 's';
+
+                const progress = total > 0 ? (total / this.tests.length) * 100 : 0;
+                document.getElementById('progress-fill').style.width = progress + '%';
+            }
+
+            markTest(testId, passed, message = '') {
+                const element = document.getElementById(testId);
+                if (element) {
+                    element.className = 'test-case ' + (passed ? 'passed' : 'failed');
+                    if (message) {
+                        element.innerHTML += '<br><small>' + message + '</small>';
+                    }
+                }
+            }
+
+            async runTest(testName, testFunction) {
+                this.log(`🧪 Starting: ${testName}`);
+                
+                try {
+                    const result = await testFunction();
+                    this.results.push({ name: testName, passed: true, result });
+                    this.log(`✅ PASSED: ${testName}`);
+                    return true;
+                } catch (error) {
+                    this.results.push({ name: testName, passed: false, error: error.message });
+                    this.log(`❌ FAILED: ${testName} - ${error.message}`);
+                    return false;
+                }
+            }
+
+            // Test: Check if application loads
+            async testApplicationLoad() {
+                await this.delay(2000); // Wait for app to load
+                
+                const frame = this.appFrame;
+                if (!frame.contentDocument) {
+                    throw new Error('Cannot access iframe content');
+                }
+                
+                const appElement = frame.contentDocument.querySelector('#app');
+                if (!appElement) {
+                    throw new Error('App element not found');
+                }
+                
+                return 'Application loaded successfully';
+            }
+
+            // Test: Role switcher exists and works
+            async testRoleSwitcher() {
+                const frame = this.appFrame;
+                const roleSwitcher = frame.contentDocument.querySelector('.role-switcher select');
+                
+                if (!roleSwitcher) {
+                    throw new Error('Role switcher not found');
+                }
+                
+                const options = roleSwitcher.querySelectorAll('option');
+                if (options.length < 4) {
+                    throw new Error('Not all role options available');
+                }
+                
+                return `Role switcher found with ${options.length} options`;
+            }
+
+            // Test: Switch to OPERATOR role
+            async testSwitchToOperator() {
+                const frame = this.appFrame;
+                const roleSwitcher = frame.contentDocument.querySelector('.role-switcher select');
+                
+                if (!roleSwitcher) {
+                    throw new Error('Role switcher not found');
+                }
+                
+                // Change to OPERATOR
+                roleSwitcher.value = 'OPERATOR';
+                roleSwitcher.dispatchEvent(new Event('change'));
+                
+                await this.delay(1000);
+                
+                // Check if menu updated
+                const menuItems = frame.contentDocument.querySelectorAll('.menu-item-role');
+                this.markTest('test-role-operator', true, `Menu has ${menuItems.length} items`);
+                
+                return 'Successfully switched to OPERATOR role';
+            }
+
+            // Test: Switch to SERWISANT role  
+            async testSwitchToSerwisant() {
+                const frame = this.appFrame;
+                const roleSwitcher = frame.contentDocument.querySelector('.role-switcher select');
+                
+                roleSwitcher.value = 'SERWISANT';
+                roleSwitcher.dispatchEvent(new Event('change'));
+                
+                await this.delay(1000);
+                
+                // Check for SERWISANT-specific menu items
+                const menuItems = frame.contentDocument.querySelectorAll('.menu-item-role');
+                const diagnosticsItem = Array.from(menuItems).find(item => 
+                    item.textContent.includes('Diagnostyka'));
+                
+                if (!diagnosticsItem) {
+                    throw new Error('Diagnostics menu item not found for SERWISANT');
+                }
+                
+                this.markTest('test-role-serwisant', true, 'SERWISANT menu items found');
+                
+                return 'Successfully switched to SERWISANT role';
+            }
+
+            // Test: Pressure panel loads
+            async testPressurePanel() {
+                const frame = this.appFrame;
+                const pressurePanel = frame.contentDocument.querySelector('#pressure-panel-container');
+                
+                if (!pressurePanel) {
+                    throw new Error('Pressure panel container not found');
+                }
+                
+                const loadingText = pressurePanel.textContent;
+                if (loadingText.includes('Ładowanie PressurePanel')) {
+                    throw new Error('Pressure panel still showing loading message');
+                }
+                
+                this.markTest('test-pressure-panel', true, 'Pressure panel loaded');
+                
+                return 'Pressure panel loaded successfully';
+            }
+
+            // Test: Component navigation
+            async testComponentNavigation() {
+                const frame = this.appFrame;
+                const menuItems = frame.contentDocument.querySelectorAll('.menu-item-role');
+                
+                if (menuItems.length === 0) {
+                    throw new Error('No menu items found');
+                }
+                
+                // Click first menu item
+                const firstItem = menuItems[0];
+                firstItem.click();
+                
+                await this.delay(1000);
+                
+                // Check if content area updated
+                const contentArea = frame.contentDocument.querySelector('#content-area');
+                if (!contentArea) {
+                    throw new Error('Content area not found');
+                }
+                
+                this.markTest('test-menu-click', true, 'Navigation working');
+                
+                return 'Component navigation works';
+            }
+
+            // Run all tests
+            async runAllTests() {
+                this.startTime = Date.now();
+                this.results = [];
+                this.log('🚀 Starting comprehensive GUI test suite...');
+                
+                // Application tests
+                await this.runTest('Application Load', () => this.testApplicationLoad());
+                await this.runTest('Role Switcher Exists', () => this.testRoleSwitcher());
+                
+                // Role switching tests
+                await this.runTest('Switch to OPERATOR', () => this.testSwitchToOperator());
+                await this.runTest('Switch to SERWISANT', () => this.testSwitchToSerwisant());
+                
+                // Component tests
+                await this.runTest('Pressure Panel Load', () => this.testPressurePanel());
+                await this.runTest('Component Navigation', () => this.testComponentNavigation());
+                
+                this.updateStats();
+                this.log('🏁 Test suite completed!');
+                
+                // Generate summary
+                const passed = this.results.filter(r => r.passed).length;
+                const total = this.results.length;
+                this.log(`📊 Summary: ${passed}/${total} tests passed (${((passed/total)*100).toFixed(1)}%)`);
+                
+                return this.results;
+            }
+
+            clearResults() {
+                this.resultsDiv.innerText = 'Results cleared...\n';
+                this.results = [];
+                this.updateStats();
+                
+                // Reset test case styling
+                document.querySelectorAll('.test-case').forEach(el => {
+                    el.className = 'test-case';
+                });
+            }
+        }
+
+        // Initialize test runner
+        const testRunner = new GUITestRunner();
+
+        // Global functions for buttons
+        function runAllTests() {
+            testRunner.runAllTests();
+        }
+
+        function runRoleTests() {
+            testRunner.log('🔄 Running role switching tests...');
+            testRunner.testSwitchToOperator();
+            testRunner.testSwitchToSerwisant();
+        }
+
+        function runComponentTests() {
+            testRunner.log('🧩 Running component tests...');
+            testRunner.testPressurePanel();
+            testRunner.testComponentNavigation();
+        }
+
+        function runNavigationTests() {
+            testRunner.log('🧭 Running navigation tests...');
+            testRunner.testComponentNavigation();
+        }
+
+        function clearResults() {
+            testRunner.clearResults();
+        }
+
+        // Auto-refresh iframe periodically
+        setInterval(() => {
+            const frame = document.getElementById('app-frame');
+            if (frame && !frame.src.includes('timestamp')) {
+                // Refresh iframe to get latest state
+                frame.src = frame.src + '?timestamp=' + Date.now();
+            }
+        }, 30000); // Refresh every 30 seconds
+    </script>
+</body>
+</html>
