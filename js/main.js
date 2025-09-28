@@ -310,6 +310,9 @@ const app = createApp({
       console.log('🏗️ Loading grid layout components...');
       
       try {
+        // Load MainMenu (critical for sidebar)
+        await this.loadMainMenu();
+        
         // Load PressurePanel
         await this.loadPressurePanel();
         
@@ -323,6 +326,7 @@ const app = createApp({
         this.registeredComponents = Object.values(this.componentsLoaded).filter(loaded => loaded).length;
         
         console.log('✅ Grid components loaded successfully:', this.componentsLoaded);
+        console.log(`📊 Total components loaded: ${this.registeredComponents}/4`);
       } catch (error) {
         console.error('❌ Error loading grid components:', error);
       }
@@ -382,6 +386,40 @@ const app = createApp({
       } catch (error) {
         console.error('❌ Error loading AppFooter:', error);
         this.componentsLoaded.appFooter = false;
+      }
+    },
+
+    async loadMainMenu() {
+      try {
+        console.log('🔍 Loading MainMenu component for grid sidebar...');
+        const mainMenuModule = await this.registry.load('mainMenu', 'latest');
+        if (mainMenuModule) {
+          // Initialize the main menu with current user context
+          const context = { 
+            user: this.currentUser,
+            roleMenuItems: this.roleBasedMenuItems 
+          };
+          await mainMenuModule.init(context);
+          
+          // Render main menu in the sidebar container
+          const sidebarContainer = document.getElementById('main-menu-container');
+          if (sidebarContainer && mainMenuModule.render) {
+            mainMenuModule.render(sidebarContainer, {
+              menuItems: this.roleBasedMenuItems,
+              currentRoute: this.$route?.path || '/dashboard',
+              user: this.currentUser
+            });
+          }
+          
+          this.componentsLoaded.mainMenu = true;
+          console.log('✅ MainMenu loaded successfully in sidebar');
+        } else {
+          console.warn('⚠️ MainMenu module not found, using fallback menu');
+          this.componentsLoaded.mainMenu = false;
+        }
+      } catch (error) {
+        console.error('❌ Error loading MainMenu:', error);
+        this.componentsLoaded.mainMenu = false;
       }
     },
     

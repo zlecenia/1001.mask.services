@@ -2,6 +2,40 @@
    VUE APPLICATION LAYOUT STYLES
    ==================================== */
 
+/* 
+🎯 ŁATWA KONTROLA SZEROKOŚCI KOLUMN - ZMIEŃ TUTAJ!
+=====================================
+
+Aby zmienić szerokość kolumn, edytuj wartości poniżej:
+
+Przykład 1 - Szersze menu (20% + 60% + 20%):
+--sidebar-width: 20%; --content-width: 60%; --pressure-width: 20%;
+
+Przykład 2 - Wąskie panele (10% + 80% + 10%):  
+--sidebar-width: 10%; --content-width: 80%; --pressure-width: 10%;
+
+Przykład 3 - Bez prawego panelu (25% + 75% + 0%):
+--sidebar-width: 25%; --content-width: 75%; --pressure-width: 0%;
+
+*/
+
+/* GRID LAYOUT CONTROL VARIABLES - EASY TO ADJUST */
+:root {
+  /* Column widths - adjust these values to control layout */
+  --sidebar-width: 15%;          /* Left column (MainMenu) */
+  --content-width: 70%;          /* Middle column (Content) */
+  --pressure-width: 15%;         /* Right column (PressurePanel) */
+  
+  /* Row heights */
+  --header-height: 60px;         /* Top header bar */
+  --footer-height: 50px;         /* Bottom footer bar */
+  
+  /* Colors and spacing */
+  --grid-border-color: #dee2e6;
+  --grid-background: #f8f9fa;
+  --header-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
 /* Application Container */
 .app-container {
   width: 100vw;
@@ -85,6 +119,7 @@
   flex: 1;
   display: flex;
   overflow: hidden;
+  width: 100vw;
 }
 
 /* Main Menu */
@@ -154,7 +189,7 @@
   background: white;
   overflow-y: auto;
   padding: 24px;
-  width: 500px;
+  width: 100vw;
 }
 
 .content-placeholder {
@@ -331,24 +366,22 @@
    GRID LAYOUT TEMPLATE STYLES
    ==================================== */
 
-/* Main Grid Layout Container */
+/* SIMPLIFIED GRID LAYOUT - Direct positioning without template-areas */
 .main-app.grid-layout {
   display: grid;
-  grid-template-areas: 
-    "header header header"
-    "sidebar content pressure"
-    "footer footer footer";
-  grid-template-rows: 60px 1fr 50px;
-  grid-template-columns: 15% 70% 15%;
+  grid-template-rows: var(--header-height) 1fr var(--footer-height);
+  grid-template-columns: var(--sidebar-width) var(--content-width) var(--pressure-width);
   height: 100vh;
   width: 100vw;
   overflow: hidden;
+  gap: 0;
 }
 
-/* Grid Header */
+/* Grid Header - spans all columns, first row */
 .grid-header {
-  grid-area: header;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  grid-column: 1 / -1;
+  grid-row: 1;
+  background: var(--header-gradient);
   color: white;
   display: flex;
   align-items: center;
@@ -358,18 +391,19 @@
   z-index: 100;
 }
 
-/* Grid Sidebar (Main Menu) */
+/* Grid Sidebar (Main Menu) - first column, second row */
 .grid-sidebar {
-  grid-area: sidebar;
-  background: #f8f9fa;
-  border-right: 1px solid #dee2e6;
+  grid-column: 1;
+  grid-row: 2;
+  background: var(--grid-background);
+  border-right: 1px solid var(--grid-border-color);
   overflow-y: auto;
   padding: 16px 0;
 }
 
 .menu-header {
   padding: 0 20px 16px;
-  border-bottom: 1px solid #dee2e6;
+  border-bottom: 1px solid var(--grid-border-color);
   margin-bottom: 16px;
 }
 
@@ -414,14 +448,14 @@
   color: white;
 }
 
-/* Grid Content Area */
+/* Grid Content Area - second column, second row */
 .grid-content {
-  grid-area: content;
+  grid-column: 2;
+  grid-row: 2;
   background: white;
   overflow-y: auto;
   padding: 24px;
-  border-right: 1px solid #dee2e6;
-  min-width: 500px;
+  border-right: 1px solid var(--grid-border-color);
 }
 
 .dashboard-stats {
@@ -467,11 +501,12 @@
   color: #667eea;
 }
 
-/* Grid Pressure Panel */
+/* Grid Pressure Panel - third column, second row */
 .grid-pressure {
-  grid-area: pressure;
-  background: #f8f9fa;
-  border-left: 1px solid #dee2e6;
+  grid-column: 3;
+  grid-row: 2;
+  background: var(--grid-background);
+  border-left: 1px solid var(--grid-border-color);
   overflow-y: auto;
   padding: 16px;
 }
@@ -510,11 +545,12 @@
   font-style: italic;
 }
 
-/* Grid Footer */
+/* Grid Footer - spans all columns, third row */
 .grid-footer {
-  grid-area: footer;
-  background: #f8f9fa;
-  border-top: 1px solid #dee2e6;
+  grid-column: 1 / -1;
+  grid-row: 3;
+  background: var(--grid-background);
+  border-top: 1px solid var(--grid-border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -523,28 +559,59 @@
   color: #6c757d;
 }
 
-/* Grid Responsive Design */
+/* ====================================
+   RESPONSIVE GRID CONTROL - Easy to adjust
+   ==================================== */
+
+/* Medium screens - slightly wider sidebars */
 @media (max-width: 1200px) {
-  .main-app.grid-layout {
-    grid-template-columns: 18% 64% 18%;
+  :root {
+    --sidebar-width: 18%;
+    --content-width: 64%; 
+    --pressure-width: 18%;
   }
 }
 
+/* Small screens - stack vertically */
+
 @media (max-width: 768px) {
+  :root {
+    --sidebar-width: 100%;
+    --content-width: 100%;
+    --pressure-width: 100%;
+  }
+  
   .main-app.grid-layout {
-    grid-template-areas: 
-      "header"
-      "content"
-      "sidebar"
-      "pressure"
-      "footer";
-    grid-template-rows: 60px 1fr auto auto 50px;
+    grid-template-rows: var(--header-height) 1fr auto auto var(--footer-height);
     grid-template-columns: 1fr;
   }
   
-  .grid-sidebar, .grid-pressure {
+  /* Mobile layout: stack vertically */
+  .grid-header {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  
+  .grid-content {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  
+  .grid-sidebar {
+    grid-column: 1;
+    grid-row: 3;
     max-height: 200px;
-    max-width: 200px;
+  }
+  
+  .grid-pressure {
+    grid-column: 1;
+    grid-row: 4;
+    max-height: 200px;
+  }
+  
+  .grid-footer {
+    grid-column: 1;
+    grid-row: 5;
   }
   
   .app-header {

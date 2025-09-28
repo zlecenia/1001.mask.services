@@ -183,12 +183,28 @@ export default {
             // Load configuration first
             await this.loadConfig();
             
-            // Validate required dependencies
+            // Validate required dependencies (with fallbacks for dev server)
             const requiredServices = ['$store', 'securityService'];
             const missing = requiredServices.filter(service => !context[service]);
             
             if (missing.length > 0) {
-                console.warn(`TestMenu: Missing services: ${missing.join(', ')}`);
+                console.warn(`TestMenu: Missing services: ${missing.join(', ')}, creating mocks for dev server`);
+                
+                // Create mock services for dev server environment
+                if (!context.$store) {
+                    context.$store = {
+                        getters: {},
+                        dispatch: (action, payload) => Promise.resolve(),
+                        commit: (mutation, payload) => {},
+                        state: {}
+                    };
+                }
+                
+                if (!context.securityService) {
+                    context.securityService = {
+                        logSecurityEvent: (event, data) => console.log('Mock security event:', event, data)
+                    };
+                }
             }
             
             // Initialize module configuration

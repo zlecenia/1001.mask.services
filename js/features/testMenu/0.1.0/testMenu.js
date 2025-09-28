@@ -1,5 +1,27 @@
-// Use global Vue from CDN (for component dev server)
-const { reactive, computed, onMounted, inject } = Vue || window.Vue || {};
+// Universal Vue import - works in both browser (dev server) and Node.js (tests)
+let reactive, computed, onMounted, inject;
+
+if (typeof window !== 'undefined' && (typeof Vue !== 'undefined' || typeof window.Vue !== 'undefined')) {
+    // Browser environment (component dev server) - use global Vue
+    const VueGlobal = typeof Vue !== 'undefined' ? Vue : window.Vue;
+    ({ reactive, computed, onMounted, inject } = VueGlobal);
+} else {
+    // Node.js environment (tests) - create compatible mock functions
+    reactive = (obj) => obj;
+    computed = (fn) => ({ value: typeof fn === 'function' ? fn() : fn });
+    onMounted = (fn) => typeof fn === 'function' ? fn() : undefined;
+    inject = (key) => null;
+    
+    // Try to import Vue if available (for Vitest with jsdom)
+    if (typeof require !== 'undefined') {
+        try {
+            const vue = require('vue');
+            ({ reactive, computed, onMounted, inject } = vue);
+        } catch (error) {
+            // Mock functions already set above, continue
+        }
+    }
+}
 
 /**
  * MASKTRONIC C20 - Test Menu Module
