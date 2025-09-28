@@ -289,12 +289,42 @@ const componentModule = {
   // Method for rendering pressure panel in different contexts
   render(container, context = {}) {
     console.log('🎨 [PressurePanel] Starting render...');
+    console.log('🎨 [PressurePanel] Container:', container);
+    console.log('🎨 [PressurePanel] Component:', this.component);
     
     if (!container) {
       console.error('❌ [PressurePanel] No container provided');
       return;
     }
     
+    // TEMPORARY SIMPLE TEST - replace with basic HTML
+    console.log('🔥 [PressurePanel] REPLACING WITH SIMPLE HTML TEST');
+    container.innerHTML = `
+      <div class="pressure-panel-working">
+        <h3>✅ PRESSURE PANEL DZIAŁA!</h3>
+        <div class="sensors">
+          <div class="sensor">
+            <div>P1: 12.3 bar</div>
+            <div>Status: Normal</div>
+          </div>
+          <div class="sensor">
+            <div>P2: 8.7 bar</div>
+            <div>Status: Warning</div>
+          </div>
+          <div class="sensor">
+            <div>P3: 950 mbar</div>
+            <div>Status: Normal</div>
+          </div>
+        </div>
+        <p>Time: ${new Date().toLocaleTimeString()}</p>
+      </div>
+    `;
+    
+    console.log('✅ [PressurePanel] HTML REPLACEMENT COMPLETE');
+    return;
+    
+    // OLD Vue mounting code (disabled for testing)
+    /*
     if (!this.component) {
       console.error('❌ [PressurePanel] No component loaded');
       return;
@@ -313,6 +343,7 @@ const componentModule = {
       console.error('❌ [PressurePanel] Render error:', error);
       container.innerHTML = `<div class="error">Błąd renderowania PressurePanel: ${error.message}</div>`;
     }
+    */
   }
 };
 

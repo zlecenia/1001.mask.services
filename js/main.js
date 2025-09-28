@@ -186,6 +186,9 @@ const app = createApp({
       
       console.log('✅ MaskService application with modular Vuex store initialized successfully');
       console.log('📊 Store modules loaded:', Object.keys(this.$store._modules.root._children));
+      
+      // DIRECT PRESSURE PANEL TEST - Force replace loading message
+      this.testPressurePanelReplacement();
     } catch (error) {
       console.error('❌ Failed to initialize MaskService application:', error);
       await this.$store.dispatch('handleError', error);
@@ -445,6 +448,47 @@ const app = createApp({
         console.error('❌ Error loading MainMenu:', error);
         this.componentsLoaded.mainMenu = false;
       }
+    },
+
+    testPressurePanelReplacement() {
+      console.log('🧪 [TEST] Starting direct pressure panel replacement...');
+      
+      setTimeout(() => {
+        const container = document.getElementById('pressure-panel-container');
+        console.log('🔍 [TEST] Container found:', !!container);
+        
+        if (container) {
+          console.log('🔥 [TEST] FORCE REPLACING PRESSURE PANEL CONTENT');
+          container.innerHTML = `
+            <div class="pressure-panel-test" style="background: #e8f5e8; border: 2px solid #28a745; padding: 16px; border-radius: 8px;">
+              <h3 style="color: #155724; margin: 0 0 12px 0;">✅ PRESSURE PANEL TEST DZIAŁA!</h3>
+              <div style="display: flex; gap: 12px; margin-bottom: 12px;">
+                <div style="background: #fff; padding: 8px; border-radius: 4px; flex: 1; text-align: center;">
+                  <div style="font-weight: bold; color: #666;">P1</div>
+                  <div style="font-size: 18px; color: #000;">12.3 bar</div>
+                  <div style="color: #28a745; font-size: 12px;">NORMAL</div>
+                </div>
+                <div style="background: #fff; padding: 8px; border-radius: 4px; flex: 1; text-align: center;">
+                  <div style="font-weight: bold; color: #666;">P2</div>
+                  <div style="font-size: 18px; color: #000;">8.7 bar</div>
+                  <div style="color: #ffc107; font-size: 12px;">WARNING</div>
+                </div>
+                <div style="background: #fff; padding: 8px; border-radius: 4px; flex: 1; text-align: center;">
+                  <div style="font-weight: bold; color: #666;">P3</div>
+                  <div style="font-size: 18px; color: #000;">950 mbar</div>
+                  <div style="color: #28a745; font-size: 12px;">NORMAL</div>
+                </div>
+              </div>
+              <div style="text-align: center; color: #666; font-size: 12px;">
+                ⏰ Test Time: ${new Date().toLocaleTimeString()}
+              </div>
+            </div>
+          `;
+          console.log('✅ [TEST] Pressure panel content replaced successfully');
+        } else {
+          console.error('❌ [TEST] Container not found');
+        }
+      }, 3000); // Wait 3 seconds for DOM to be ready
     },
     
     getDefaultMenu() {

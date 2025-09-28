@@ -106,6 +106,15 @@ beforeEach(() => {
   localStorageMock.setItem.mockClear();
   localStorageMock.removeItem.mockClear();
   localStorageMock.clear.mockClear();
+  
+  // Ensure document.body exists and is properly set up for Vue Test Utils
+  if (!document.body) {
+    document.body = document.createElement('body');
+    document.documentElement.appendChild(document.body);
+  }
+  
+  // Clear document.body content to avoid test pollution
+  document.body.innerHTML = '';
 });
 
 // Cleanup after each test

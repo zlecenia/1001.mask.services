@@ -182,8 +182,7 @@ describe('DeviceData Component', () => {
           $store: store,
           $emit: vi.fn()
         }
-      },
-      attachTo: document.body
+      }
     });
   };
 
